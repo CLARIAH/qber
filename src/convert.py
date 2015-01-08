@@ -1,4 +1,4 @@
-import loader.canada
+import loader.reader
 
 
-loader.canada.go()
+loader.reader.go('loader/canada.json')
