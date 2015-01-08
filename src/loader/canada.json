@@ -1,0 +1,15 @@
+{
+    "description": "Microdata for Canada 1901 and 1911",
+    "data" : [
+        { 
+            "year": 1901,
+            "file": "../data/Canada 1901/1901.sav",
+            "format": "SPSS"
+        },
+        {
+            "year": 1901,
+            "file": "../data/Canada 1911/CCRI-CDN-Census1911V20110628.sav",
+            "format": "SPSS"
+        }
+    ]
+}
