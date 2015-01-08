@@ -1,0 +1,46 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}CLARIAH QBer{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <!-- ... -->
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>CLARIAH QBer</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+          {% block qber_content %}
+          {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+{{super()}}
+
+<script src="{{url_for('.static', filename='selectize.js')}}"></script>
+<script src="{{url_for('.static', filename='qber.js')}}"></script>
+
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+
+<link rel="stylesheet"
+      href="{{url_for('.static', filename='bootstrap.min.css')}}">
+<link rel="stylesheet" href="{{url_for('.static', filename='selectize.css')}}" />
+<link rel="stylesheet" href="{{url_for('.static', filename='selectize.bootstrap3.css')}}" />
+
+
+
+{% endblock %}
+

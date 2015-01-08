@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block qber_content %}
+
+<div class="list-group">
+  {% for id, description in metadata.items() %}
+    <a href="#" class="list-group-item variable" id="var_{{ id }}" skos_field="#skos_field_{{ id }}" uri_field="#uri_field_{{ id }}">
+      <h4 class="list-group-item-heading">{{ id }}</h4>
+      <div class="list-group-item-text" id="body_{{ id }}" style="display: none;">
+        <form>
+          <textarea class="form-control" rows="3">{{ description }}</textarea><br/>
+          {% include 'lsd.html' %}
+          <label for="dimension_type_{{ id }}">Specify the type of dimension:</label>
+          <select class="form-control dimension-type-select" id="dimension_type_{{ id }}" placeholder="Select dimension type"></select>
+          {% include 'schemes.html' %}
+        </form>
+      </div>
+    </a>
+  {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    var dimensions = {{ dimensions|safe }};
+    var schemes = {{ schemes|safe }};
+    
+  </script>
+  {{ super() }}
+{% endblock %}
