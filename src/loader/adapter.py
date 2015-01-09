@@ -88,7 +88,9 @@ class SavAdapter(Adapter):
         self.reader = SavReader(self.filename, ioLocale='en_US.UTF-8')
         
         if self.has_header:
-            self.header = SavHeaderReader(self.filename, ioLocale='en_US.UTF-8').varNames
+            with SavHeaderReader(self.filename, ioLocale='en_US.UTF-8') as hr:
+                self.header = hr.varNames
+            
         else :
             self.header = None
             
