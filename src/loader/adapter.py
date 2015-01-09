@@ -3,7 +3,7 @@
 import os
 os.environ["DYLD_LIBRARY_PATH"] = "../lib/python2.7/site-packages/savReaderWriter/spssio/macos"
 
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from savReaderWriter import SavReader, SavHeaderReader
 import csv
 
@@ -27,6 +27,10 @@ class Adapter(object):
             return self.metadata
         else :
             return None
+            
+    def get_examples(self):
+        ### Should be implemented by reader-specific subclasses.
+        return {}
         
     def load_metadata(self):
         metadata = OrderedDict()
@@ -51,6 +55,7 @@ class Adapter(object):
             print "No metadata or header"
 
         return metadata
+        
     
     def validate_header(self):
         if self.header and self.metadata:
@@ -92,7 +97,25 @@ class SavAdapter(Adapter):
         print self.validate_header()
         return
     
-
+    def get_examples(self):
+        """Returns first 50 rows, and converts it to samples for each column."""
+        
+        # Get first 10 rows
+        rows = self.reader.head(50)
+        
+        # Assume metadata keys are best (since if no metadata exists, the header will be used to generate it)
+        header = self.metadata.keys()
+        
+        # Convert the rows to a list of dictionaries with keys from the header
+        data_dictionaries = [dict(zip(header, values)) for values in rows]
+        
+        # Convert the list of dictionaries to a dictionary of lists
+        data = defaultdict(list)
+        for d in data_dictionaries:
+            for k, v in d.items():
+                data[k].append(v)
+        
+        return data
     
 class CsvAdapter(Adapter):
     

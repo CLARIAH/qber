@@ -4,15 +4,43 @@
 
 <div class="list-group">
   {% for id, description in metadata.items() %}
-    <a href="#" class="list-group-item variable" id="var_{{ id }}" skos_field="#skos_field_{{ id }}" uri_field="#uri_field_{{ id }}">
+    <a class="list-group-item variable" id="var_{{ id }}" skos_field="#skos_field_{{ id }}" uri_field="#uri_field_{{ id }}">
       <h4 class="list-group-item-heading">{{ id }}</h4>
       <div class="list-group-item-text" id="body_{{ id }}" style="display: none;">
         <form>
-          <textarea class="form-control" rows="3">{{ description }}</textarea><br/>
-          {% include 'lsd.html' %}
+          <div class="row">
+            <div class="col-md-6">
+              <label for="description_{{ id }}">Description</label>
+              <textarea id="description_{{ id }}" class="form-control" rows="3">{{ description }}</textarea><br/>
+            </div>
+            <div class="col-md-6" style="max-height: 200px; overflow: auto;">
+              
+              {% for value in examples[id] %}
+                {% if loop.first %}
+                  <table class="table table-striped">
+                    <thead>
+                      <tr><th>Example Values</th></tr>
+                    </thead>
+                    <tbody>
+                {% endif %}
+                    <tr><td>{{ value }}</td></tr>
+                {% if loop.last %}
+                    </tbody>
+                  </table>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <div class="control-group" id="uri_field_group_{{ id }}">
+          	<label for="uri_field_{{ id }}">Map to dimension:</label>
+          	<select id="uri_field_{{ id }}" multiple placeholder="Select a dimension..."></select>
+          </div>
           <label for="dimension_type_{{ id }}">Specify the type of dimension:</label>
           <select class="form-control dimension-type-select" id="dimension_type_{{ id }}" placeholder="Select dimension type"></select>
-          {% include 'schemes.html' %}
+          <div class="control-group" id="skos_field_group_{{ id }}">
+          	<label for="skos_field_{{ id }}">Restrict values to SKOS Scheme:</label>
+          	<select id="skos_field_{{ id }}" multiple placeholder="Select a SKOS Scheme..."></select>
+          </div>
         </form>
       </div>
     </a>
