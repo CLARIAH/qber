@@ -63,7 +63,7 @@ class Adapter(object):
             diff = set(self.header).difference(set(self.metadata.keys()))
             if len(diff) > 0:
                 print "Header and metadata do *not* correspond"
-                print zip(self.header,self.metadata.keys())
+                # print zip(self.header,self.metadata.keys())
                 return False
             else :
                 print "Header and metadata are aligned"
