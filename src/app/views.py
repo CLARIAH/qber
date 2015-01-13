@@ -12,7 +12,7 @@ import config
 
 from app import app
 
-from util.file_client import get_header
+
 import loader.reader
 
 log = app.logger
