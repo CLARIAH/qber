@@ -1,0 +1,13 @@
+<div class="btn-group">
+  <button id="variable-menu" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded='false'>
+    Variable <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+  {% for id in items %}
+    <li><a class="variable-menu-item" target="{{ id }}">{{ id }}</a>
+  {% endfor %}
+  </ul>
+  <span class="btn-separator"></span>
+  <button id="submit" type="button" class="btn btn-primary">Submit</button>
+</div>
+<hr/> 

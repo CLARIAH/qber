@@ -20,6 +20,10 @@ log.setLevel(logging.DEBUG)
 
 @app.route('/')
 def index():
+    return render_template('base.html')
+
+@app.route('/metadata')
+def metadata():
     adapter = loader.reader.go('loader/canada.json',0)
     
     variables = adapter.get_header()
@@ -30,9 +34,40 @@ def index():
     dimensions = get_dimensions()
     schemes = get_schemes()
     
+    data = {
+        'variables': variables,
+        'metadata': metadata,
+        'examples': examples,
+        'dimensions': dimensions,
+        'schemes': schemes
+    }
     
+    return jsonify(data)
     
-    return render_template('variables.html', variables=variables, metadata=metadata, examples=examples, dimensions=json.dumps(dimensions), schemes=json.dumps(schemes))
+@app.route('/menu',methods=['POST'])
+def menu():
+    req_json = request.get_json(force=True)
+    # log.debug(request.form)
+    # req_json = json.loads(request.form.get(0))
+    log.debug(req_json)
+
+    items = req_json['items']
+    log.debug(items)
+    # items = request.form.get('items')
+    
+    return render_template('menu.html',items=items)
+    
+    # , variables=variables, metadata=metadata, examples=examples, dimensions=json.dumps(dimensions), schemes=json.dumps(schemes))
+
+@app.route('/variable',methods=['POST'])
+def variable():
+    req_json = request.get_json(force=True)
+    log.debug(req_json)
+    
+    variable = req_json['variable']
+    examples = req_json['examples']
+    
+    return render_template('variable.html',id=variable['id'],description=['description'],examples=examples)
 
 def get_dimensions():
     
