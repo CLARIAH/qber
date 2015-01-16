@@ -31,11 +31,34 @@ function initialize_menu(){
   $.post('/menu',data=JSON.stringify({'items': metadata}), function(data){
     $('#menu').html(data);
     
-    $(".variable-menu-item").on('click',function(){
-      var variable_id = $(this).attr('target');
-
+    $('#variable-menu').selectize({
+        create: true,
+        sortField: 'text'
+    });
+    
+    $("#variable-menu").on('change',function(){
+      var variable_id = $(this).val();
 
       initialize_variable_panel(variable_id);
+    });
+    
+    $("#submit").on('click',function(e){
+      keys = $.localStorage.keys();
+      
+      data = {'variables': {}}
+      
+      for (n in keys) {
+        data['variables'][keys[n]] = $.localStorage.get(keys[n]);
+      };
+      
+      $.post('/save',data=JSON.stringify(data),function(data){
+        console.log(data);
+      });
+    });
+    
+    $("#reset").on('click',function(e){
+      alert("Emptied the local storage... you'll need to start all over again.")
+      $.localStorage.removeAll();
     });
     
   });
@@ -43,15 +66,15 @@ function initialize_menu(){
 
 
 function initialize_variable_panel(variable_id){
-  console.log(variable_id);
-  
-  $.post('/variable',data=JSON.stringify({'variable': metadata[variable_id], 'examples': examples[variable_id]}), function(data){
+
+  $.post('/variable',data=JSON.stringify({'id': variable_id, 'description': metadata[variable_id], 'examples': examples[variable_id]}), function(data){
+
     $('#variable-panel').hide();
     $('#variable-panel').html(data);
     
     var variable_panel = $('#var_'+variable_id);
     
-    fill_selects(variable_panel);
+    fill_selects(variable_id, variable_panel);
     
     $('#variable-panel').show();
     
@@ -61,11 +84,28 @@ function initialize_variable_panel(variable_id){
 };
 
 
-function fill_selects(variable_panel){
+function fill_selects(variable_id, variable_panel){
   var uri_field = variable_panel.attr('uri_field');
   var skos_field = variable_panel.attr('skos_field');
+  var save_button = variable_panel.attr('save_button');
+  var form = variable_panel.attr('form');
+
+
 
   variable_panel.children(".list-group-item-text").show();
+  
+  $(save_button).on('click',function(){
+    var form = $(this).attr('form');
+    console.log(form);
+    var variable_id = $(this).attr('target');
+    
+    console.log($(form));
+    var data = $(form).toObject();
+    
+    $.localStorage.set(variable_id,data);
+    
+    console.log(data);
+  });
 
   $(uri_field).selectize({
     maxItems: null,
@@ -119,8 +159,13 @@ function fill_selects(variable_panel){
 
 
   $(".regex").on('keyup', function(){
+    var example_input = $($(this).attr('example'));
     
-    var example = $($(this).attr('example')).val();
+    example_input.on('keyup',function(){
+      $(".regex").keyup();
+    });
+    
+    var example = example_input.val();
     var matches_div_id = $(this).attr('matches');
     
     try {
@@ -187,6 +232,32 @@ function fill_selects(variable_panel){
     create: false
   
   });
+  
+  var data = $.localStorage.get(variable_id);
+  
+  if (data) {
+    js2form($('form'), data);
+    
+    $('.data').each(function(){
+      var field = $(this).attr('name'); 
+    
+      if (field in data){
+        var value = data[field];
+      
+        if($(this).hasClass('selectized')){
+          $(this)[0].selectize.setValue(value);
+        } else {
+          if(value == 'on') {
+            $(this).prop('checked',true);
+          } else {
+            $(this).val(value);
+          }
+        }
+      }
+    });
+    
+    $(".regex").keyup();
+  }
   
 }
 

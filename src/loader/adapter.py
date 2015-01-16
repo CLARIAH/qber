@@ -100,24 +100,28 @@ class SavAdapter(Adapter):
         return
     
     def get_examples(self):
-        """Returns first 50 rows, and converts it to samples for each column."""
+        """Returns first 10000 rows, and converts it to samples for each column."""
         
-        # Get first 10 rows
-        rows = self.reader.head(50)
+        # Get first 10000 rows
+        rows = self.reader.head(10000)
         
         # Assume metadata keys are best (since if no metadata exists, the header will be used to generate it)
         header = self.metadata.keys()
         
         # Convert the rows to a list of dictionaries with keys from the header
-        data_dictionaries = [dict(zip(header, values)) for values in rows]
+        data_dictionaries = [dict(zip(header, [v.strip() if type(v) == str else v for v in values ])) for values in rows]
         
-        # Convert the list of dictionaries to a dictionary of lists
-        data = defaultdict(list)
+        # Convert the list of dictionaries to a dictionary of sets
+        data = defaultdict(set)
         for d in data_dictionaries:
             for k, v in d.items():
-                data[k].append(v)
+                data[k].add(v)
         
-        return data
+        json_ready_data = {}
+        for k,v in data.items():
+            json_ready_data[k] = list(v)[:250]
+            
+        return json_ready_data
     
 class CsvAdapter(Adapter):
     

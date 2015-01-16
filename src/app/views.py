@@ -12,11 +12,14 @@ import config
 
 from app import app
 
-
 import loader.reader
+import datacube.converter
 
 log = app.logger
 log.setLevel(logging.DEBUG)
+
+dataset = 'canada_1901'
+dataset_file = 'loader/canada.json'
 
 @app.route('/')
 def index():
@@ -24,7 +27,7 @@ def index():
 
 @app.route('/metadata')
 def metadata():
-    adapter = loader.reader.go('loader/canada.json',0)
+    adapter = loader.reader.go(dataset_file,0)
     
     variables = adapter.get_header()
     metadata = adapter.get_metadata()
@@ -64,10 +67,23 @@ def variable():
     req_json = request.get_json(force=True)
     log.debug(req_json)
     
-    variable = req_json['variable']
+    variable_id = req_json['id']
+    description = req_json['description']
     examples = req_json['examples']
     
-    return render_template('variable.html',id=variable['id'],description=['description'],examples=examples)
+    log.debug(examples)
+    
+    return render_template('variable.html',id=variable_id,description=description,examples=examples)
+
+@app.route('/save',methods=['POST'])
+def save():
+    req_json = request.get_json(force=True)
+    
+    variables = req_json['variables']
+    
+    graph = datacube.converter.data_structure_definition(dataset, variables)
+    
+    return graph.serialize(format='turtle')
 
 def get_dimensions():
     
