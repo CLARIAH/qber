@@ -1,11 +1,21 @@
+# File: utrecht1829_etl_01.R
+# date: 2015-01-24
+# Author: richard.zijdeman@iisg.nl
+
+# Laste change: -
+
+
+# packages and libraries
 # install.packages("gdata")
 library(gdata)
+
+# working directory
+setwd("~/git/qber/")
 
 # functions
 # trim leading and trailing spaces: see 
 # http://stackoverflow.com/questions/2261079/how-to-trim-leading-and-trailing-whitespace-in-r
 trim <- function (x) gsub("^\\s+|\\s+$", "", x) # 
-
 
 
 # read in data
@@ -164,14 +174,21 @@ table(u29.1$beroep_hb)
 u29.1$beroep_hb <- trim(u29.1$beroep_hb)
 
 # religie hoofdbewoner (religion head of household)
-table(u29.1$religie_hb)
-#
-names(u29.1)
+table(u29.1$religie_hb, useNA = "ifany")
+u29.1$religie_hb[u29.1$religie_hb == "cl"]  <- NA
+u29.1$religie_hb[u29.1$religie_hb == "cle"] <- NA
+u29.1$religie_hb[u29.1$religie_hb == "gg"]  <- NA
+table(u29.1$religie_hb, useNA = "ifany")
 
+##
+summary(u29.1)
 
-
-
-
-
-
-
+## reset character variables to factors
+u29.2 <- u29.1
+i <- c("geslacht", "huwelijkse_staat", "religie", "wijknummer", "hoofdbewoner", 
+       "religie_hb")
+ilist <- names(u29.2) %in% i
+u29.2[ilist] <- lapply(u29.2[ilist], as.factor)
+str(u29.2)
+write.csv(u29.2, "./data/derived/utrecht_1829_clean_01.csv", 
+          fileEncoding = "UTF-8")
