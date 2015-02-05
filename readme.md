@@ -14,7 +14,7 @@ First, open a terminal or console and clone the QBer git repository to a directo
 `git clone https://github.com/CLARIAH-SDH/qber.git`  
 (you can also download the source from Github)
 
-Change directory to directory and then (to keep things nice and tidy) use [virtualenv](http://virtualenv.pypa.io) to create a virtual environment, and activate it:
+Change directory to directory and then (to keep things nice and tidy) use [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html) to create a virtual environment, and activate it:
 
 `virtualenv .`
 
