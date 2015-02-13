@@ -10,6 +10,6 @@ itsdangerous==0.24
 pyparsing==2.0.3
 rdflib==4.1.2
 requests==2.5.1
-savReaderWriter==3.3.0
+# savReaderWriter==3.3.0
 six==1.8.0
 wsgiref==0.1.2
