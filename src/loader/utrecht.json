@@ -1,0 +1,11 @@
+{
+    "description": "Microdata for Utrecht 1829",
+    "data" : [
+        { 
+            "year": 1829,
+            "filename": "../data/derived/utrecht_1829_clean_01.csv",
+            "format": "CSV",
+            "header": true
+        }
+    ]
+}

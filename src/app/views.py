@@ -18,8 +18,8 @@ import datacube.converter
 log = app.logger
 log.setLevel(logging.DEBUG)
 
-dataset = 'canada_1901'
-dataset_file = 'loader/canada.json'
+dataset = 'utrecht_1829'
+dataset_file = 'loader/utrecht.json'
 
 @app.route('/')
 def index():
