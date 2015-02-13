@@ -36,13 +36,14 @@ Make sure to always activate the virtualenv before running QBer again.
 
 ### Caveat Emptor
 
-QBer is work in progress. For it to work properly, you need to give it apointer to the dataset to load. (and to be entirely honest, it doesn't really do very much yet)
+QBer is work in progress. For it to work properly, you need to give it a pointer to the dataset to load. (and to be entirely honest, it doesn't really do very much yet)
 
-This is currently specified in the `canada.json` file, located in the `src/loader` directory. 
+This is currently specified in the `canada.json` and `utrecht.json` files, located in the `src/loader` directory. 
+* You need to edit `views.py` to point QBer to the right JSON file.
 * QBer will only load the *first* dataset listed. 
-* Make sure the path points to the proper SPSS file (the path is relative to the `src` directory). 
-* For CSV files (untested), change the value for `format` to `CSV`. 
-* There also is the option to load a file that specifies the to-be-expected metadata for the data (this is a two-column CSV file with variable-names in the first column, and a description in the second). The default configuration loads from `metadata/canada_1901.csv`.
+* Make sure the path inside the JSON file points to the proper data file (the path is relative to the `src` directory). 
+* For CSV files, change the value for `format` to `CSV`. SPSS support has now been disabled temporarily.
+* There also is the option to load a file that specifies the to-be-expected metadata for the data (this is a two-column CSV file with variable-names in the first column, and a description in the second). The `canada.json` configuration loads from `metadata/canada_1901.csv`.
 
 
 
