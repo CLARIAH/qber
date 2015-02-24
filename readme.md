@@ -26,6 +26,9 @@ Then install the required Python packages using [pip](https://pip.readthedocs.or
 
 `pip install -r requirements.txt`
 
+Copy the `config_template.py` file to `config.py` and make necessary changes (see documentation in the file). 
+These settings are needed for posting the QBer generated RDF descriptions of your dataset to a triple store (we use Stardog).
+
 Change directory to `src` and then:
 
 `python run.py`
