@@ -1,13 +1,13 @@
 from rdflib import Graph, Namespace, Literal, URIRef, BNode, RDF, RDFS, OWL
 
 
-QBRV = Namespace('http://qbr.data2semantics.org/vocab/')
-QBR = Namespace('http://qbr.data2semantics.org/resource/')
+QBRV = Namespace('http://qber.data2semantics.org/vocab/')
+QBR = Namespace('http://qber.data2semantics.org/resource/')
 
 QB = Namespace('http://purl.org/linked-data/cube#')
 
 def data_structure_definition(dataset, variables):
-    BASE = Namespace('http://qbr.data2semantics.org/resource/{}/'.format(dataset))
+    BASE = Namespace('http://qber.data2semantics.org/resource/{}/'.format(dataset))
 
 
     g = Graph()

@@ -9,6 +9,7 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Graph
 
 import config
+import util.sparql_client as sc
 
 from app import app
 
@@ -18,8 +19,10 @@ import datacube.converter
 log = app.logger
 log.setLevel(logging.DEBUG)
 
-dataset = 'utrecht_1829'
-dataset_file = 'loader/utrecht.json'
+
+dataset = config.dataset
+dataset_file = config.dataset_file
+
 
 @app.route('/')
 def index():
@@ -83,7 +86,10 @@ def save():
     
     graph = datacube.converter.data_structure_definition(dataset, variables)
     
-    return graph.serialize(format='turtle')
+    query = sc.make_update(graph)
+    result = sc.sparql_update(query)
+    
+    return result
 
 def get_dimensions():
     
