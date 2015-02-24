@@ -26,6 +26,9 @@ def data_structure_definition(dataset, variables):
     
     for variable_id, metadata in variables.items():
         variable_uri = BASE[variable_id]
+        component_uri = BASE['component/'+variable_id]
+        
+        g.add((structure_uri, QB['component'], component_uri))
         
         ### DIMENSION PROPERTIES
         if 'description' in metadata:
@@ -39,17 +42,13 @@ def data_structure_definition(dataset, variables):
             dimension_type_uri = URIRef(metadata['dimension_type'])
             
             g.add((variable_uri, RDF.type, dimension_type_uri))
-            bnode = BNode()
             
             if dimension_type_uri == QB['DimensionProperty']:
-                g.add((structure_uri, QB['component'], bnode))
-                g.add((bnode, QB['dimension'], variable_uri))
+                g.add((component_uri, QB['dimension'], variable_uri))
             elif dimension_type_uri == QB['MeasureProperty']:
-                g.add((structure_uri, QB['component'], bnode))
-                g.add((bnode, QB['measure'], variable_uri))
+                g.add((component_uri, QB['measure'], variable_uri))
             elif dimension_type_uri == QB['AttributeProperty']:
-                g.add((structure_uri, QB['component'], bnode))
-                g.add((bnode, QB['attribute'], variable_uri))
+                g.add((component_uri, QB['attribute'], variable_uri))
                 
         ### DATA CONVERSION INSTRUCTIONS
         
