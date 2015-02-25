@@ -77,6 +77,24 @@ def variable():
     log.debug(examples)
     
     return render_template('variable.html',id=variable_id,description=description,examples=examples)
+    
+    
+@app.route('/dimension',methods=['GET'])
+def dimension():
+    uri = request.args.get('uri', False)
+    
+    if uri :
+        print sc.ask(uri)
+        
+        g = Graph()
+        g.parse(uri,format='turtle')
+        
+        return g.serialize(format='turtle')
+        
+    else :
+        return 'error'
+        
+    
 
 @app.route('/save',methods=['POST'])
 def save():

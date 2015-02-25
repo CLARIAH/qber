@@ -20,7 +20,14 @@ def make_update(graph):
     
     return query
     
+
+def ask(uri, endpoint_url = config.ENDPOINT_URL):
+    template = "ASK <{}>"
+    query = template.format(uri)
     
+    result = requests.get(endpoint_url, params={'query': query, 'reasoning': config.REASONING_TYPE}, headers=QUERY_HEADERS)
+    
+    return result.content
 
 
 def sparql_update(query, endpoint_url = config.UPDATE_URL):
@@ -32,7 +39,7 @@ def sparql_update(query, endpoint_url = config.UPDATE_URL):
 def sparql(query, strip=False, endpoint_url = config.ENDPOINT_URL):
     """This method replaces the SPARQLWrapper SPARQL interface, since SPARQLWrapper cannot handle the Stardog-style query headers needed for inferencing"""
     
-    result = requests.get(endpoint_url,params={'query': query, 'reasoning': config.REASONING_TYPE}, headers=config.QUERY_HEADERS)
+    result = requests.get(endpoint_url,params={'query': query, 'reasoning': config.REASONING_TYPE}, headers=QUERY_HEADERS)
     try :
         result_dict = json.loads(result.content)
     except Exception as e:

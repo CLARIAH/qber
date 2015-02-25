@@ -107,8 +107,9 @@ function fill_selects(variable_id, variable_panel){
     console.log(data);
   });
 
+  // The drop down menu for external dimensions.
   $(uri_field).selectize({
-    maxItems: null,
+    maxItems: 1,
     valueField: 'uri',
     searchField: 'label',
     options: dimensions,
@@ -130,6 +131,14 @@ function fill_selects(variable_id, variable_panel){
       }
     
     }
+  });
+  
+  
+  $(uri_field).on('change', function(){
+    var dimension_uri = $(uri_field).val();
+    $.get('/dimension',data={'uri': dimension_uri}, function(data){
+      console.log(data);
+    });
   });
   
   $(skos_field).selectize({
