@@ -51,7 +51,6 @@ def data_structure_definition(dataset, variables):
                 g.add((component_uri, QB['attribute'], variable_uri))
                 
         ### DATA CONVERSION INSTRUCTIONS
-        
         data_adapters = {}
         
         if 'restrict_to_skos' in metadata and metadata['restrict_to_skos'] == 'on' and 'skos_field' in metadata:
