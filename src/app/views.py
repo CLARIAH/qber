@@ -37,7 +37,7 @@ def metadata():
     examples = adapter.get_examples()
     short_metadata = {metadata.keys()[0]: metadata[metadata.keys()[0]]}
     
-    dimensions = get_dimensions()
+    dimensions = get_lsd_dimensions()
     schemes = get_schemes()
     
     data = {
@@ -84,12 +84,40 @@ def dimension():
     uri = request.args.get('uri', False)
     
     if uri :
-        print sc.ask(uri)
-        
-        g = Graph()
-        g.parse(uri,format='turtle')
-        
-        return g.serialize(format='turtle')
+        success, visited = sc.resolve(uri, depth=2)
+        print "Resolved ", visited
+        if success: 
+            query = """
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+                PREFIX dct: <http://purl.org/dc/terms/>
+                PREFIX qb: <http://purl.org/linked-data/cube#>
+
+                SELECT ?c ?notation ?label WHERE {{
+                  <{URI}>   a               qb:CodedProperty .
+                  <{URI}>   qb:codeList     ?cl .
+                  {{
+                      ?cl   a               skos:ConceptScheme .
+                      ?c    skos:inScheme   ?cl .
+                  }} UNION {{
+                      ?cl   a               skos:Collection .
+                      ?cl   skos:member+    ?c .
+                  }}
+                  ?c    skos:notation       ?notation .
+                  ?c    skos:prefLabel      ?label .
+                }}""".format(URI=uri)
+            
+            print query 
+            results = sc.sparql(query)
+            
+            
+            return results
+            
+            
+        else :
+            return 'error'
+
         
     else :
         return 'error'
@@ -109,8 +137,8 @@ def save():
     
     return result
 
-def get_dimensions():
-    
+
+def get_lsd_dimensions():
     dimensions_response = requests.get("http://amp.ops.few.vu.nl/data.json")
     dimensions = json.loads(dimensions_response.content)
     
