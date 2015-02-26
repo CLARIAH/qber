@@ -20,14 +20,21 @@ def make_update(graph):
     
     return query
     
+def ask_graph(uri, endpoint_url = config.ENDPOINT_URL):
+    
+    return ask(uri, template = "ASK {{ GRAPH <{}> {{ ?s ?p ?o }} }}", endpoint_url=endpoint_url)
 
-def ask(uri, endpoint_url = config.ENDPOINT_URL):
-    template = "ASK <{}>"
+def ask(uri, template = "ASK {{ <{}> ?p ?o }}", endpoint_url = config.ENDPOINT_URL):
+    
     query = template.format(uri)
+    result = requests.get(endpoint_url, params={'query': query, 'reasoning': config.REASONING_TYPE}, headers={'Accept': 'text/boolean'})
     
-    result = requests.get(endpoint_url, params={'query': query, 'reasoning': config.REASONING_TYPE}, headers=QUERY_HEADERS)
-    
-    return result.content
+    if result.content == 'false' or result.content == 'False':
+        return False
+    elif result.content == 'true' or result.content == 'True':
+        return True
+    else :
+        return result.content
 
 
 def sparql_update(query, endpoint_url = config.UPDATE_URL):
