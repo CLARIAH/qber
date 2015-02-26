@@ -1,4 +1,5 @@
 import app.config as config
+from rdflib import Graph, URIRef
 import requests
 
 
@@ -12,6 +13,46 @@ UPDATE_HEADERS = {
     'Content-Type': 'application/sparql-update',
     'SD-Connection-String': 'reasoning={}'.format(config.REASONING_TYPE)
 }
+
+def resolve(uri, depth=2, current_depth=0, visited = set()):
+    print current_depth, uri
+    if current_depth == depth:
+        print "reached max depth"
+        return True, visited
+    
+    # If the URI is already present in our triple store, we won't follow...
+    if uri in visited:
+        print uri, "already visited"
+        return True, visited
+    if ask_graph(URIRef(uri).defrag()) :
+        print uri, "already known"
+        visited.add(uri)
+        return True, visited
+    else :
+        g = Graph()
+        try :
+            g.parse(uri)
+        except :
+            try :
+                g.parse(uri, format='turtle')
+            except Exception as e:
+                print "Oops", e
+                visited.add(uri)
+                return False, visited
+    
+        # Add the gleaned triples to the store
+        update_query = make_update(g,graph_uri=URIRef(uri).defrag())
+        sparql_update(update_query)
+        print uri, "added to triple store"
+        visited.add(uri)
+        # We'll visit every triple in the file we downloaded
+        # Alternatively only use those where the 'uri' is a subject (but that makes caching harder)
+        for s,p,o in g.triples((None, None, None)) :
+            # Resolve every object 'o' (as long as it is a URI)
+            if isinstance(o, URIRef) :
+                success, visited = resolve(o, depth=depth, current_depth  = current_depth + 1, visited = visited)
+        
+    return True, visited
 
 
 def make_update(graph, graph_uri = None):
