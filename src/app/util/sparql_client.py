@@ -14,9 +14,13 @@ UPDATE_HEADERS = {
 }
 
 
-def make_update(graph):
-    template = "INSERT DATA {{ {} }}"
-    query = template.format(graph.serialize(format='nt'))
+def make_update(graph, graph_uri = None):
+    if graph_uri == None :
+        template = "INSERT DATA {{ {} }}"
+        query = template.format(graph.serialize(format='nt'))
+    else :
+        template = "INSERT DATA {{ GRAPH <{}> {{ {} }} }}"
+        query = template.format(graph_uri, graph.serialize(format='nt'))
     
     return query
     
