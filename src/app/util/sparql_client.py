@@ -45,6 +45,9 @@ def sparql_update(query, endpoint_url = config.UPDATE_URL):
     
     result = requests.post(endpoint_url,params={'reasoning': config.REASONING_TYPE}, data=query, headers=UPDATE_HEADERS)
     
+
+    print "SPARQL UPDATE response: ", result.content
+    
     return result.content
 
 def sparql(query, strip=False, endpoint_url = config.ENDPOINT_URL):
