@@ -8,7 +8,7 @@ from collections import OrderedDict, defaultdict
 # TODO: Temporarily Disabled
 # from savReaderWriter import SavReader, SavHeaderReader
 import csv
-
+import pandas as pd
 
 
 
@@ -125,6 +125,7 @@ class Adapter(object):
 #
 #         return json_ready_data
     
+
 class CsvAdapter(Adapter):
     
     def __init__(self,dataset):
@@ -137,10 +138,11 @@ class CsvAdapter(Adapter):
         
         self.has_header = dataset['header']
         
-        self.reader = csv.reader(open(self.filename,'r'))
+        self.data = pd.DataFrame.from_csv(self.filename)
+        
 
         if self.has_header :
-            self.header = next(self.reader)
+            self.header = list(self.data.columns)
         elif self.metadata :
             self.header = self.metadata.keys()
         else :
@@ -153,36 +155,49 @@ class CsvAdapter(Adapter):
         
         
     def get_examples(self):
-        """Returns first 10000 rows, and converts it to samples for each column."""
+        """Return all unique values, and converts it to samples for each column."""
         
-        # Get first 10000 rows
-        count = 0
-        rows = []
-        for row in self.reader:
-            if count == 10000 :
-                break
-            rows.append(row)
-            count += 1
+        # Get all unique values for each column
+        stats = {}
+        for col in self.data.columns:
+            stat = OrderedDict()
+            counts = self.data[col].value_counts()
+            for i in counts.index:
+                stat[i] = counts[i]
             
-        # rows = self.reader.head(10000)
-        
-        # Assume metadata keys are best (since if no metadata exists, the header will be used to generate it)
-        header = self.metadata.keys()
-        
-        # Convert the rows to a list of dictionaries with keys from the header
-        data_dictionaries = [dict(zip(header, [v.strip() if type(v) == str else v for v in values ])) for values in rows]
-        
-        # Convert the list of dictionaries to a dictionary of sets
-        data = defaultdict(set)
-        for d in data_dictionaries:
-            for k, v in d.items():
-                data[k].add(v)
-        
-        json_ready_data = {}
-        for k,v in data.items():
-            json_ready_data[k] = list(v)[:250]
-            
-        return json_ready_data
+            stats[col] = stat
+    
+        return stats
+        #
+        #
+        # # Get first 10000 rows
+        # count = 0
+        # rows = []
+        # for row in self.reader:
+        #     if count == 10000 :
+        #         break
+        #     rows.append(row)
+        #     count += 1
+        #
+        # # rows = self.reader.head(10000)
+        #
+        # # Assume metadata keys are best (since if no metadata exists, the header will be used to generate it)
+        # header = self.metadata.keys()
+        #
+        # # Convert the rows to a list of dictionaries with keys from the header
+        # data_dictionaries = [dict(zip(header, [v.strip() if type(v) == str else v for v in values ])) for values in rows]
+        #
+        # # Convert the list of dictionaries to a dictionary of sets
+        # data = defaultdict(set)
+        # for d in data_dictionaries:
+        #     for k, v in d.items():
+        #         data[k].add(v)
+        #
+        # json_ready_data = {}
+        # for k,v in data.items():
+        #     json_ready_data[k] = list(v)[:250]
+        #
+        # return json_ready_data
 
 mappings = {
     # "SPSS": SavAdapter,
