@@ -1,6 +1,7 @@
 import app.config as config
 from rdflib import Graph, URIRef
 import requests
+import json
 
 
 ### This is old style, but leaving for backwards compatibility with earlier versions of Stardog
@@ -91,41 +92,31 @@ def sparql_update(query, endpoint_url = config.UPDATE_URL):
     
     return result.content
 
-def sparql(query, strip=False, endpoint_url = config.ENDPOINT_URL):
+def sparql(query, endpoint_url = config.ENDPOINT_URL):
     """This method replaces the SPARQLWrapper SPARQL interface, since SPARQLWrapper cannot handle the Stardog-style query headers needed for inferencing"""
     
     result = requests.get(endpoint_url,params={'query': query, 'reasoning': config.REASONING_TYPE}, headers=QUERY_HEADERS)
     try :
         result_dict = json.loads(result.content)
     except Exception as e:
+        print e
         return result.content
+        
+    return result_dict['results']['bindings']
+        
+        
+def dictize(sparql_results):
+    # If the results are a dict, just return the list of bindings
+    if isinstance(sparql_results, dict):
+        sparql_results = sparql_results['results']['bindings']
     
-    if strip:
-        new_results = []
-        for r in result_dict['results']['bindings']:
-            new_result = {}
-            for k, v in r.items():
-                print k, v
-                if v['type'] == 'uri' and not k+'_label' in r.keys():
-                    new_result[k+'_label'] = {}
-                    new_result[k+'_label']['type'] = 'literal'
-                    new_result[k+'_label']['value'] = v['value'][v['value'].rfind('/')+1:]
-                    
-                elif not k+'_label' in r.keys():
-                    new_result[k+'_label'] = {}
-                    new_result[k+'_label']['type'] = 'literal'
-                    new_result[k+'_label']['value'] = v['value']
-                    
-                new_result[k+'_stripped'] = {}
-                new_result[k+'_stripped']['type'] = 'literal'
-                new_result[k+'_stripped']['value'] = v['value'][v['value'].rfind('/')+1:]
-                
-                
-                new_result[k] = v
-                    
-            new_results.append(new_result)
-                   
-        log.debug(new_results)
-        return new_results
-    else :
-        return result_dict['results']['bindings']
+    results = []
+    for r in sparql_results :
+        result = {}
+        for k,v in r.items():
+            result[k] = v['value']
+        
+        results.append(result)
+        
+    return results
+        
