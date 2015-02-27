@@ -94,25 +94,66 @@ def dimension():
                 PREFIX dct: <http://purl.org/dc/terms/>
                 PREFIX qb: <http://purl.org/linked-data/cube#>
 
-                SELECT ?c ?notation ?label WHERE {{
-                  <{URI}>   a               qb:CodedProperty .
-                  <{URI}>   qb:codeList     ?cl .
-                  {{
-                      ?cl   a               skos:ConceptScheme .
-                      ?c    skos:inScheme   ?cl .
-                  }} UNION {{
-                      ?cl   a               skos:Collection .
-                      ?cl   skos:member+    ?c .
-                  }}
-                  ?c    skos:notation       ?notation .
-                  ?c    skos:prefLabel      ?label .
+                SELECT (<{URI}> as ?uri) ?type ?description ?measured_concept WHERE {{
+                    OPTIONAL
+                    {{
+                        <{URI}>   rdfs:comment ?description .
+                    }}
+                    OPTIONAL
+                    {{
+                        <{URI}>   a  qb:DimensionProperty .
+                        BIND(qb:DimensionProperty AS ?type ) 
+                    }}
+                    OPTIONAL
+                    {{
+                        <{URI}>   qb:concept  ?measured_concept . 
+                    }}
+                    OPTIONAL
+                    {{
+                        <{URI}>   a  qb:MeasureProperty .
+                        BIND(qb:MeasureProperty AS ?type ) 
+                    }}
+                    OPTIONAL
+                    {{
+                        <{URI}>   a  qb:AttributeProperty .
+                        BIND(qb:AttributeProperty AS ?type ) 
+                    }}
+                }}
+            
+            """.format(URI=uri)
+            
+            results = sc.sparql(query)
+            # Turn into something more manageable, and take only the first element.
+            variable_definition = sc.dictize(results)[0]
+
+            query = """
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+                PREFIX dct: <http://purl.org/dc/terms/>
+                PREFIX qb: <http://purl.org/linked-data/cube#>
+
+                SELECT ?type ?measured_concept ?concept ?notation ?label WHERE {{
+                      <{URI}>   a               qb:CodedProperty .
+                      BIND(qb:DimensionProperty AS ?type )  
+                      <{URI}>   qb:codeList     ?cl .
+                      {{
+                          ?cl       a               skos:ConceptScheme .
+                          ?concept  skos:inScheme   ?cl .
+                      }} UNION {{
+                          ?cl   a               skos:Collection .
+                          ?cl   skos:member+    ?concept .
+                      }}
+                      ?concept    skos:notation       ?notation .
+                      ?concept    skos:prefLabel      ?label .
                 }}""".format(URI=uri)
             
-            print query 
-            results = sc.sparql(query)
+            codelist_results = sc.sparql(query)
+            if len(codelist_results) > 0 :
+                codelist = sc.dictize(codelist_results)
+                variable_definition['codelist'] = codelist
             
-            
-            return results
+            return jsonify(variable_definition)
             
             
         else :
