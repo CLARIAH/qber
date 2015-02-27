@@ -66,8 +66,11 @@ function initialize_menu(){
 
 
 function initialize_variable_panel(variable_id){
-
-  $.post('/variable',data=JSON.stringify({'id': variable_id, 'description': metadata[variable_id], 'examples': examples[variable_id]}), function(data){
+  var payload = JSON.stringify({'id': variable_id, 'description': metadata[variable_id], 'examples': examples[variable_id]})
+  
+  console.log(payload);
+  
+  $.post('/variable',data=payload, function(data){
 
     $('#variable-panel').hide();
     $('#variable-panel').html(data);
@@ -137,7 +140,31 @@ function fill_selects(variable_id, variable_panel){
   $(uri_field).on('change', function(){
     var dimension_uri = $(uri_field).val();
     $.get('/dimension',data={'uri': dimension_uri}, function(data){
-      console.log(data);
+      if (data['codelist']) {
+        $('#mappingcol').show();
+        $('.valuerow').each(function(){
+          var row = $(this);
+          var td = $('<td></td>');
+          td.attr('style','min-width: 30%;');
+          var select = $('<select></select>');
+          td.append(select);
+          
+          select.selectize({
+            maxItems: 1,
+            valueField: 'concept',
+            labelField: 'label',
+            searchField: 'label',
+            options: data['codelist'],
+            create: false
+          });
+          
+          row.append(td);
+        });
+        
+        console.log(data['codelist']);
+      } else {
+        console.log('No codelist');
+      }
     });
   });
   
