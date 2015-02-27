@@ -7,9 +7,13 @@ Werkzeug==0.9.6
 html5lib==0.999
 isodate==0.5.0
 itsdangerous==0.24
+numpy==1.9.1
+pandas==0.15.2
 pyparsing==2.0.3
+python-dateutil==2.4.0
+pytz==2014.10
 rdflib==4.1.2
 requests==2.5.1
-# savReaderWriter==3.3.0
+savReaderWriter==3.3.0
 six==1.8.0
 wsgiref==0.1.2
