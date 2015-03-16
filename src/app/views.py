@@ -181,8 +181,14 @@ def save():
 
 def get_lsd_dimensions():
     dimensions_response = requests.get("http://amp.ops.few.vu.nl/data.json")
-    dimensions = json.loads(dimensions_response.content)
     
+    try :
+        dimensions = json.loads(dimensions_response.content)
+    except :
+        log.error("Dimensions could not be loaded from service...")
+        
+        dimensions = []
+        
     return dimensions
 
 def get_schemes():
