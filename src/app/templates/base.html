@@ -16,15 +16,21 @@
     </div>
     <div class="row">
         <div class="col-md-12" id='menu'>
-          
+          <div class="btn-toolbar">
+            <div class="btn-group" role="group">
+              <button id="load" type="button" class="btn btn-primary" data-toggle="modal" data-target="#open-dataset-modal">Load</button>
+            </div>
+          </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12" id='variable-panel'>
-          
         </div>
     </div>
 </div>
+
+{% include 'open-dataset-modal.html' %}
+
 {% endblock %}
 
 {% block scripts %}
@@ -48,6 +54,7 @@
       href="{{url_for('.static', filename='bootstrap.min.css')}}">
 <link rel="stylesheet" href="{{url_for('.static', filename='selectize.css')}}" />
 <link rel="stylesheet" href="{{url_for('.static', filename='selectize.bootstrap3.css')}}" />
+<link rel="stylesheet" href="{{url_for('.static', filename='qber.css')}}" />
 
 
 

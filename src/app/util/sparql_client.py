@@ -16,6 +16,7 @@ UPDATE_HEADERS = {
 }
 
 def resolve(uri, depth=2, current_depth=0, visited = set()):
+    """ Resolves the URI to the maximum depth specified by 'depth' """
     print current_depth, uri
     if current_depth == depth:
         print "reached max depth"
