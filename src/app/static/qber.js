@@ -2,6 +2,19 @@ function escapeRegExp(str) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 
+(function ($) {
+      $.each(['show', 'hide'], function (i, ev) {
+        var el = $.fn[ev];
+        $.fn[ev] = function () {
+          this.trigger(ev);
+          return el.apply(this, arguments);
+        };
+      });
+    })(jQuery);
+
+
+
+// Global variables
 var variables, metadata, examples, dimensions, schemes;
 
 $( document ).ready(function() {
@@ -10,20 +23,30 @@ $( document ).ready(function() {
   
   
   $('#variable-panel').hide();
+  
+  $('#open-dataset-modal').on('show', function(){
+    console.log('Now showing #open-dataset-modal');
+    browse('#browser','.');
+  });
+  
 
-  $.get('/metadata',function(data){
+  
+});
+
+function load_dataset(file){
+  console.log('Loading '+ file);
+  
+  
+  $.get('/metadata',data={'file':file}, function(data){
     variables = data['variables'];
     metadata = data['metadata'];
     examples = data['examples'];
     dimensions = data['dimensions'];
     schemes = data['schemes'];
-    
+
     initialize_menu();
-    
-    
   });
-  
-});
+}
 
 
 function initialize_menu(){
@@ -41,6 +64,7 @@ function initialize_menu(){
 
       initialize_variable_panel(variable_id);
     });
+
     
     $("#submit").on('click',function(e){
       keys = $.localStorage.keys();
@@ -297,5 +321,84 @@ function fill_selects(variable_id, variable_panel){
   
 }
 
+
+function browse(browsepane, path) {
+    console.log('Will browse relative path: '+ path)
+
+    // Retrieve JSON list of files
+    $.get('/browse', {
+        path: path
+    }, function(data) {
+        var parent = data.parent;
+        var files = data.files;
+
+        // Clear the DIV containing the file browser.
+        $(browsepane).empty();
+
+
+        var heading = $('<h4></h4>');
+
+        if (path.length < 50) {
+            heading.append(path);
+        } else {
+            heading.append(path.substring(0, 10) + '...' + path.substring(path.length - 40));
+        }
+
+
+        $(browsepane).append(heading);
+
+
+        var list = $('<div></div>');
+        list.toggleClass('list-group');
+
+        if (parent != '') {
+            var up = $('<a class="list-group-item"><span class="glyphicon glyphicon-folder-open"></span><span style="padding-left: 1em;">..</span></a>');
+            up.on("click", function(e) {
+                browse(browsepane, parent);
+            });
+
+            $(list).append(up);
+        }
+
+
+
+        $.each(files, function(index, value) {
+            console.log(value);
+
+            var a = $('<a></a>');
+
+            a.toggleClass('list-group-item');
+
+            if (value.type == 'dir') {
+                var icon = $('<span class="glyphicon glyphicon-folder-open"></span>');
+                a.append(icon);
+                a.append('<span style="padding-left: 1em;">' + value.name + '</span>');
+                a.on('click', function(e) {
+                    browse(browsepane, value.path);
+                });
+            } else {
+                var icon = $('<span class="glyphicon glyphicon-file"></span>');
+                a.append(icon);
+                a.append('<span style="padding-left: 1em;">' + value.name + '</span>');
+
+                var badge = $('<span></span>');
+                badge.append(" (" + value.mimetype + ")");
+                badge.toggleClass('badge');
+                a.append(badge);
+                
+                a.on('click', function(e) {
+                  $('#open-dataset-modal').toggle();
+                  load_dataset(value.path);
+                });
+            }
+
+
+            list.append(a);
+        });
+
+
+        $(browsepane).append(list);
+    });
+}
 
 

@@ -10,6 +10,7 @@ from rdflib import Graph
 
 import config
 import util.sparql_client as sc
+import util.file_client as fc
 
 from app import app
 
@@ -24,13 +25,31 @@ dataset = config.dataset
 dataset_file = config.dataset_file
 
 
+
 @app.route('/')
 def index():
     return render_template('base.html')
 
 @app.route('/metadata')
 def metadata():
-    adapter = loader.reader.go(dataset_file,0)
+    dataset_file = request.args.get('file',False)
+    
+    if not dataset_file:
+        return jsonify({'result': 'Error: you should provide me with a relative path to the file you want to load'})
+    
+    dataset_path = os.path.join(config.base_path, dataset_file)
+    log.debug('Dataset path: '+dataset_path)
+    
+    # TODO: this is hardcoded, and needs to be gleaned from the dataset file metadata
+    dataset = {
+        'filename': dataset_path,
+        'format': 'CSV',
+        'header': True
+    }
+
+    
+    
+    adapter = loader.adapter.get_adapter(dataset)
     
     variables = adapter.get_header()
     metadata = adapter.get_metadata()
@@ -149,10 +168,15 @@ def dimension():
                 }}""".format(URI=uri)
             
             codelist_results = sc.sparql(query)
+            
+            log.debug(codelist_results)
+            
+            
             if len(codelist_results) > 0 :
                 codelist = sc.dictize(codelist_results)
                 variable_definition['codelist'] = codelist
             
+            log.debug(variable_definition)
             return jsonify(variable_definition)
             
             
@@ -177,12 +201,37 @@ def save():
     result = sc.sparql_update(query)
     
     return result
+    
+    
+    
+    
+    
+@app.route('/browse',methods=['GET'])
+def browse():
+    path = request.args.get('path', None)
+    if not path :
+        raise Exception('Must specify a path!')
+        
+        
+    log.debug('Will browse absolute path: {}/{}'.format(config.base_path, path))
+    filelist, parent = fc.browse(config.base_path, path)
+    
+    return jsonify({'parent': parent, 'files': filelist})
+
+
+
 
 
 def get_lsd_dimensions():
     dimensions_response = requests.get("http://amp.ops.few.vu.nl/data.json")
-    dimensions = json.loads(dimensions_response.content)
     
+    try :
+        dimensions = json.loads(dimensions_response.content)
+    except :
+        log.error("Dimensions could not be loaded from service...")
+        
+        dimensions = []
+        
     return dimensions
 
 def get_schemes():

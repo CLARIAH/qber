@@ -157,6 +157,28 @@ class CsvAdapter(Adapter):
         
         
 
+    def get_examples(self):
+        """Return all unique values, and converts it to samples for each column."""
+        
+        # Get all unique values for each column
+        stats = {}
+        for col in self.data.columns:
+            istats = []
+            
+            counts = self.data[col].value_counts()
+
+            for i in counts.index:
+                stat = {}
+                stat['id'] = i
+                stat['count'] = counts[i]
+                istats.append(stat)
+            
+            
+            stats[col] = istats
+            
+            
+    
+        return stats
 
 
 mappings = {

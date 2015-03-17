@@ -32,15 +32,15 @@
             </div>
             <div class="col-md-6" style="min-height: 350px; max-height: 350px; overflow: auto;">
               
-              {% for key, value in examples.items() %}
+              {% for e in examples %}
                 {% if loop.first %}
                   <table class="table table-striped">
                     <thead>
-                      <tr><th>Example Values</th><th>Frequency</th><th id='mappingcol' style='display: none;'>Mapping</th></tr>
+                      <tr><th>Values</th><th>Frequency</th><th id='mappingcol' style='display: none;'>Mapping</th></tr>
                     </thead>
                     <tbody>
                 {% endif %}
-                    <tr class='valuerow' value='{{ key }}'><td>{{ key }}</td><td>{{ value }}</td></tr>
+                    <tr class='valuerow' value='{{ e.id }}'><td>{{ e.id }}</td><td>{{ e.count }}</td></tr>
                 {% if loop.last %}
                     </tbody>
                   </table>
