@@ -38,7 +38,7 @@ def metadata():
         return jsonify({'result': 'Error: you should provide me with a relative path to the file you want to load'})
     
     dataset_path = os.path.join(config.base_path, dataset_file)
-    log.debug('Dataset path: '+dataset_path)
+    log.debug('Dataset path: ' + dataset_path)
     
     # TODO: this is hardcoded, and needs to be gleaned from the dataset file metadata
     dataset = {
@@ -47,8 +47,6 @@ def metadata():
         'header': True
     }
 
-    
-    
     adapter = loader.adapter.get_adapter(dataset)
     
     variables = adapter.get_header()
@@ -72,20 +70,16 @@ def metadata():
 @app.route('/menu',methods=['POST'])
 def menu():
     req_json = request.get_json(force=True)
-    # log.debug(request.form)
-    # req_json = json.loads(request.form.get(0))
     log.debug(req_json)
 
     items = req_json['items']
     log.debug(items)
-    # items = request.form.get('items')
     
     return render_template('menu.html',items=items)
-    
-    # , variables=variables, metadata=metadata, examples=examples, dimensions=json.dumps(dimensions), schemes=json.dumps(schemes))
 
 @app.route('/variable',methods=['POST'])
 def variable():
+    """Takes the variable details from the POST data and returns the UI for editing"""
     req_json = request.get_json(force=True)
     log.debug(req_json)
     
@@ -100,6 +94,7 @@ def variable():
     
 @app.route('/dimension',methods=['GET'])
 def dimension():
+    """Resolves the URI of a dimension (variable) and retrieves its definition"""
     uri = request.args.get('uri', False)
     
     if uri :
@@ -191,6 +186,7 @@ def dimension():
 
 @app.route('/save',methods=['POST'])
 def save():
+    """Uses the DataCube converter to convert the JSON representation of variables to RDF DataCube"""
     req_json = request.get_json(force=True)
     
     variables = req_json['variables']
@@ -208,6 +204,7 @@ def save():
     
 @app.route('/browse',methods=['GET'])
 def browse():
+    """Takes a relative path, and returns a list of files/directories at that location as JSON"""
     path = request.args.get('path', None)
     if not path :
         raise Exception('Must specify a path!')
@@ -223,6 +220,8 @@ def browse():
 
 
 def get_lsd_dimensions():
+    """Loads the list of Linked Statistical Data dimensions (variables) from the LSD portal"""
+    # TODO: Create a local copy that gets updated periodically
     dimensions_response = requests.get("http://amp.ops.few.vu.nl/data.json")
     
     try :
@@ -235,7 +234,9 @@ def get_lsd_dimensions():
     return dimensions
 
 def get_schemes():
+    """Loads SKOS Schemes (code lists) either from the LOD Cache, or from a cached copy"""
     if os.path.exists('metadata/schemes.json'):
+        # TODO: Check the age of this file, and update if older than e.g. a week.
         log.debug("Loading schemes from file...")
         with open('metadata/schemes.json','r') as f:
             schemes_json = f.read()
@@ -243,7 +244,7 @@ def get_schemes():
         schemes = json.loads(schemes_json)
         return schemes
     else :
-        log.debug("Loading schemes from RDF sources")
+        log.debug("Loading schemes from RDF sources...")
         schemes = []
     
         ### ---
