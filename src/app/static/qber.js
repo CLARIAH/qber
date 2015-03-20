@@ -161,10 +161,29 @@ function fill_selects(variable_id, variable_panel){
   });
   
   
+  // If we import an external dimension with a code list, add a select button for every row in the value examples table.
   $(uri_field).on('change', function(){
     var dimension_uri = $(uri_field).val();
+    
+    console.log(this);
+    var dimension_type = $('#'+$(this).attr('data-dimension-type'))[0].selectize;
+    var skos_codelist = $('#'+$(this).attr('data-skos-codelist'))[0].selectize;
+    
+    dimension_type.enable();
+    skos_codelist.enable();
+    
     $.get('/dimension',data={'uri': dimension_uri}, function(data){
+      
+      // Set dimension select value to the type given by the dimension specification we pulled from the web
+      dimension_type.setValue(data['type']);
+      dimension_type.disable();
+            
       if (data['codelist']) {
+        // Codelist
+        
+        // Disable the selection of an external code list, as this is already provided by the dimension specification
+        skos_codelist.disable();
+        
         $('#mappingcol').show();
         $('.valuerow').each(function(){
           var row = $(this);
@@ -187,6 +206,7 @@ function fill_selects(variable_id, variable_panel){
         
         console.log(data['codelist']);
       } else {
+        // No codelist
         console.log('No codelist');
       }
     });

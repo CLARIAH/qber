@@ -10,23 +10,39 @@
                 <label for="description_{{ id }}">Description</label>
                 <textarea id="description_{{ id }}" name="description" class="data form-control" rows="3">{{ description }}</textarea>
               </div>
-              <div class="checkbox">
-                  <label>
-                    <input id="dimension_learn_{{ id }}" name="dimension_learn" type="checkbox" class="data"> Create dimension from variable name and description
-                  </label>
-              </div>
-              <div class='checkbox'>
+              <!-- <div class='checkbox'>
                 <label>
-                  <input id="dimension_map_{{ id }}" name="dimension_map" type="checkbox" class="data"> Map to dimension:
-            	  </label>
-              </div>
+                  <input id="dimension_map_{{ id }}" name="dimension_map" type="checkbox" class="data"> Map to variable:
+                </label>
+              </div> -->
               <div class="control-group form-group" id="uri_field_group_{{ id }}">
-                <select id="uri_field_{{ id }}" name="uri_field"  class="data form-control" placeholder="Select a dimension..."></select>
+                <select id="uri_field_{{ id }}" name="uri_field"  class="data form-control" placeholder="Map to a pre-existing variable..."  data-dimension-type="dimension_type_{{ id }}" data-skos-codelist="skos_field_{{ id }}"></select>
               </div>
           
               <div class="control-group form-group">
                 <label for="dimension_type_{{ id }}">Specify the type of dimension:</label>
                 <select class="data form-control dimension-type-select" id="dimension_type_{{ id }}" name="dimension_type" placeholder="Select dimension type"></select>
+              </div>
+          
+              <div class='checkbox'>
+                <label>
+                  <input id="restrict_to_skos_{{ id }}" name="restrict_to_skos"  class="data" type="checkbox"> Restrict values to code list (SKOS Scheme):
+                </label>
+              </div>
+              
+              <div class="control-group form-group" id="skos_field_group_{{ id }}">
+              	<select id="skos_field_{{ id }}" name="skos_field"  class="data form-control" multiple placeholder="Select one or more SKOS Concept Schemes..."></select>
+              </div>
+              
+              <div class="checkbox">
+                  <label>
+                    <input id="dimension_learn_{{ id }}" name="dimension_learn" type="checkbox" class="data"> Create dimension from variable name and description
+                  </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input id="skos_learn_{{ id }}" name="skos_learn"  class="data" type="checkbox"> Learn code list from values
+                </label>
               </div>
               
             </div>
@@ -52,21 +68,7 @@
 
           
           <hr/>
-          <h5>SKOS Concepts</h5>
-          
-          	<div class='checkbox'>
-              <label>
-                <input id="restrict_to_skos_{{ id }}" name="restrict_to_skos"  class="data" type="checkbox"> Restrict values to SKOS Scheme:
-              </label>
-            </div>
-          <div class="control-group form-group" id="skos_field_group_{{ id }}">
-          	<select id="skos_field_{{ id }}" name="skos_field"  class="data form-control" multiple placeholder="Select one or more SKOS Concept Schemes..."></select>
-          </div>
-            <div class="checkbox">
-              <label>
-                <input id="skos_learn_{{ id }}" name="skos_learn"  class="data" type="checkbox"> Learn SKOS Concept Scheme from values
-              </label>
-            </div>
+
 
             <div class="row">
               
