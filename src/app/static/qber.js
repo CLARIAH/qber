@@ -117,8 +117,6 @@ function fill_selects(variable_id, variable_panel){
   var save_button = variable_panel.attr('save_button');
   var form = variable_panel.attr('form');
 
-
-
   variable_panel.children(".list-group-item-text").show();
   
   $(save_button).on('click',function(){
@@ -177,7 +175,14 @@ function fill_selects(variable_id, variable_panel){
       // Set dimension select value to the type given by the dimension specification we pulled from the web
       dimension_type.setValue(data['type']);
       dimension_type.disable();
-            
+
+      // We remove existing code cells from the rows
+      $('.valuerow .codecell').each(function(){
+        $(this).remove();
+      });
+
+      // If the dimension specifies a code book/code list
+      // we need to use that information to populate dropdowns in the the values pane, to allow for mappings.
       if (data['codelist']) {
         // Codelist
         
@@ -185,9 +190,12 @@ function fill_selects(variable_id, variable_panel){
         skos_codelist.disable();
         
         $('#mappingcol').show();
+        
+        // We populate each row with a new cell that contains the code list
         $('.valuerow').each(function(){
           var row = $(this);
           var td = $('<td></td>');
+          td.addClass('codecell');
           td.attr('style','min-width: 30%;');
           var select = $('<select></select>');
           td.append(select);
@@ -283,19 +291,19 @@ function fill_selects(variable_id, variable_panel){
     searchField: 'label',
     options: [
       {
-        'label': 'Dimension',
+        'label': 'Dimension Variable',
         'uri': 'http://purl.org/linked-data/cube#DimensionProperty',
-        'description': 'Dimension properties are used to identify an observation'
+        'description': 'Dimension variables are used to identify an observed value (e.g. location, gender)'
       },
       {
-        'label': 'Measure',
+        'label': 'Measure Variable',
         'uri': 'http://purl.org/linked-data/cube#MeasureProperty',
-        'description': 'The measure is the observed value'
+        'description': 'A measure variable reflects an observed value (e.g. population size)'
       },
       {
         'label': 'Attribute',
         'uri': 'http://purl.org/linked-data/cube#AttributeProperty',
-        'description': 'Attributes provide additional information, such as units of measures, etc.'
+        'description': 'Attributes provide additional information about an observed value (e.g. unit of measure, currency)'
       },
     ],
     render: {
@@ -340,6 +348,16 @@ function fill_selects(variable_id, variable_panel){
   }
   
 }
+
+
+
+
+
+
+
+
+
+
 
 
 function browse(browsepane, path) {
