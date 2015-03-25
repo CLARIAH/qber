@@ -120,6 +120,7 @@ function fill_selects(variable_id, variable_panel){
   variable_panel.children(".list-group-item-text").show();
   
   $(save_button).on('click',function(){
+    // Take the form data, and add it to the local storage.
     var form = $(this).attr('form');
     console.log(form);
     var variable_id = $(this).attr('target');

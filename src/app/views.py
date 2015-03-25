@@ -32,14 +32,18 @@ def index():
 
 @app.route('/metadata')
 def metadata():
+    """Loads the metadata for a dataset specified by the 'file' relative path argument"""
     dataset_file = request.args.get('file',False)
     
+    # Check whether a file has been provided
     if not dataset_file:
         return jsonify({'result': 'Error: you should provide me with a relative path to the file you want to load'})
     
+    # Create an absolute path
     dataset_path = os.path.join(config.base_path, dataset_file)
     log.debug('Dataset path: ' + dataset_path)
     
+    # Specify the dataset's details
     # TODO: this is hardcoded, and needs to be gleaned from the dataset file metadata
     dataset = {
         'filename': dataset_path,
@@ -47,6 +51,7 @@ def metadata():
         'header': True
     }
 
+    # Intialize a file a dapter for the dataset
     adapter = loader.adapter.get_adapter(dataset)
     
     variables = adapter.get_header()
@@ -54,9 +59,12 @@ def metadata():
     examples = adapter.get_examples()
     short_metadata = {metadata.keys()[0]: metadata[metadata.keys()[0]]}
     
+    # Get the LSD dimensions from the LSD service (or a locally cached copy)
     dimensions = get_lsd_dimensions()
+    # Get all known SKOS schemes and collections from the LOD cache service
     schemes = get_schemes()
     
+    # Prepare the data dictionary
     data = {
         'variables': variables,
         'metadata': metadata,
@@ -69,6 +77,7 @@ def metadata():
     
 @app.route('/menu',methods=['POST'])
 def menu():
+    """Render the menu for the items specified in the POST data (i.e. the variable names)"""
     req_json = request.get_json(force=True)
     log.debug(req_json)
 
