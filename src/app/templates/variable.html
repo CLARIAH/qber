@@ -1,6 +1,11 @@
     <div class="panel panel-default variable variable-panel" id="var_{{ id }}" save_button="#save_button_{{ id}}" form="#form_{{ id}}" skos_field="#skos_field_{{ id }}" uri_field="#uri_field_{{ id }}">
       <div class="panel-heading">
-        <div class="panel-title">{{ id }} <div class='btn btn-primary btn-xs pull-right save-button' id="save_button_{{ id}}" form="#form_{{ id}}" target="{{ id }}">Save</div></div>
+        <div class="panel-title">
+          {{ id }} 
+          <div class='btn btn-info btn-xs pull-right save-button' id="save_button_{{ id}}" form="#form_{{ id}}" target="{{ id }}">
+            <span class="glyphicon glyphicon-save"></span> Save
+          </div>
+        </div>
       </div>
       <div class="panel-body" id="body_{{ id }}">
         <form id="form_{{ id }}" name="form">
