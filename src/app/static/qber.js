@@ -38,6 +38,7 @@ function load_dataset(file){
   
   
   $.get('/metadata',data={'file':file}, function(data){
+    console.log(data);
     variables = data['variables'];
     metadata = data['metadata'];
     examples = data['examples'];
@@ -172,7 +173,7 @@ function fill_selects(variable_id, variable_panel){
     skos_codelist.enable();
     
     $.get('/dimension',data={'uri': dimension_uri}, function(data){
-      
+      console.log(data);
       // Set dimension select value to the type given by the dimension specification we pulled from the web
       dimension_type.setValue(data['type']);
       dimension_type.disable();
@@ -189,6 +190,9 @@ function fill_selects(variable_id, variable_panel){
         
         // Disable the selection of an external code list, as this is already provided by the dimension specification
         skos_codelist.disable();
+        
+        skos_codelist.addOption({'uri': data['codelist'][0]['cl'], 'label': data['codelist'][0]['cl_label'] });
+        skos_codelist.addItem(data['codelist'][0]['cl']);
         
         $('#mappingcol').show();
         

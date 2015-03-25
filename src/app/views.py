@@ -156,10 +156,11 @@ def dimension():
                 PREFIX dct: <http://purl.org/dc/terms/>
                 PREFIX qb: <http://purl.org/linked-data/cube#>
 
-                SELECT ?type ?measured_concept ?concept ?notation ?label WHERE {{
+                SELECT ?type ?measured_concept ?concept ?notation ?label ?cl ?cl_label WHERE {{
                       <{URI}>   a               qb:CodedProperty .
                       BIND(qb:DimensionProperty AS ?type )  
                       <{URI}>   qb:codeList     ?cl .
+                      ?cl       rdfs:label      ?cl_label .
                       {{
                           ?cl       a               skos:ConceptScheme .
                           ?concept  skos:inScheme   ?cl .
@@ -196,8 +197,8 @@ def dimension():
 @app.route('/save',methods=['POST'])
 def save():
     """Uses the DataCube converter to convert the JSON representation of variables to RDF DataCube"""
-    req_json = request.get_json(force=True)
     
+    req_json = request.get_json(force=True)
     variables = req_json['variables']
     
     graph = datacube.converter.data_structure_definition(dataset, variables)
