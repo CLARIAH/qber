@@ -234,12 +234,25 @@ def get_lsd_dimensions():
     # TODO: Create a local copy that gets updated periodically
     dimensions_response = requests.get("http://amp.ops.few.vu.nl/data.json")
     
-    try :
-        dimensions = json.loads(dimensions_response.content)
-    except :
-        log.error("Dimensions could not be loaded from service...")
+    
+    if os.path.exists('metadata/dimensions.json'):
+        log.debug("Loading dimensions from file...")
+        with open('metadata/dimensions.json','r') as f:
+            dimensions_json = f.read()
+            
+        dimensions = json.loads(dimensions_json)
+    else :
+        log.debug("Loading dimensions from LSD service...")
+        try :
+            dimensions = json.loads(dimensions_response.content)
         
-        dimensions = []
+            with open('metadata/dimensions.json','w') as f:
+                f.write(dimensions)
+        
+        except :
+            log.error("Dimensions could not be loaded from service...")
+        
+            dimensions = []
         
     return dimensions
 
