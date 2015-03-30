@@ -86,7 +86,7 @@ def menu():
     
     return render_template('menu.html',items=items)
 
-@app.route('/variable',methods=['POST'])
+@app.route('/variable/ui',methods=['POST'])
 def variable():
     """Takes the variable details from the POST data and returns the UI for editing"""
     req_json = request.get_json(force=True)
@@ -101,9 +101,9 @@ def variable():
     return render_template('variable.html',id=variable_id,description=description,examples=examples)
     
     
-@app.route('/dimension',methods=['GET'])
+@app.route('/variable/resolve',methods=['GET'])
 def dimension():
-    """Resolves the URI of a dimension (variable) and retrieves its definition"""
+    """Resolves the URI of a variable and retrieves its definition"""
     uri = request.args.get('uri', False)
     
     if uri :
@@ -193,7 +193,7 @@ def dimension():
         return 'error'
         
 
-@app.route('/codelist',methods=['GET'])
+@app.route('/codelist/concepts',methods=['GET'])
 def codelist():
     """Gets the SKOS Concepts belonging to the SKOS Scheme or Collection identified by the URI parameter"""
     uri = request.args.get('uri', False)
@@ -222,14 +222,17 @@ def codelist():
             sparql.setReturnFormat(JSON)
             sparql.setQuery(query)
     
-            codelist_results = sparql.query().convert()
+            codelist_results = sparql.query().convert()['results']['bindings']
     
-            log.debug(codelist_results)
+
     
             if len(codelist_results) > 0:
                 codelist = sc.dictize(codelist_results)
-            
-            return jsoninfy(codelist)
+            else :
+                codelist = []
+
+            return jsonify({'codelist': codelist})
+
         except Exception as e:
             log.error(e)
             return jsonify({'response': 'error', 'message': str(e)})
@@ -273,7 +276,7 @@ def browse():
 def get_lsd_dimensions():
     """Loads the list of Linked Statistical Data dimensions (variables) from the LSD portal"""
     # TODO: Create a local copy that gets updated periodically
-    dimensions_response = requests.get("http://amp.ops.few.vu.nl/data.json")
+    
     
     
     if os.path.exists('metadata/dimensions.json'):
@@ -283,6 +286,7 @@ def get_lsd_dimensions():
             
         dimensions = json.loads(dimensions_json)
     else :
+        dimensions_response = requests.get("http://amp.ops.few.vu.nl/data.json")
         log.debug("Loading dimensions from LSD service...")
         try :
             dimensions = json.loads(dimensions_response.content)
