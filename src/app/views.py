@@ -156,20 +156,11 @@ def dimension():
                 PREFIX dct: <http://purl.org/dc/terms/>
                 PREFIX qb: <http://purl.org/linked-data/cube#>
 
-                SELECT ?concept ?notation ?label ?cl ?cl_label WHERE {{
+                SELECT DISTINCT ?cl ?cl_label WHERE {{
                       <{URI}>   a               qb:CodedProperty .
                       BIND(qb:DimensionProperty AS ?type )  
                       <{URI}>   qb:codeList     ?cl .
                       ?cl       rdfs:label      ?cl_label .
-                      {{
-                          ?cl       a               skos:ConceptScheme .
-                          ?concept  skos:inScheme   ?cl .
-                      }} UNION {{
-                          ?cl   a               skos:Collection .
-                          ?cl   skos:member+    ?concept .
-                      }}
-                      ?concept    skos:notation       ?notation .
-                      ?concept    skos:prefLabel      ?label .
                 }}""".format(URI=uri)
             
             codelist_results = sc.sparql(query)
@@ -218,20 +209,28 @@ def codelist():
         """.format(URI=uri)
         
         try: 
+            # First we go to the LOD cloud
             sparql = SPARQLWrapper('http://lod.openlinksw.com/sparql')
             sparql.setReturnFormat(JSON)
             sparql.setQuery(query)
     
-            codelist_results = sparql.query().convert()['results']['bindings']
-    
-
-    
-            if len(codelist_results) > 0:
-                codelist = sc.dictize(codelist_results)
+            lod_codelist_results = sparql.query().convert()['results']['bindings']
+            if len(lod_codelist_results) > 0:
+                lod_codelist = sc.dictize(lod_codelist_results)
             else :
-                codelist = []
+                lod_codelist = []
+    
+            # Then we have a look locally
+            sdh_codelist_results = sc.sparql(query) 
+            if len(sdh_codelist_results) > 0:
+                sdh_codelist = sc.dictize(sdh_codelist_results)
+            else :
+                sdh_codelist = []
+            
+            log.debug(lod_codelist)
+            log.debug(sdh_codelist)
 
-            return jsonify({'codelist': codelist})
+            return jsonify({'codelist': lod_codelist + sdh_codelist })
 
         except Exception as e:
             log.error(e)

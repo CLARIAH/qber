@@ -219,15 +219,22 @@ function fill_selects(variable_id, variable_panel){
         
         // Add the name of the codelist to the codelist_field
         add_codelist(skos_codelist_select, data['codelist'][0]['cl'], data['codelist'][0]['cl_label']);
-        // Populate select dropdowns in list of values.
-        populate_value_selects(data['codelist']);
         
-        $('#mappingcol').show();
+        // Populate select dropdowns in list of values.
+        // NOTE: No need as this is now done by the change handler on the codelist_field element
+        // populate_value_selects(data['codelist']);
+        
+        // $('#mappingcol').show();
         
         console.log(data['codelist']);
       } else {
         // No codelist
         console.log('No codelist');
+        
+        $(codelist_checkbox).attr('checked',false);
+        $(codelist_checkbox).removeAttr('disabled');
+        skos_codelist_select.setValue('');
+        
       }
     });
   });
@@ -269,7 +276,7 @@ function fill_selects(variable_id, variable_panel){
   
   $(codelist_field).on('change', function(){
     var codelist_uri = $(codelist_field).val();
-    console.log(codelist_uri);
+    console.log('#codelist_field changed, selected value: ' + codelist_uri);
         
     $.get('/codelist/concepts',data={'uri': codelist_uri}, function(data){
       // We remove existing code cells from the rows
