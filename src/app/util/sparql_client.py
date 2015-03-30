@@ -112,12 +112,17 @@ def dictize(sparql_results):
         sparql_results = sparql_results['results']['bindings']
     
     results = []
+
     for r in sparql_results :
         result = {}
         for k,v in r.items():
-            result[k] = v['value']
-        
+            try :
+                result[k] = v['value']
+            except :
+                print k, v
+    
         results.append(result)
+
         
     return results
         

@@ -1,4 +1,11 @@
-    <div class="panel panel-default variable variable-panel" id="var_{{ id }}" save_button="#save_button_{{ id}}" form="#form_{{ id}}" skos_field="#skos_field_{{ id }}" uri_field="#uri_field_{{ id }}">
+    <div class="panel panel-default variable variable-panel" id="var_{{ id }}" 
+          save_button="#save_button_{{ id}}" 
+          form="#form_{{ id}}" 
+          codelist_field="#codelist_field_{{ id }}" 
+          codelist_checkbox="#codelist_checkbox_{{ id }}" 
+          lod_variable_field="#lod_variable_field_{{ id }}"
+          learn_definition_checkbox="#learn_definition_checkbox_{{ id }}"
+          learn_codelist_checkbox="#learn_codelist_checkbox_{{ id }}">
       <div class="panel-heading">
         <div class="panel-title">
           {{ id }} 
@@ -20,8 +27,8 @@
                   <input id="dimension_map_{{ id }}" name="dimension_map" type="checkbox" class="data"> Map to variable:
                 </label>
               </div> -->
-              <div class="control-group form-group" id="uri_field_group_{{ id }}">
-                <select id="uri_field_{{ id }}" name="uri_field"  class="data form-control" placeholder="Map to a pre-existing variable..."  data-dimension-type="dimension_type_{{ id }}" data-skos-codelist="skos_field_{{ id }}"></select>
+              <div class="control-group form-group" id="lod_variable_field_group_{{ id }}">
+                <select id="lod_variable_field_{{ id }}" name="lod_variable_field"  class="data form-control" placeholder="Map to a pre-existing variable..."  data-dimension-type="dimension_type_{{ id }}" data-skos-codelist="codelist_field_{{ id }}"></select>
               </div>
           
               <div class="control-group form-group">
@@ -31,22 +38,22 @@
           
               <div class='checkbox'>
                 <label>
-                  <input id="restrict_to_skos_{{ id }}" name="restrict_to_skos"  class="data" type="checkbox"> Restrict values to code list (SKOS Scheme):
+                  <input id="codelist_checkbox_{{ id }}" name="codelist_checkbox"  class="data" type="checkbox"> Restrict values to code list (SKOS Scheme):
                 </label>
               </div>
               
-              <div class="control-group form-group" id="skos_field_group_{{ id }}">
-              	<select id="skos_field_{{ id }}" name="skos_field"  class="data form-control" placeholder="Select a code list (SKOS Scheme)..."></select>
+              <div class="control-group form-group" id="codelist_field_group_{{ id }}">
+              	<select id="codelist_field_{{ id }}" name="codelist_field"  class="data form-control" placeholder="Select a code list (SKOS Scheme)..."></select>
               </div>
               
               <div class="checkbox">
                   <label>
-                    <input id="dimension_learn_{{ id }}" name="dimension_learn" type="checkbox" class="data"> Create dimension from variable name and description
+                    <input id="learn_definition_checkbox_{{ id }}" name="learn_definition_checkbox" type="checkbox" class="data"> Create variable definition from name and description
                   </label>
               </div>
               <div class="checkbox">
                 <label>
-                  <input id="skos_learn_{{ id }}" name="skos_learn"  class="data" type="checkbox"> Learn code list from values
+                  <input id="learn_codelist_checkbox_{{ id }}" name="learn_codelist_checkbox"  class="data" type="checkbox"> Learn code list from values in the dataset
                 </label>
               </div>
               

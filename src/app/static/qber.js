@@ -95,7 +95,7 @@ function initialize_variable_panel(variable_id){
   
   console.log(payload);
   
-  $.post('/variable',data=payload, function(data){
+  $.post('/variable/ui',data=payload, function(data){
 
     $('#variable-panel').hide();
     $('#variable-panel').html(data);
@@ -113,8 +113,13 @@ function initialize_variable_panel(variable_id){
 
 
 function fill_selects(variable_id, variable_panel){
-  var uri_field = variable_panel.attr('uri_field');
-  var skos_field = variable_panel.attr('skos_field');
+  var lod_variable_field = variable_panel.attr('lod_variable_field');
+  var codelist_field = variable_panel.attr('codelist_field');
+  var codelist_checkbox = variable_panel.attr('codelist_checkbox');
+  var learn_definition_checkbox = variable_panel.attr('learn_definition_checkbox');
+  var learn_codelist_checkbox = variable_panel.attr('learn_codelist_checkbox');
+  
+  
   var save_button = variable_panel.attr('save_button');
   var form = variable_panel.attr('form');
 
@@ -135,7 +140,7 @@ function fill_selects(variable_id, variable_panel){
   });
 
   // The drop down menu for external dimensions.
-  $(uri_field).selectize({
+  $(lod_variable_field).selectize({
     maxItems: 1,
     valueField: 'uri',
     searchField: 'label',
@@ -163,8 +168,8 @@ function fill_selects(variable_id, variable_panel){
 
   
   // If we import an external dimension with a code list, add a select button for every row in the value examples table.
-  $(uri_field).on('change', function(){
-    var dimension_uri = $(uri_field).val();
+  $(lod_variable_field).on('change', function(){
+    var dimension_uri = $(lod_variable_field).val();
     
     console.log(this);
     var dimension_type = $('#'+$(this).attr('data-dimension-type'))[0].selectize;
@@ -172,6 +177,9 @@ function fill_selects(variable_id, variable_panel){
     
     dimension_type.enable();
     skos_codelist_select.enable();
+    
+    $(learn_definition_checkbox).removeAttr('disabled');
+    $(learn_codelist_checkbox).removeAttr('disabled');
     
     if (dimension_uri == '') {
       console.log('Dimension uri empty');
@@ -181,21 +189,35 @@ function fill_selects(variable_id, variable_panel){
       return;
     } 
     
-    $.get('/dimension',data={'uri': dimension_uri}, function(data){
+    $.get('/variable/resolve',data={'uri': dimension_uri}, function(data){
       console.log(data);
       // Set dimension select value to the type given by the dimension specification we pulled from the web
       dimension_type.setValue(data['type']);
       dimension_type.disable();
-
+      $(learn_definition_checkbox).attr('checked', false);
+      $(learn_definition_checkbox).attr('disabled',true);
+      
+      
+      
       // We remove existing code cells from the rows
       $('.valuerow .codecell').each(function(){
         $(this).remove();
       });
 
+
+
       // If the dimension specifies a code book/code list
       // we need to use that information to populate dropdowns in the the values pane, to allow for mappings.
       if (data['codelist']) {
         // Codelist
+        
+        // Make sure to check the appropriate checkboxes
+        $(codelist_checkbox).attr('checked',true);
+        $(codelist_checkbox).attr('disabled',true);
+        $(learn_codelist_checkbox).attr('checked', false);
+        $(learn_codelist_checkbox).attr('disabled',true);
+        
+        // Add the name of the codelist to the codelist_field
         add_codelist(skos_codelist_select, data['codelist'][0]['cl'], data['codelist'][0]['cl_label']);
         // Populate select dropdowns in list of values.
         populate_value_selects(data['codelist']);
@@ -210,8 +232,17 @@ function fill_selects(variable_id, variable_panel){
     });
   });
   
+  $(codelist_checkbox).on('change', function(){
+    // We remove existing code cells from the rows
+    $('.valuerow .codecell').each(function(){
+      $(this).remove();
+    });
+    
+    // We set the codelist_field to null
+    $(codelist_field)[0].selectize.setValue('');
+  });
   
-  $(skos_field).selectize({
+  $(codelist_field).selectize({
     maxItems: 1,
     valueField: 'uri',
     searchField: 'label',
@@ -236,11 +267,35 @@ function fill_selects(variable_id, variable_panel){
     }
   });
   
-  $(skos_field).on('change', function(){
-    var codelist_uri = $(skos_field).val();
+  $(codelist_field).on('change', function(){
+    var codelist_uri = $(codelist_field).val();
     console.log(codelist_uri);
-    $.get('/codelist',data={'uri': codelist_uri}, function(data){
-      console.log(data);
+        
+    $.get('/codelist/concepts',data={'uri': codelist_uri}, function(data){
+      // We remove existing code cells from the rows
+      $('.valuerow .codecell').each(function(){
+        $(this).remove();
+      });
+      
+      // If the SKOS vocabulary actually specifies a codelist
+      // we need to use that information to populate dropdowns in the the values pane, to allow for mappings.
+      if (data['codelist']) {
+        // Make sure to check the appropriate checkboxes
+        $(codelist_checkbox).attr('checked',true);
+        $(learn_codelist_checkbox).attr('checked', false);
+        $(learn_codelist_checkbox).attr('disabled', true);
+        
+        // Populate select dropdowns in list of values.
+        populate_value_selects(data['codelist']);
+        
+        $('#mappingcol').show();
+        
+        console.log(data['codelist']);
+      } else {
+        // No codelist
+        console.log('No codelist');
+      }
+
     });
   });
 
@@ -360,6 +415,8 @@ function add_codelist(skos_codelist_select, codelist_uri, codelist_label){
 
 
 function populate_value_selects(codelist){
+  console.log(codelist)
+  
   // We populate each row with a new cell that contains the code list
   $('.valuerow').each(function(){
     var row = $(this);
