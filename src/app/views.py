@@ -156,7 +156,7 @@ def dimension():
                 PREFIX dct: <http://purl.org/dc/terms/>
                 PREFIX qb: <http://purl.org/linked-data/cube#>
 
-                SELECT ?type ?measured_concept ?concept ?notation ?label ?cl ?cl_label WHERE {{
+                SELECT ?concept ?notation ?label ?cl ?cl_label WHERE {{
                       <{URI}>   a               qb:CodedProperty .
                       BIND(qb:DimensionProperty AS ?type )  
                       <{URI}>   qb:codeList     ?cl .
