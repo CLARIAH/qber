@@ -200,12 +200,7 @@ function fill_selects(variable_id, variable_panel){
         // Populate select dropdowns in list of values.
         populate_value_selects(data['codelist']);
         
-        
-
-        
         $('#mappingcol').show();
-        
-        
         
         console.log(data['codelist']);
       } else {
@@ -217,7 +212,7 @@ function fill_selects(variable_id, variable_panel){
   
   
   $(skos_field).selectize({
-    maxItems: null,
+    maxItems: 1,
     valueField: 'uri',
     searchField: 'label',
     options: schemes,
@@ -239,6 +234,14 @@ function fill_selects(variable_id, variable_panel){
       }
     
     }
+  });
+  
+  $(skos_field).on('change', function(){
+    var codelist_uri = $(skos_field).val();
+    console.log(codelist_uri);
+    $.get('/codelist',data={'uri': codelist_uri}, function(data){
+      console.log(data);
+    });
   });
 
 

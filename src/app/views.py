@@ -192,7 +192,48 @@ def dimension():
     else :
         return 'error'
         
+
+@app.route('/codelist',methods=['GET'])
+def codelist():
+    """Gets the SKOS Concepts belonging to the SKOS Scheme or Collection identified by the URI parameter"""
+    uri = request.args.get('uri', False)
+    log.debug(uri)
     
+    if uri:
+        log.debug("Querying for SKOS concepts in Scheme or Collection <{}>".format(uri))
+
+        query = """
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+            PREFIX dct: <http://purl.org/dc/terms/>
+
+            SELECT DISTINCT ?concept ?label ?notation WHERE {{
+              {{ ?concept skos:inScheme <{URI}> . }}
+              UNION 
+              {{ <{URI}> skos:member+ ?concept . }}
+              ?concept skos:prefLabel ?label .
+              OPTIONAL {{ ?concept skos:notation ?notation . }}
+            }} 
+        """.format(URI=uri)
+        
+        try: 
+            sparql = SPARQLWrapper('http://lod.openlinksw.com/sparql')
+            sparql.setReturnFormat(JSON)
+            sparql.setQuery(query)
+    
+            codelist_results = sparql.query().convert()
+    
+            log.debug(codelist_results)
+    
+            if len(codelist_results) > 0:
+                codelist = sc.dictize(codelist_results)
+            
+            return jsoninfy(codelist)
+        except Exception as e:
+            log.error(e)
+            return jsonify({'response': 'error', 'message': str(e)})
+ 
 
 @app.route('/save',methods=['POST'])
 def save():
