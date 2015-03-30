@@ -15,6 +15,5 @@ python-magic==0.4.6
 pytz==2014.10
 rdflib==4.1.2
 requests==2.5.1
-savReaderWriter==3.3.0
 six==1.8.0
 wsgiref==0.1.2
