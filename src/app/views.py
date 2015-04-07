@@ -108,8 +108,17 @@ def dimension():
     uri = request.args.get('uri', False)
     
     if uri :
-        success, visited = sc.resolve(uri, depth=2)
-        print "Resolved ", visited
+        exists = sc.sparql("""
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        
+            ASK {{<{}> rdfs:label ?l .}}""".format(uri))
+        
+        if not "true" in exists:
+            success, visited = sc.resolve(uri, depth=2)
+            print "Resolved ", visited        
+        else :
+            success = True
+
         if success: 
             query = """
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
