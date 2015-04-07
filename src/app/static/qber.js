@@ -70,6 +70,7 @@ function initialize_menu(){
 
     
     $("#submit").on('click',function(e){
+      console.log('Submitting to CSDH');
       keys = $.localStorage.keys();
       
       data = {'variables': {}}
@@ -213,26 +214,25 @@ function fill_selects(variable_id, variable_panel){
     skos_codelist_select.setValue('');
     skos_codelist_select.enable();
     
-    $(learn_definition_checkbox).removeAttr('disabled');
     $(learn_codelist_checkbox).removeAttr('disabled');
+    $(learn_codelist_checkbox).attr('checked',true);
     
     if (dimension_uri == '') {
       console.log('Dimension uri empty');
       console.log(dimension_uri);
       dimension_type.enable();
       skos_codelist_select.enable();
+      $(learn_codelist_checkbox).attr('checked',false);
       return;
     } 
     
     $.get('/variable/resolve',data={'uri': dimension_uri}, function(data){
       console.log(data);
       // Set dimension select value to the type given by the dimension specification we pulled from the web
-      dimension_type.setValue(data['type']);
-      dimension_type.disable();
-      $(learn_definition_checkbox).attr('checked', false);
-      $(learn_definition_checkbox).attr('disabled',true);
-      
-      
+      if (data['type'] != ''){
+        dimension_type.setValue(data['type']);
+        dimension_type.disable();
+      }
       
       // We remove existing code cells from the rows
       $('.valuerow .codecell').each(function(){
@@ -249,7 +249,7 @@ function fill_selects(variable_id, variable_panel){
         // Make sure to check the appropriate checkboxes
         $(codelist_checkbox).attr('checked',true);
         $(codelist_checkbox).attr('disabled',true);
-        $(learn_codelist_checkbox).attr('checked', false);
+        $(learn_codelist_checkbox).attr('checked', true);
         $(learn_codelist_checkbox).attr('disabled',true);
         
         // Add the name of the codelist to the codelist_field
@@ -324,7 +324,7 @@ function fill_selects(variable_id, variable_panel){
       if (data['codelist']) {
         // Make sure to check the appropriate checkboxes
         $(codelist_checkbox).attr('checked',true);
-        $(learn_codelist_checkbox).attr('checked', false);
+        $(learn_codelist_checkbox).attr('checked', true);
         $(learn_codelist_checkbox).attr('disabled', true);
         
         // Populate select dropdowns in list of values.
