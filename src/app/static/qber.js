@@ -17,15 +17,18 @@ function escapeRegExp(str) {
 // Global variables
 var variables, metadata, examples, dimensions, schemes;
 
+
+// Once the document is loaded
 $( document ).ready(function() {
   console.log("Document loaded");
   
   
-  
+  // Hide the variable panel
   $('#variable-panel').hide();
   
+  // Click handler for the file opening dialog
   $('#open-dataset-modal').on('show', function(){
-    console.log('Now showing #open-dataset-modal');
+    // Start the file browser with the current directory as the starting path.
     browse('#browser','.');
   });
   
