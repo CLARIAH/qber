@@ -208,9 +208,14 @@ def codelist():
             }} 
         """.format(URI=uri)
         
+        lod_codelist = []
+        sdh_codelist = []
+        
         try: 
+            log.debug("Querying the LOD cloud cache")
             # First we go to the LOD cloud
             sparql = SPARQLWrapper('http://lod.openlinksw.com/sparql')
+            sparql.setTimeout(1)
             sparql.setReturnFormat(JSON)
             sparql.setQuery(query)
     
@@ -219,7 +224,15 @@ def codelist():
                 lod_codelist = sc.dictize(lod_codelist_results)
             else :
                 lod_codelist = []
-    
+                
+            log.debug(lod_codelist)
+        except Exception as e:
+            log.error(e)
+            log.error('Could not retrieve anything from the LOD cloud')
+            lod_codelist = []
+            
+        try:
+            log.debug("Querying the SDH")
             # Then we have a look locally
             sdh_codelist_results = sc.sparql(query) 
             if len(sdh_codelist_results) > 0:
@@ -227,14 +240,23 @@ def codelist():
             else :
                 sdh_codelist = []
             
-            log.debug(lod_codelist)
+            
             log.debug(sdh_codelist)
 
-            return jsonify({'codelist': lod_codelist + sdh_codelist })
+            
 
         except Exception as e:
             log.error(e)
+            log.error('Could not retrieve anything from the SDH')
+            
+            sdh_codelist = []
+        
+        if lod_codelist == [] and sdh_codelist == []:
             return jsonify({'response': 'error', 'message': str(e)})
+        else :
+            return jsonify({'codelist': lod_codelist + sdh_codelist })
+        
+        
  
 
 @app.route('/save',methods=['POST'])
