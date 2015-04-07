@@ -195,12 +195,14 @@ function fill_selects(variable_id, variable_panel){
   // If we import an external dimension with a code list, add a select button for every row in the value examples table.
   $(lod_variable_field).on('change', function(){
     var dimension_uri = $(lod_variable_field).val();
-    
+    console.log('Lod variable field changed, and set to '+ dimension_uri);
     console.log(this);
     var dimension_type = $('#'+$(this).attr('data-dimension-type'))[0].selectize;
     var skos_codelist_select = $('#'+$(this).attr('data-skos-codelist'))[0].selectize;
     
     dimension_type.enable();
+    dimension_type.setValue('');
+    skos_codelist_select.setValue('');
     skos_codelist_select.enable();
     
     $(learn_definition_checkbox).removeAttr('disabled');
