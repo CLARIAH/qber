@@ -39,7 +39,6 @@ $( document ).ready(function() {
 function load_dataset(file){
   console.log('Loading '+ file);
   
-  
   $.get('/metadata',data={'file':file}, function(data){
     console.log(data);
     variables = data['variables'];
@@ -130,16 +129,39 @@ function fill_selects(variable_id, variable_panel){
   
   $(save_button).on('click',function(){
     // Take the form data, and add it to the local storage.
-    var form = $(this).attr('form');
-    console.log(form);
-    var variable_id = $(this).attr('target');
+    // var form = $(this).attr('form');
+    // console.log(form);
+    // var variable_id = $(this).attr('target');
+    //
+    // console.log($(form));
+    // var data = $(form).toObject({getDisabled:true});
+    //
+    // $.localStorage.set(variable_id,data);
+    //
+    // console.log(data);
     
-    console.log($(form));
-    var data = $(form).toObject({getDisabled:true});
+    var data = {};
+    
+    $('.data').each(function(index, element){
+      var element_id = $(element).prop('name');
+      var value;
+      if ($(element).prop('type') == 'checkbox'){
+        console.log(element_id + ' is a checkbox');
+        
+        value = $(element).prop('checked');
+        
+      } else {
+        console.log(element_id + ' is not a checkbox');
+        
+        value = $(element).val();
+      }
+      
+      data[element_id] = value;
+      
+    });
     
     $.localStorage.set(variable_id,data);
     
-    console.log(data);
   });
 
   // The drop down menu for external dimensions.
