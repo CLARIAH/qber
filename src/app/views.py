@@ -291,7 +291,7 @@ def get_lsd_dimensions():
             dimensions = json.loads(dimensions_response.content)
         
             with open('metadata/dimensions.json','w') as f:
-                f.write(dimensions)
+                f.write(dimensions_response)
         
         except :
             log.error("Dimensions could not be loaded from service...")
