@@ -60,9 +60,10 @@ def metadata():
     short_metadata = {metadata.keys()[0]: metadata[metadata.keys()[0]]}
     
     # Get the LSD dimensions from the LSD service (or a locally cached copy)
-    dimensions = get_lsd_dimensions()
+    # And concatenate it with the dimensions in the CSDH 
+    dimensions = get_lsd_dimensions() + get_csdh_dimensions()
     # Get all known SKOS schemes and collections from the LOD cache service
-    schemes = get_schemes()
+    schemes = get_schemes() + get_csdh_schemes()
     
     # Prepare the data dictionary
     data = {
@@ -297,9 +298,7 @@ def browse():
 def get_lsd_dimensions():
     """Loads the list of Linked Statistical Data dimensions (variables) from the LSD portal"""
     # TODO: Create a local copy that gets updated periodically
-    
-    
-    
+      
     if os.path.exists('metadata/dimensions.json'):
         log.debug("Loading dimensions from file...")
         with open('metadata/dimensions.json','r') as f:
@@ -321,6 +320,72 @@ def get_lsd_dimensions():
             dimensions = []
         
     return dimensions
+    
+def get_csdh_dimensions():
+    """Loads the list of Linked Statistical Data dimensions (variables) from the CSDH"""
+    
+    query = """
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX dct: <http://purl.org/dc/terms/>
+        PREFIX qb: <http://purl.org/linked-data/cube#>
+
+        SELECT DISTINCT ?uri ?label ("CSDH" as ?refs) WHERE {
+          { 
+              ?uri a qb:DimensionProperty . 
+              ?uri rdfs:label ?label .
+          }
+          UNION 
+          {
+              ?uri a qb:MeasureProperty . 
+              ?uri rdfs:label ?label .
+          }
+          UNION 
+          { 
+              ?uri a qb:AttributeProperty . 
+              ?uri rdfs:label ?label .
+          } 
+        }
+    """
+    sdh_dimensions_results = sc.sparql(query)
+    if len(sdh_dimensions_results) > 0:
+        sdh_dimensions = sc.dictize(sdh_dimensions_results)
+    else :
+        sdh_dimensions = []
+        
+    return sdh_dimensions
+
+def get_csdh_schemes():
+    """Loads SKOS Schemes (code lists) from the CSDH"""   
+    log.debug("Querying CSDH Cloud")
+
+    query = """
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX dct: <http://purl.org/dc/terms/>
+
+        SELECT DISTINCT ?uri ?label WHERE {
+          { 
+              ?c skos:inScheme ?uri . 
+              ?uri rdfs:label ?label . 
+          }
+          UNION
+          {   
+              ?uri skos:member ?c .
+              ?uri rdfs:label ?label . 
+          }
+          
+        } 
+    """ 
+    
+    schemes_results = sc.sparql(query)
+    schemes = sc.dictize(schemes_results)
+    
+    log.debug(schemes)
+    
+    return schemes
 
 def get_schemes():
     """Loads SKOS Schemes (code lists) either from the LOD Cache, or from a cached copy"""
