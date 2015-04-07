@@ -126,24 +126,17 @@ function fill_selects(variable_id, variable_panel){
 
   variable_panel.children(".list-group-item-text").show();
   
+  
+  
+  // Save the entered data to local storage
   $(save_button).on('click',function(){
-    // Take the form data, and add it to the local storage.
-    // var form = $(this).attr('form');
-    // console.log(form);
-    // var variable_id = $(this).attr('target');
-    //
-    // console.log($(form));
-    // var data = $(form).toObject({getDisabled:true});
-    //
-    // $.localStorage.set(variable_id,data);
-    //
-    // console.log(data);
-    
     var data = {};
     
+    // For each data element, get its value and store it
     $('.data').each(function(index, element){
       var element_id = $(element).prop('name');
       var value;
+      
       if ($(element).prop('type') == 'checkbox'){
         console.log(element_id + ' is a checkbox');
         
@@ -159,18 +152,22 @@ function fill_selects(variable_id, variable_panel){
       
     });
     
-    mappings = []
     
+    // Get values
+    data['values'] = examples[variable_id];
+    
+    // For each mapping, store the mapping
+    mappings = []
     $('.mapping.selectized').each(function(index, element){
       var code_id = $(element).prop('name');
       var value = $(element).val();
       
       mappings.push({'id': code_id, 'value': value});
-      
-    })
+    });
     
     data['mappings'] = mappings;
     
+    // Set the data in local storage
     $.localStorage.set(variable_id,data);
     console.log(data);
   });
