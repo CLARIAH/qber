@@ -160,8 +160,20 @@ function fill_selects(variable_id, variable_panel){
       
     });
     
-    $.localStorage.set(variable_id,data);
+    mappings = []
     
+    $('.mapping.selectized').each(function(index, element){
+      var code_id = $(element).prop('name');
+      var value = $(element).val();
+      
+      mappings.push({'id': code_id, 'value': value});
+      
+    })
+    
+    data['mappings'] = mappings;
+    
+    $.localStorage.set(variable_id,data);
+    console.log(data);
   });
 
   // The drop down menu for external dimensions.
@@ -432,6 +444,8 @@ function fill_selects(variable_id, variable_panel){
       }
     });
     
+
+    
     $(".regex").keyup();
   }
   
@@ -454,10 +468,16 @@ function populate_value_selects(codelist){
   // We populate each row with a new cell that contains the code list
   $('.valuerow').each(function(){
     var row = $(this);
+    
+    // Get the value of the code in this row
+    var code_id = row.attr('value');
+    
     var td = $('<td></td>');
     td.addClass('codecell');
     td.attr('style','min-width: 30%;');
     var select = $('<select></select>');
+    select.prop('name',code_id);
+    select.addClass('mapping');
     td.append(select);
     
     select.selectize({
