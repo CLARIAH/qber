@@ -118,7 +118,6 @@ function fill_selects(variable_id, variable_panel){
   var lod_variable_field = variable_panel.attr('lod_variable_field');
   var codelist_field = variable_panel.attr('codelist_field');
   var codelist_checkbox = variable_panel.attr('codelist_checkbox');
-  var learn_definition_checkbox = variable_panel.attr('learn_definition_checkbox');
   var learn_codelist_checkbox = variable_panel.attr('learn_codelist_checkbox');
   
   
