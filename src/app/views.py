@@ -21,11 +21,6 @@ log = app.logger
 log.setLevel(logging.DEBUG)
 
 
-dataset = config.dataset
-dataset_file = config.dataset_file
-
-
-
 @app.route('/')
 def index():
     return render_template('base.html')
@@ -65,16 +60,46 @@ def metadata():
     # Get all known SKOS schemes and collections from the LOD cache service
     schemes = get_schemes() + get_csdh_schemes()
     
+    
+    cache = read_cache(dataset_path)
+    
+    (head, dataset_local_name) = os.path.split(dataset_file)
+    (dataset_name, extension) = os.path.splitext(dataset_local_name)
+    
     # Prepare the data dictionary
     data = {
+        'file': dataset_name,
+        'path': dataset_path,
         'variables': variables,
         'metadata': metadata,
         'examples': examples,
         'dimensions': dimensions,
-        'schemes': schemes
+        'schemes': schemes,
+        'cache': cache
     }
     
+    
     return jsonify(data)
+    
+    
+def read_cache(dataset_path):
+    
+    dataset_cache_filename = "{}.cache.json".format(dataset_path)
+    
+    if os.path.exists(dataset_cache_filename):    
+        with open(dataset_cache_filename,'r') as dataset_cache_file:
+            dataset_cache = json.load(dataset_cache_file)
+    
+        return dataset_cache 
+    else :
+        return {}
+    
+def write_cache(dataset_path, data):
+    dataset_cache_filename = "{}.cache.json".format(dataset_path)
+    
+    with open(dataset_cache_filename,'w') as dataset_cache_file:
+        json.dump(data, dataset_cache_file)
+
     
 @app.route('/menu',methods=['POST'])
 def menu():
@@ -275,11 +300,15 @@ def save():
     
     req_json = request.get_json(force=True)
     variables = req_json['variables']
+    dataset = req_json['file']
+    dataset_path = req_json['path']
     
     graph = datacube.converter.data_structure_definition(dataset, variables)
     
     query = sc.make_update(graph)
     result = sc.sparql_update(query)
+    
+    write_cache(dataset_path, variables)
     
     return result
     

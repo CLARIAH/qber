@@ -15,7 +15,7 @@ function escapeRegExp(str) {
 
 
 // Global variables
-var variables, metadata, examples, dimensions, schemes;
+var variables, metadata, examples, dimensions, schemes, variable;
 
 
 // Once the document is loaded
@@ -46,14 +46,37 @@ function load_dataset(file){
     examples = data['examples'];
     dimensions = data['dimensions'];
     schemes = data['schemes'];
-
+    cache = data['cache'];
+    
+    for (variable in cache) {
+      $.localStorage.set(variable,cache[variable]);
+    };
+    
+    $.localStorage.set('file', data['file']);
+    $.localStorage.set('path', data['path']);
+    
+    $('#dataset-name').text(data['file']);
+    
+    var close_button = $('<div class="btn btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></div>');
+    $('#dataset-name').append(close_button);
+    
+    close_button.on('click',function(){
+      $('#dataset-name').empty();
+      $('#menu').empty();
+      $('#variable-panel').empty();
+      $('#load-menu').show();
+      
+      $.localStorage.removeAll();
+      
+    });
+    
+    $('#load-menu').hide();
     initialize_menu();
   });
 }
 
 
 function initialize_menu(){
-  
   $.post('/menu',data=JSON.stringify({'items': metadata}), function(data){
     $('#menu').html(data);
     
@@ -76,8 +99,15 @@ function initialize_menu(){
       data = {'variables': {}}
       
       for (n in keys) {
-        data['variables'][keys[n]] = $.localStorage.get(keys[n]);
+        if (keys[n] != 'file' && keys[n] != 'path') {
+          data['variables'][keys[n]] = $.localStorage.get(keys[n]);
+        }
       };
+      
+      data['file'] = $.localStorage.get('file');
+      data['path'] = $.localStorage.get('path');
+      
+      console.log(data);
       
       $.post('/save',data=JSON.stringify(data),function(data){
         console.log(data);
@@ -96,7 +126,7 @@ function initialize_menu(){
 function initialize_variable_panel(variable_id){
   var payload = JSON.stringify({'id': variable_id, 'description': metadata[variable_id], 'examples': examples[variable_id]})
   
-  console.log(payload);
+  variable = variable_id;
   
   $.post('/variable/ui',data=payload, function(data){
 
@@ -461,6 +491,15 @@ function add_codelist(skos_codelist_select, codelist_uri, codelist_label){
 function populate_value_selects(codelist){
   console.log(codelist)
   
+  // Use the global variable 'variable' to retrieve the mappings
+  var variable_data = $.localStorage.get(variable);
+  
+  var mappings = [];
+  
+  if (variable_data != null){
+    mappings = variable_data['mappings']
+  }
+  
   // We populate each row with a new cell that contains the code list
   $('.valuerow').each(function(){
     var row = $(this);
@@ -473,6 +512,9 @@ function populate_value_selects(codelist){
     td.attr('style','min-width: 30%;');
     var select = $('<select></select>');
     select.prop('name',code_id);
+    
+
+    
     select.addClass('mapping');
     td.append(select);
     
@@ -484,6 +526,16 @@ function populate_value_selects(codelist){
       options: codelist,
       create: false
     });
+    
+    for (n in mappings) {
+      var mapping = mappings[n];
+      console.log('Checking mapping');
+      console.log(mapping);
+      if (code_id == mapping['id']) {
+        console.log('Setting mapping for  '+code_id+' to '+mapping['value']);
+        select[0].selectize.setValue(mapping['value']);
+      }
+    }
     
     row.append(td);
   });

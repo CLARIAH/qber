@@ -29,10 +29,6 @@ class Adapter(object):
             return self.metadata
         else :
             return None
-            
-    def get_examples(self):
-        ### Should be implemented by reader-specific subclasses.
-        return {}
         
     def load_metadata(self):
         metadata = OrderedDict()
@@ -74,6 +70,29 @@ class Adapter(object):
         else :
             print "No header or no metadata present"
             return False
+            
+    def get_examples(self):
+        """Return all unique values, and converts it to samples for each column."""
+        
+        # Get all unique values for each column
+        stats = {}
+        for col in self.data.columns:
+            istats = []
+            
+            counts = self.data[col].value_counts()
+
+            for i in counts.index:
+                stat = {}
+                stat['id'] = i
+                stat['count'] = counts[i]
+                istats.append(stat)
+            
+            
+            stats[col] = istats
+            
+            
+    
+        return stats
 
 # TODO: Temporarily Disabled
 # class SavAdapter(Adapter):
@@ -142,7 +161,6 @@ class CsvAdapter(Adapter):
         
         self.data = pd.DataFrame.from_csv(self.filename)
         
-
         if self.has_header :
             self.header = list(self.data.columns)
         elif self.metadata :
@@ -157,28 +175,7 @@ class CsvAdapter(Adapter):
         
         
 
-    def get_examples(self):
-        """Return all unique values, and converts it to samples for each column."""
-        
-        # Get all unique values for each column
-        stats = {}
-        for col in self.data.columns:
-            istats = []
-            
-            counts = self.data[col].value_counts()
 
-            for i in counts.index:
-                stat = {}
-                stat['id'] = i
-                stat['count'] = counts[i]
-                istats.append(stat)
-            
-            
-            stats[col] = istats
-            
-            
-    
-        return stats
 
 
 mappings = {

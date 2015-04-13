@@ -11,16 +11,20 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>CLARIAH QBer</h1>
+            <h1>CLARIAH QBer 
+              <small id='dataset-name'></small>
+              <small id="load-menu">
+                <div id="load" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#open-dataset-modal">
+                  <span class="glyphicon glyphicon-folder-open" aria-hidden="True"></span>&nbsp;Load
+                </div>
+              </small>
+            </h1>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12" id='menu'>
-          <div class="btn-toolbar">
-            <div class="btn-group" role="group">
-              <button id="load" type="button" class="btn btn-primary" data-toggle="modal" data-target="#open-dataset-modal">Load</button>
-            </div>
-          </div>
+
         </div>
     </div>
     <div class="row">
@@ -43,6 +47,7 @@
 <script src="{{url_for('.static', filename='form2js.js')}}"></script>
 <script src="{{url_for('.static', filename='js2form.js')}}"></script>
 <script src="{{url_for('.static', filename='jquery.toObject.js')}}"></script>
+<script src="{{url_for('.static', filename='levenshtein.js')}}"></script>
 <script src="{{url_for('.static', filename='qber.js')}}"></script>
 
 {% endblock %}
@@ -54,7 +59,7 @@
       href="{{url_for('.static', filename='bootstrap.min.css')}}">
 <link rel="stylesheet" href="{{url_for('.static', filename='selectize.css')}}" />
 <link rel="stylesheet" href="{{url_for('.static', filename='selectize.bootstrap3.css')}}" />
-<link rel="stylesheet" href="{{url_for('.static', filename='qber.css')}}" />
+<!-- <link rel="stylesheet" href="{{url_for('.static', filename='qber.css')}}" /> -->
 
 
 
