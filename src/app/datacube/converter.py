@@ -44,10 +44,10 @@ def data_structure_definition(dataset, variables):
         ### DIMENSION PROPERTIES
         g.add((variable_uri, RDFS.label, Literal(variable_id)))
         
-        if metadata['description'] != "":
+        if 'description' in metadata and metadata['description'] != "":
             g.add((variable_uri, RDFS.comment, Literal(metadata['description'])))
 
-        if metadata['dimension_type'] != "" :
+        if 'dimension_type' in metadata and metadata['dimension_type'] != "" :
             dimension_type_uri = URIRef(metadata['dimension_type'])
             
             if dimension_type_uri == QB['DimensionProperty']:
@@ -59,7 +59,7 @@ def data_structure_definition(dataset, variables):
             elif dimension_type_uri == QB['AttributeProperty']:
                 g.add((variable_uri, RDF.type, dimension_type_uri))
                 g.add((component_uri, QB['attribute'], variable_uri))
-        elif metadata['lod_variable_field'] != "" or metadata['codelist_checkbox'] == True or metadata['learn_codelist_checkbox'] == True:
+        elif ('lod_variable_field' in metadata and metadata['lod_variable_field'] != "") or ('codelist_checkbox' in metadata and metadata['codelist_checkbox'] == True) or ('learn_codelist_checkbox' in metadata and metadata['learn_codelist_checkbox'] == True):
             # It must be a dimension....
             g.add((variable_uri, RDF.type, QB['DimensionProperty']))
             g.add((component_uri, QB['dimension'], variable_uri))
@@ -71,12 +71,12 @@ def data_structure_definition(dataset, variables):
 
 
         # If we have a variable from the LOD cloud
-        if metadata['lod_variable_field'] != "":
+        if 'lod_variable_field' in metadata and metadata['lod_variable_field'] != "":
             g.add((variable_uri, RDFS.subPropertyOf, URIRef(metadata['lod_variable_field'])))
         
         
         # If we have a codelist for this variable
-        if metadata['codelist_checkbox'] == True or metadata['learn_codelist_checkbox'] == True:
+        if ('codelist_checkbox' in metadata and metadata['codelist_checkbox'] == True) or ('learn_codelist_checkbox' in metadata and metadata['learn_codelist_checkbox'] == True):
             # The variable should have its own codelist (a collection, since we don't know the hierarchy)
             codelist_uri = safe_url(BASE,'codelist/'+variable_id)
             g.add((codelist_uri, RDF.type, SKOS['Collection']))
@@ -102,7 +102,7 @@ def data_structure_definition(dataset, variables):
                 g.add((codelist_uri,SKOS['member'], value_uri))
 
             # If we have a mapping specified, map to the codelist we selected
-            if metadata['codelist_field'] != "":
+            if 'codelist_field' in metadata and metadata['codelist_field'] != "":
                 g.add((codelist_uri, PROV['wasDerivedFrom'], URIRef(metadata['codelist_field'])))
             
                 for mapping in metadata['mappings']:

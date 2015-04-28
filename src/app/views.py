@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, g, request, jsonify, make_response, redirect, url_for, abort
+from flask.ext.socketio import emit
 from werkzeug.http import parse_accept_header
 import logging
 import requests
@@ -11,8 +12,9 @@ from rdflib import Graph
 import config
 import util.sparql_client as sc
 import util.file_client as fc
+import util.inspector
 
-from app import app
+from app import app, socketio
 
 import loader.reader
 import datacube.converter
@@ -24,6 +26,28 @@ log.setLevel(logging.DEBUG)
 @app.route('/')
 def index():
     return render_template('base.html')
+    
+@app.route('/inspector')
+def inspector():
+    return render_template('inspector.html')
+    
+@app.route('/inspect')
+def inspect():
+    data = util.inspector.update()
+    return jsonify(data)
+    
+@socketio.on('message', namespace='/inspector')
+def message(json):
+    log.debug('SocketIO message:\n'+ str(json))
+    
+@socketio.on('connect', namespace='/inspector')
+def connect():
+    log.debug('SocketIO connected')
+    emit('response', {'data': 'Connected'})
+
+@socketio.on('disconnect', namespace='/inspector')
+def disconnect():
+    log.debug('SocketIO disconnected')
 
 @app.route('/metadata')
 def metadata():
@@ -304,6 +328,12 @@ def save():
     dataset_path = req_json['path']
     
     graph = datacube.converter.data_structure_definition(dataset, variables)
+    
+    data = util.inspector.update(graph)
+    socketio.emit('update', {'data': data}, namespace='/inspector')
+    
+    with open('latest_update.ttl','w') as f:
+        graph.serialize(f, format='turtle')
     
     query = sc.make_update(graph)
     result = sc.sparql_update(query)
