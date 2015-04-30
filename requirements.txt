@@ -1,6 +1,5 @@
 Flask==0.10.1
 Flask-Bootstrap==3.3.0.1
-Flask-OpenID==1.2.4
 Flask-SocketIO==0.6.0
 Jinja2==2.7.3
 MarkupSafe==0.23
@@ -20,11 +19,8 @@ pandas==0.15.2
 pyparsing==2.0.3
 python-dateutil==2.4.0
 python-magic==0.4.6
-python-openid==2.2.5
 pytz==2014.10
 rdflib==4.1.2
 requests==2.5.1
--e git+https://bitbucket.org/fomcl/savreaderwriter.git@362fa1cde40cc4d5e27c0a8d92891d869b578b06#egg=savReaderWriter-master
 six==1.8.0
 wsgiref==0.1.2
-xlrd==0.9.3
