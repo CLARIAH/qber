@@ -22,14 +22,14 @@ var variables, metadata, examples, dimensions, schemes, variable;
 $( document ).ready(function() {
   console.log("Document loaded");
   // Hide the load button
-  
+
   $('#load-menu').hide();
-  
+
   // Hide the variable panel
   $('#variable-panel').hide();
-  
-  
-  
+
+
+
   // Click handler for the file opening dialog
   $('#open-dataset-modal').on('show', function(){
     // Start the file browser with the current directory as the starting path.
@@ -38,26 +38,30 @@ $( document ).ready(function() {
 });
 
 
+
+
+// Store the profile in a global variable
+var profile;
 function on_sign_in(googleUser) {
-  var profile = googleUser.getBasicProfile();
+  profile = googleUser.getBasicProfile();
   console.log('ID: ' + profile.getId());
   console.log('Name: ' + profile.getName());
   console.log('Image URL: ' + profile.getImageUrl());
   console.log('Email: ' + profile.getEmail());
-  
+
   var img = $('<img></img>');
   img.attr('src',profile.getImageUrl());
   img.attr('height','20px');
   $('#profile-image').append(img);
   $('#profile-name').html(profile.getName());
-  
+
   $('#load-menu').show();
 }
 
 
 function load_dataset(file){
   console.log('Loading '+ file);
-  
+
   $.get('/metadata',data={'file':file}, function(data){
     console.log(data);
     variables = data['variables'];
@@ -66,29 +70,29 @@ function load_dataset(file){
     dimensions = data['dimensions'];
     schemes = data['schemes'];
     cache = data['cache'];
-    
+
     for (variable in cache) {
       $.localStorage.set(variable,cache[variable]);
     };
-    
+
     $.localStorage.set('file', data['file']);
     $.localStorage.set('path', data['path']);
-    
+
     $('#dataset-name').text(data['file']);
-    
+
     var close_button = $('<div class="btn btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></div>');
     $('#dataset-name').append(close_button);
-    
+
     close_button.on('click',function(){
       $('#dataset-name').empty();
       $('#menu').empty();
       $('#variable-panel').empty();
       $('#load-menu').show();
-      
+
       $.localStorage.removeAll();
-      
+
     });
-    
+
     $('#load-menu').hide();
     initialize_menu();
   });
@@ -98,69 +102,76 @@ function load_dataset(file){
 function initialize_menu(){
   $.post('/menu',data=JSON.stringify({'items': metadata}), function(data){
     $('#menu').html(data);
-    
+
     $('#variable-menu').selectize({
         create: true,
         sortField: 'text'
     });
-    
+
     $("#variable-menu").on('change',function(){
       var variable_id = $(this).val();
 
       initialize_variable_panel(variable_id);
     });
 
-    
+
     $("#submit").on('click',function(e){
       console.log('Submitting to CSDH');
       keys = $.localStorage.keys();
-      
+
       data = {'variables': {}}
-      
+
       for (n in keys) {
         if (keys[n] != 'file' && keys[n] != 'path') {
           data['variables'][keys[n]] = $.localStorage.get(keys[n]);
         }
       };
-      
+
       data['file'] = $.localStorage.get('file');
       data['path'] = $.localStorage.get('path');
-      
+
+      data['profile'] = {}
+
+      data['profile']['id'] = profile.getId();
+      data['profile']['name'] = profile.getName();
+      data['profile']['image'] = profile.getImageUrl();
+      data['profile']['email'] = profile.getEmail();
+
       console.log(data);
-      
+
       $.post('/save',data=JSON.stringify(data),function(data){
         console.log(data);
       });
     });
-    
+
     $("#reset").on('click',function(e){
       alert("Emptied the local storage... you'll need to start all over again.")
       $.localStorage.removeAll();
     });
-    
+
   });
 }
 
 
 function initialize_variable_panel(variable_id){
   var payload = JSON.stringify({'id': variable_id, 'description': metadata[variable_id], 'examples': examples[variable_id]})
-  
+
   variable = variable_id;
-  
+
   $.post('/variable/ui',data=payload, function(data){
 
     $('#variable-panel').hide();
     $('#variable-panel').html(data);
-    
+
     var variable_panel = $('#var_'+variable_id);
-    
+
     fill_selects(variable_id, variable_panel);
-    
+
     $('#variable-panel').show();
-    
+
   });
-  
-  
+
+
 };
 
 
@@ -169,54 +180,54 @@ function fill_selects(variable_id, variable_panel){
   var codelist_field = variable_panel.attr('codelist_field');
   var codelist_checkbox = variable_panel.attr('codelist_checkbox');
   var learn_codelist_checkbox = variable_panel.attr('learn_codelist_checkbox');
-  
-  
+
+
   var save_button = variable_panel.attr('save_button');
   var form = variable_panel.attr('form');
 
   variable_panel.children(".list-group-item-text").show();
-  
-  
-  
+
+
+
   // Save the entered data to local storage
   $(save_button).on('click',function(){
     var data = {};
-    
+
     // For each data element, get its value and store it
     $('.data').each(function(index, element){
       var element_id = $(element).prop('name');
       var value;
-      
+
       if ($(element).prop('type') == 'checkbox'){
         console.log(element_id + ' is a checkbox');
-        
+
         value = $(element).prop('checked');
-        
+
       } else {
         console.log(element_id + ' is not a checkbox');
-        
+
         value = $(element).val();
       }
-      
+
       data[element_id] = value;
-      
+
     });
-    
-    
+
+
     // Get values
     data['values'] = examples[variable_id];
-    
+
     // For each mapping, store the mapping
     mappings = []
     $('.mapping.selectized').each(function(index, element){
       var code_id = $(element).prop('name');
       var value = $(element).val();
-      
+
       mappings.push({'id': code_id, 'value': value});
     });
-    
+
     data['mappings'] = mappings;
-    
+
     // Set the data in local storage
     $.localStorage.set(variable_id,data);
     console.log(data);
@@ -244,12 +255,12 @@ function fill_selects(variable_id, variable_panel){
         'label': input,
         'uri': 'http://sdh.clariah.org/vocab/dimension/'+input
       }
-    
+
     }
   });
-  
 
-  
+
+
   // If we import an external dimension with a code list, add a select button for every row in the value examples table.
   $(lod_variable_field).on('change', function(){
     var dimension_uri = $(lod_variable_field).val();
@@ -257,15 +268,15 @@ function fill_selects(variable_id, variable_panel){
     console.log(this);
     var dimension_type = $('#'+$(this).attr('data-dimension-type'))[0].selectize;
     var skos_codelist_select = $('#'+$(this).attr('data-skos-codelist'))[0].selectize;
-    
+
     dimension_type.enable();
     dimension_type.setValue('');
     skos_codelist_select.setValue('');
     skos_codelist_select.enable();
-    
+
     $(learn_codelist_checkbox).removeAttr('disabled');
     $(learn_codelist_checkbox).attr('checked',true);
-    
+
     if (dimension_uri == '') {
       console.log('Dimension uri empty');
       console.log(dimension_uri);
@@ -273,8 +284,8 @@ function fill_selects(variable_id, variable_panel){
       skos_codelist_select.enable();
       $(learn_codelist_checkbox).attr('checked',false);
       return;
-    } 
-    
+    }
+
     $.get('/variable/resolve',data={'uri': dimension_uri}, function(data){
       console.log(data);
       // Set dimension select value to the type given by the dimension specification we pulled from the web
@@ -282,7 +293,7 @@ function fill_selects(variable_id, variable_panel){
         dimension_type.setValue(data['type']);
         dimension_type.disable();
       }
-      
+
       // We remove existing code cells from the rows
       $('.valuerow .codecell').each(function(){
         $(this).remove();
@@ -294,45 +305,45 @@ function fill_selects(variable_id, variable_panel){
       // we need to use that information to populate dropdowns in the the values pane, to allow for mappings.
       if (data['codelist']) {
         // Codelist
-        
+
         // Make sure to check the appropriate checkboxes
         $(codelist_checkbox).attr('checked',true);
         $(codelist_checkbox).attr('disabled',true);
         $(learn_codelist_checkbox).attr('checked', true);
         $(learn_codelist_checkbox).attr('disabled',true);
-        
+
         // Add the name of the codelist to the codelist_field
         add_codelist(skos_codelist_select, data['codelist'][0]['cl'], data['codelist'][0]['cl_label']);
-        
+
         // Populate select dropdowns in list of values.
         // NOTE: No need as this is now done by the change handler on the codelist_field element
         // populate_value_selects(data['codelist']);
-        
+
         // $('#mappingcol').show();
-        
+
         console.log(data['codelist']);
       } else {
         // No codelist
         console.log('No codelist');
-        
+
         $(codelist_checkbox).attr('checked',false);
         $(codelist_checkbox).removeAttr('disabled');
         skos_codelist_select.setValue('');
-        
+
       }
     });
   });
-  
+
   $(codelist_checkbox).on('change', function(){
     // We remove existing code cells from the rows
     $('.valuerow .codecell').each(function(){
       $(this).remove();
     });
-    
+
     // We set the codelist_field to null
     $(codelist_field)[0].selectize.setValue('');
   });
-  
+
   $(codelist_field).selectize({
     maxItems: 1,
     valueField: 'uri',
@@ -354,20 +365,20 @@ function fill_selects(variable_id, variable_panel){
         'label': input,
         'uri': 'http://sdh.clariah.org/vocab/scheme/'+input
       }
-    
+
     }
   });
-  
+
   $(codelist_field).on('change', function(){
     var codelist_uri = $(codelist_field).val();
     console.log('#codelist_field changed, selected value: ' + codelist_uri);
-        
+
     $.get('/codelist/concepts',data={'uri': codelist_uri}, function(data){
       // We remove existing code cells from the rows
       $('.valuerow .codecell').each(function(){
         $(this).remove();
       });
-      
+
       // If the SKOS vocabulary actually specifies a codelist
       // we need to use that information to populate dropdowns in the the values pane, to allow for mappings.
       if (data['codelist']) {
@@ -375,12 +386,12 @@ function fill_selects(variable_id, variable_panel){
         $(codelist_checkbox).attr('checked',true);
         $(learn_codelist_checkbox).attr('checked', true);
         $(learn_codelist_checkbox).attr('disabled', true);
-        
+
         // Populate select dropdowns in list of values.
         populate_value_selects(data['codelist']);
-        
+
         $('#mappingcol').show();
-        
+
         console.log(data['codelist']);
       } else {
         // No codelist
@@ -393,23 +404,23 @@ function fill_selects(variable_id, variable_panel){
 
   $(".regex").on('keyup', function(){
     var example_input = $($(this).attr('example'));
-    
+
     example_input.on('keyup',function(){
       $(".regex").keyup();
     });
-    
+
     var example = example_input.val();
     var matches_div_id = $(this).attr('matches');
-    
+
     try {
       var regex = XRegExp($(this).val(),'gi');
-      
+
       parts = XRegExp.exec(example, regex)
       console.log(parts)
       $(matches_div_id).empty();
-      
-      if (parts != null ){ 
-        var re = /\d+/; 
+
+      if (parts != null ){
+        var re = /\d+/;
         var match = $('<table>');
         match.addClass('table');
         match.addClass('table-striped');
@@ -426,9 +437,9 @@ function fill_selects(variable_id, variable_panel){
     } catch (err) {
       $(matches_div_id).text("Invalid regular expression...");
     }
-    
-    
-    
+
+
+
   });
 
   $(".dimension-type-select").selectize({
@@ -463,20 +474,20 @@ function fill_selects(variable_id, variable_panel){
       }
     },
     create: false
-  
+
   });
-  
+
   var data = $.localStorage.get(variable_id);
-  
+
   if (data) {
     js2form($('form'), data);
-    
+
     $('.data').each(function(){
-      var field = $(this).attr('name'); 
-    
+      var field = $(this).attr('name');
+
       if (field in data){
         var value = data[field];
-      
+
         if($(this).hasClass('selectized')){
           $(this)[0].selectize.setValue(value);
         } else {
@@ -488,12 +499,12 @@ function fill_selects(variable_id, variable_panel){
         }
       }
     });
-    
 
-    
+
+
     $(".regex").keyup();
   }
-  
+
 }
 
 
@@ -501,7 +512,7 @@ function fill_selects(variable_id, variable_panel){
 function add_codelist(skos_codelist_select, codelist_uri, codelist_label){
   // Disable the selection of an external code list, as this is already provided by the dimension specification
   skos_codelist_select.disable();
-  
+
   skos_codelist_select.addOption({'uri': codelist_uri, 'label': codelist_label });
   skos_codelist_select.addItem(codelist_uri);
 }
@@ -509,34 +520,34 @@ function add_codelist(skos_codelist_select, codelist_uri, codelist_label){
 
 function populate_value_selects(codelist){
   console.log(codelist)
-  
+
   // Use the global variable 'variable' to retrieve the mappings
   var variable_data = $.localStorage.get(variable);
-  
+
   var mappings = [];
-  
+
   if (variable_data != null){
     mappings = variable_data['mappings']
   }
-  
+
   // We populate each row with a new cell that contains the code list
   $('.valuerow').each(function(){
     var row = $(this);
-    
+
     // Get the value of the code in this row
     var code_id = row.attr('value');
-    
+
     var td = $('<td></td>');
     td.addClass('codecell');
     td.attr('style','min-width: 30%;');
     var select = $('<select></select>');
     select.prop('name',code_id);
-    
 
-    
+
+
     select.addClass('mapping');
     td.append(select);
-    
+
     select.selectize({
       maxItems: 1,
       valueField: 'concept',
@@ -545,7 +556,7 @@ function populate_value_selects(codelist){
       options: codelist,
       create: false
     });
-    
+
     for (n in mappings) {
       var mapping = mappings[n];
       console.log('Checking mapping');
@@ -555,7 +566,7 @@ function populate_value_selects(codelist){
         select[0].selectize.setValue(mapping['value']);
       }
     }
-    
+
     row.append(td);
   });
 }
@@ -627,7 +638,7 @@ function browse(browsepane, path) {
                 badge.append(" (" + value.mimetype + ")");
                 badge.toggleClass('badge');
                 a.append(badge);
-                
+
                 a.on('click', function(e) {
                   $('#open-dataset-modal').toggle();
                   load_dataset(value.path);
@@ -642,5 +653,3 @@ function browse(browsepane, path) {
         $(browsepane).append(list);
     });
 }
-
-
