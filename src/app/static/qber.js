@@ -21,20 +21,39 @@ var variables, metadata, examples, dimensions, schemes, variable;
 // Once the document is loaded
 $( document ).ready(function() {
   console.log("Document loaded");
+  // Hide the load button
   
+  $('#load-menu').hide();
   
   // Hide the variable panel
   $('#variable-panel').hide();
+  
+  
   
   // Click handler for the file opening dialog
   $('#open-dataset-modal').on('show', function(){
     // Start the file browser with the current directory as the starting path.
     browse('#browser','.');
   });
-  
-
-  
 });
+
+
+function on_sign_in(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId());
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail());
+  
+  var img = $('<img></img>');
+  img.attr('src',profile.getImageUrl());
+  img.attr('height','20px');
+  $('#profile-image').append(img);
+  $('#profile-name').html(profile.getName());
+  
+  $('#load-menu').show();
+}
+
 
 function load_dataset(file){
   console.log('Loading '+ file);
