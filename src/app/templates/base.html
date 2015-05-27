@@ -1,4 +1,10 @@
 {% extends "bootstrap/base.html" %}
+
+{% block metas %}
+<meta name="google-signin-client_id" content="693352032871-11385rcadjcf688bojnp2hr998g0llpm.apps.googleusercontent.com">
+
+{% endblock %}
+
 {% block title %}CLARIAH QBer{% endblock %}
 
 {% block navbar %}
@@ -24,8 +30,12 @@
 
     <div class="row">
         <div class="col-md-12" id='menu'>
-
+          <div class="g-signin2" data-onsuccess="onSignIn"></div>
         </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+      </div>
     </div>
     <div class="row">
         <div class="col-md-12" id='variable-panel'>
@@ -41,6 +51,7 @@
 
 {{super()}}
 
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 <script src="{{url_for('.static', filename='selectize.js')}}"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
 <script src="{{url_for('.static', filename='jquery.storageapi.min.js')}}"></script>
@@ -49,6 +60,16 @@
 <script src="{{url_for('.static', filename='jquery.toObject.js')}}"></script>
 <script src="{{url_for('.static', filename='levenshtein.js')}}"></script>
 <script src="{{url_for('.static', filename='qber.js')}}"></script>
+
+<script language="javascript">
+function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId());
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail());
+}
+</script>
 
 {% endblock %}
 
