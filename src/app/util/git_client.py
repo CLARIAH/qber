@@ -23,7 +23,7 @@ def add_file(absolute_path, author, email):
     git = get_repository()
 
     # Get the relative path
-    path = os.path.relpath(absolute_path,DATA_PATH)
+    path = os.path.relpath(absolute_path, DATA_PATH)
 
     try:
         print "Adding {}".format(path)
@@ -32,7 +32,10 @@ def add_file(absolute_path, author, email):
     except Exception as e:
         print "Nothing added"
 
-    sha_hash = git.log('--pretty=format:\'%H\'','-n',1,path)
+    print "Calling git log to get sha hash for file {}".format(path)
+    sha_hash = git.log("--pretty=format:'%H'", '-n', 1, path)
+    print "Got hash"
+    print sha_hash
     return str(sha_hash)
 
 

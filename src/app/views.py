@@ -331,9 +331,11 @@ def save():
     dataset_path = req_json['path']
     profile = req_json['profile']
 
+    print "Calling git"
     source_hash = git_client.add_file(dataset_path, profile['name'], profile['email'])
-
+    print "Returned from git"
     print source_hash
+    print "Printed hash"
 
     graph = datacube.converter.data_structure_definition(dataset, variables, profile)
 
