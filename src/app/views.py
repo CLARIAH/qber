@@ -117,7 +117,7 @@ def read_cache(dataset_path):
     dataset_cache_filename = "{}.cache.json".format(dataset_path)
 
     if os.path.exists(dataset_cache_filename):
-        with open(dataset_cache_filename,'r') as dataset_cache_file:
+        with open(dataset_cache_filename, 'r') as dataset_cache_file:
             dataset_cache = json.load(dataset_cache_file)
 
         return dataset_cache
