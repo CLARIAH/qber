@@ -15,35 +15,33 @@ import pandas as pd
 class Adapter(object):
     def __init__(self, dataset):
         self.dataset = dataset
-        
+
         return
-    
+
     def get_reader(self):
         return self.reader
-        
+
     def get_header(self):
         return self.header
-        
+
     def get_metadata(self):
         if self.metadata:
             return self.metadata
         else :
             return None
-        
+
     def load_metadata(self):
         metadata = OrderedDict()
-        
+
         if 'metadata' in self.dataset:
             print "Loading metadata..."
             metadata_filename = self.dataset['metadata']
-        
-            metadata_file = open(metadata_filename,"r")
-            metadata_reader = csv.reader(metadata_file,delimiter=";",quotechar="\"")
-    
-            
-    
-            for l in metadata_reader:
-                metadata[l[0].strip()] = l[1].strip()
+
+            with open(metadata_filename, "r") as metadata_file:
+                metadata_reader = csv.reader(metadata_file,delimiter=";",quotechar="\"")
+
+                for l in metadata_reader:
+                    metadata[l[0].strip()] = l[1].strip()
 
         elif self.header :
             print "No metadata... reconstructing from header"
@@ -53,8 +51,8 @@ class Adapter(object):
             print "No metadata or header"
 
         return metadata
-        
-    
+
+
     def validate_header(self):
         """Checks whether the header in the file and the metadata provided are exactly the same"""
         if self.header and self.metadata:
@@ -70,15 +68,15 @@ class Adapter(object):
         else :
             print "No header or no metadata present"
             return False
-            
+
     def get_examples(self):
         """Return all unique values, and converts it to samples for each column."""
-        
+
         # Get all unique values for each column
         stats = {}
         for col in self.data.columns:
             istats = []
-            
+
             counts = self.data[col].value_counts()
 
             for i in counts.index:
@@ -86,12 +84,12 @@ class Adapter(object):
                 stat['id'] = i
                 stat['count'] = counts[i]
                 istats.append(stat)
-            
-            
+
+
             stats[col] = istats
-            
-            
-    
+
+
+
         return stats
 
 # TODO: Temporarily Disabled
@@ -144,36 +142,37 @@ class Adapter(object):
 #             json_ready_data[k] = list(v)[:250]
 #
 #         return json_ready_data
-    
+
 
 class CsvAdapter(Adapter):
-    
+
     def __init__(self,dataset):
         """Initializes an adapter for reading a CSV dataset"""
         super(CsvAdapter, self).__init__(dataset)
-        
+
         if not dataset['format'] == 'CSV':
             raise Exception('This is a CSV adapter, not {}'.format(dataset['format']))
-        
+
         self.filename = dataset['filename']
-        
+
         self.has_header = dataset['header']
-        
-        self.data = pd.DataFrame.from_csv(self.filename)
-        
+
+        with open(self.filename, 'r') as fn:
+            self.data = pd.DataFrame.from_csv(fn)
+
         if self.has_header :
             self.header = list(self.data.columns)
         elif self.metadata :
             self.header = self.metadata.keys()
         else :
             self.header = None
-            
+
         self.metadata = self.load_metadata()
-            
+
         print self.validate_header()
         return
-        
-        
+
+
 
 
 
@@ -187,6 +186,5 @@ def get_adapter(dataset):
 
     adapterClass = mappings[dataset['format']]
     adapter = adapterClass(dataset)
-    
+
     return adapter
-    
