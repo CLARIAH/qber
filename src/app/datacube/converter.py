@@ -1,92 +1,188 @@
-from rdflib import Graph, Namespace, Literal, URIRef, BNode, RDF, RDFS, OWL
+from rdflib import Dataset, Graph, Namespace, Literal, URIRef, BNode, RDF, RDFS, OWL, XSD
 import urllib
+import datetime
 
-QBRV = Namespace('http://qber.data2semantics.org/vocab/')
-QBR = Namespace('http://qber.data2semantics.org/resource/')
+QBRV = Namespace('http://csdh.sandbox.socialhistoryservices.org/vocab/')
+QBR = Namespace('http://csdh.sandbox.socialhistoryservices.org/resource/')
 
 QB = Namespace('http://purl.org/linked-data/cube#')
 SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
 PROV = Namespace('http://www.w3.org/ns/prov#')
+NP = Namespace('http://www.nanopub.org/nschema#')
+FOAF = Namespace('http://xmlns.com/foaf/0.1/')
+
 
 def safe_url(NS, local):
-    safe_local = local.replace(' ','_')
+    """Generates a URIRef from the namespace + local part that is relatively safe for
+    use in RDF graphs
+
+    Arguments:
+    NS      -- a @Namespace object
+    local   -- the local name of the resource
+    """
+    safe_local = local.replace(' ', '_')
     return NS[safe_local]
 
 
-def data_structure_definition(dataset, variables, profile):
+def data_structure_definition(dataset, variables, profile, source_path, source_hash):
+    """Converts the dataset + variables to a set of rdflib Graphs (a nanopublication with provenance annotations)
+    that contains the data structure definition (from the DataCube vocabulary) and
+    the mappings to external datasets.
 
-    BASE = Namespace('http://qber.data2semantics.org/resource/{}/'.format(dataset))
+    Arguments:
+    dataset     -- the name of the dataset
+    variables   -- the list of dictionaries with the variables and their mappings to URIs
+    profile     -- the Google signin profile
+    source_path -- the path to the dataset file that was annotated
+    source_hash -- the Git hash of the dataset file version of the dataset
+
+    :returns: an RDF graph store containing a nanopublication
+    """
+    BASE = Namespace('http://csdh.sandbox.socialhistoryservices.org/resource/{}/'.format(dataset))
+
+    # Initialize a conjunctive graph for the whole lot
+    dataset = Dataset()
+    dataset.bind('qbrv', QBRV)
+    dataset.bind('qbr', QBR)
+    dataset.bind('qb', QB)
+    dataset.bind('skos', SKOS)
+    dataset.bind('prov', PROV)
+    dataset.bind('np', NP)
+    dataset.bind('foaf', FOAF)
+
+    # Initialize the graphs needed for the nanopublication
+    timestamp = datetime.datetime.now().isoformat()
+
+    hash_part = source_hash + '/' + timestamp
+
+
+    # The Nanopublication consists of three graphs
+    assertion_graph_uri = BASE['assertion/' + hash_part]
+    assertion_graph = dataset.graph(assertion_graph_uri)
+
+    provenance_graph_uri = BASE['provenance/' + hash_part]
+    provenance_graph = dataset.graph(provenance_graph_uri)
+
+    pubinfo_graph_uri = BASE['pubinfo/' + hash_part]
+    pubinfo_graph = dataset.graph(pubinfo_graph_uri)
 
 
 
-    g = Graph()
+    # A URI that represents the author
+    author_uri = QBR['person/' + profile['email']]
 
-    g.bind('qbrv',QBRV)
-    g.bind('qbr',QBR)
-    g.bind('qb',QB)
-    g.bind('skos',SKOS)
-    g.bind('prov',PROV)
+    dataset.add((author_uri, RDF.type, FOAF['Person']))
+    dataset.add((author_uri, FOAF['name'], Literal(profile['name'])))
+    dataset.add((author_uri, FOAF['email'], Literal(profile['email'])))
+    dataset.add((author_uri, QBRV['googleId'], Literal(profile['id'])))
+    dataset.add((author_uri, FOAF['depiction'], URIRef(profile['image'])))
 
+
+
+
+    # A URI that represents the version of the dataset source file
+    dataset_version_uri = BASE[source_hash]
+
+    # Some information about the source file used
+    dataset.add((dataset_version_uri, QBRV['path'], Literal(source_path, datatype=XSD.string)))
+    dataset.add((dataset_version_uri, QBRV['sha1_hash'], Literal(source_hash, datatype=XSD.string)))
+
+    # ----
+    # The nanopublication itself
+    # ----
+    nanopublication_uri = BASE['nanopublication/' + hash_part]
+
+    dataset.add((nanopublication_uri, RDF.type, NP['Nanopublication']))
+    dataset.add((nanopublication_uri, NP['hasAssertion'], assertion_graph_uri))
+    dataset.add((assertion_graph_uri, RDF.type, NP['Assertion']))
+    dataset.add((nanopublication_uri, NP['hasProvenance'], provenance_graph_uri))
+    dataset.add((provenance_graph_uri, RDF.type, NP['Provenance']))
+    dataset.add((nanopublication_uri, NP['hasPublicationInfo'], pubinfo_graph_uri))
+    dataset.add((pubinfo_graph_uri, RDF.type, NP['PublicationInfo']))
+
+    # ----
+    # The provenance graph
+    # ----
+
+    # Provenance information for the assertion graph (the data structure definition itself)
+    provenance_graph.add((assertion_graph_uri, PROV['wasDerivedFrom'], dataset_version_uri))
+    provenance_graph.add((assertion_graph_uri, PROV['generatedAtTime'], Literal(timestamp, datatype=XSD.datetime)))
+    provenance_graph.add((assertion_graph_uri, PROV['wasAttributedTo'], author_uri))
+
+    # ----
+    # The publication info graph
+    # ----
+
+    # The URI of the latest version of QBer
+    # TODO: should point to the actual latest commit of this QBer source file.
+    # TODO: consider linking to this as the plan of some activity, rather than an activity itself.
+    qber_uri = URIRef('https://github.com/CLARIAH-SDH/qber.git')
+
+    pubinfo_graph.add((nanopublication_uri, PROV['wasGeneratedBy'], qber_uri))
+    pubinfo_graph.add((nanopublication_uri, PROV['generatedAtTime'], Literal(timestamp, datatype=XSD.datetime)))
+    pubinfo_graph.add((nanopublication_uri, PROV['wasAttributedTo'], author_uri))
+
+    # ----
+    # The assertion graph
+    # ----
     dataset_uri = QBR[dataset]
     structure_uri = BASE['structure']
 
-    g.add((dataset_uri, RDF.type, QB['DataSet']))
-    g.add((structure_uri, RDF.type, QB['DataStructureDefinition']))
+    assertion_graph.add((dataset_uri, RDF.type, QB['DataSet']))
+    assertion_graph.add((structure_uri, RDF.type, QB['DataStructureDefinition']))
 
-    g.add((dataset_uri, QB['structure'], structure_uri))
+    assertion_graph.add((dataset_uri, QB['structure'], structure_uri))
+
 
     for variable_id, metadata in variables.items():
         variable_uri = BASE[variable_id]
-        component_uri = safe_url(BASE,'component/'+variable_id)
+        component_uri = safe_url(BASE, 'component/' + variable_id)
 
-        g.add((structure_uri, QB['component'], component_uri))
+        assertion_graph.add((structure_uri, QB['component'], component_uri))
 
-        ### DIMENSION PROPERTIES
-        g.add((variable_uri, RDFS.label, Literal(variable_id)))
+        # DIMENSION PROPERTIES
+        assertion_graph.add((variable_uri, RDFS.label, Literal(variable_id)))
 
         if 'description' in metadata and metadata['description'] != "":
-            g.add((variable_uri, RDFS.comment, Literal(metadata['description'])))
+            assertion_graph.add((variable_uri, RDFS.comment, Literal(metadata['description'])))
 
-        if 'dimension_type' in metadata and metadata['dimension_type'] != "" :
+        if 'dimension_type' in metadata and metadata['dimension_type'] != "":
             dimension_type_uri = URIRef(metadata['dimension_type'])
 
             if dimension_type_uri == QB['DimensionProperty']:
-                g.add((variable_uri, RDF.type, dimension_type_uri))
-                g.add((component_uri, QB['dimension'], variable_uri))
+                assertion_graph.add((variable_uri, RDF.type, dimension_type_uri))
+                assertion_graph.add((component_uri, QB['dimension'], variable_uri))
             elif dimension_type_uri == QB['MeasureProperty']:
-                g.add((variable_uri, RDF.type, dimension_type_uri))
-                g.add((component_uri, QB['measure'], variable_uri))
+                assertion_graph.add((variable_uri, RDF.type, dimension_type_uri))
+                assertion_graph.add((component_uri, QB['measure'], variable_uri))
             elif dimension_type_uri == QB['AttributeProperty']:
-                g.add((variable_uri, RDF.type, dimension_type_uri))
-                g.add((component_uri, QB['attribute'], variable_uri))
+                assertion_graph.add((variable_uri, RDF.type, dimension_type_uri))
+                assertion_graph.add((component_uri, QB['attribute'], variable_uri))
         elif ('lod_variable_field' in metadata and metadata['lod_variable_field'] != "") or ('codelist_checkbox' in metadata and metadata['codelist_checkbox'] == True) or ('learn_codelist_checkbox' in metadata and metadata['learn_codelist_checkbox'] == True):
             # It must be a dimension....
-            g.add((variable_uri, RDF.type, QB['DimensionProperty']))
-            g.add((component_uri, QB['dimension'], variable_uri))
+            assertion_graph.add((variable_uri, RDF.type, QB['DimensionProperty']))
+            assertion_graph.add((component_uri, QB['dimension'], variable_uri))
         else :
             # Otherwise we assume it is just an attribute
-            g.add((variable_uri, RDF.type, QB['AttributeProperty']))
-            g.add((component_uri, QB['attribute'], variable_uri))
-
-
+            assertion_graph.add((variable_uri, RDF.type, QB['AttributeProperty']))
+            assertion_graph.add((component_uri, QB['attribute'], variable_uri))
 
         # If we have a variable from the LOD cloud
         if 'lod_variable_field' in metadata and metadata['lod_variable_field'] != "":
-            g.add((variable_uri, RDFS.subPropertyOf, URIRef(metadata['lod_variable_field'])))
-
+            assertion_graph.add((variable_uri, RDFS.subPropertyOf, URIRef(metadata['lod_variable_field'])))
 
         # If we have a codelist for this variable
-        if ('codelist_checkbox' in metadata and metadata['codelist_checkbox'] == True) or ('learn_codelist_checkbox' in metadata and metadata['learn_codelist_checkbox'] == True):
+        if ('codelist_checkbox' in metadata and metadata['codelist_checkbox'] is True) or ('learn_codelist_checkbox' in metadata and metadata['learn_codelist_checkbox'] is True):
             # The variable should have its own codelist (a collection, since we don't know the hierarchy)
-            codelist_uri = safe_url(BASE,'codelist/'+variable_id)
-            g.add((codelist_uri, RDF.type, SKOS['Collection']))
-            g.add((codelist_uri, RDFS.label, Literal('Code list for "{}" in dataset {}'.format(variable_id, dataset))))
+            codelist_uri = safe_url(BASE, 'codelist/' + variable_id)
+            assertion_graph.add((codelist_uri, RDF.type, SKOS['Collection']))
+            assertion_graph.add((codelist_uri, RDFS.label, Literal('Code list for "{}" in dataset {}'.format(variable_id, dataset))))
 
             # The variable should be typed as a 'coded property'
-            g.add((variable_uri, RDF.type, QB['CodedProperty']))
+            assertion_graph.add((variable_uri, RDF.type, QB['CodedProperty']))
 
             # And it should point to the codelist
-            g.add((variable_uri, QB['codeList'], codelist_uri))
+            assertion_graph.add((variable_uri, QB['codeList'], codelist_uri))
 
             # Generate a SKOS concept for each of the values
             for value in metadata['values']:
@@ -95,33 +191,50 @@ def data_structure_definition(dataset, variables, profile):
                     continue
 
                 value_id = value['id']
-                value_uri = safe_url(BASE,'code/'+variable_id+'/'+value_id)
+                value_uri = safe_url(BASE,'code/' + variable_id + '/' + value_id)
 
-                g.add((value_uri,RDF.type,SKOS['Concept']))
-                g.add((value_uri,SKOS['prefLabel'], Literal(value_id)))
-                g.add((codelist_uri,SKOS['member'], value_uri))
+                assertion_graph.add((value_uri, RDF.type, SKOS['Concept']))
+                assertion_graph.add((value_uri, SKOS['prefLabel'], Literal(value_id)))
+                assertion_graph.add((codelist_uri, SKOS['member'], value_uri))
 
             # If we have a mapping specified, map to the codelist we selected
             if 'codelist_field' in metadata and metadata['codelist_field'] != "":
-                g.add((codelist_uri, PROV['wasDerivedFrom'], URIRef(metadata['codelist_field'])))
+                assertion_graph.add((codelist_uri, PROV['wasDerivedFrom'], URIRef(metadata['codelist_field'])))
 
                 for mapping in metadata['mappings']:
                     source = mapping['id']
                     target = mapping['value']
 
-                    g.add((safe_url(BASE,'code/'+variable_id+'/'+source),SKOS['exactMatch'], URIRef(target)))
+                    assertion_graph.add((safe_url(BASE, 'code/' + variable_id + '/' + source), SKOS['exactMatch'], URIRef(target)))
 
-    return g
+    for c in dataset.contexts():
+        print c
 
-
-# def concept_transformer(label, uri='http://example.com/data/dimension', base_ns=Namespace('http://example.com/data/')):
-#     g = Graph()
-#
-#     g.bind('qbrv',QBRV)
-#     g.bind('qbr',QBR)
-#     g.bind('qb',QB)
-#     g.bind('data',base_ns)
+    return dataset
 
 
+# Because Trig serialization in RDFLib is extremely crappy
+import string
 
-    return
+
+def reindent(s, numSpaces):
+    s = s.split('\n')
+    s = [(numSpaces * ' ') + string.lstrip(line) for line in s]
+    s = "\n".join(s)
+    return s
+
+
+def serializeTrig(dataset):
+    turtles = []
+    for c in dataset.contexts():
+        if c.identifier != URIRef('urn:x-rdflib:default'):
+            turtle = "<{id}> {{\n".format(id=c.identifier)
+            turtle += reindent(c.serialize(format='turtle'), 4)
+            turtle += "}\n\n"
+        else :
+            turtle += c.serialize(format='turtle')
+            turtle += "\n\n"
+
+        turtles.append(turtle)
+
+    return "\n".join(turtles)

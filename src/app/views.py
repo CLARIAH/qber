@@ -331,21 +331,18 @@ def save():
     dataset_path = req_json['path']
     profile = req_json['profile']
 
-    print "Calling git"
     source_hash = git_client.add_file(dataset_path, profile['name'], profile['email'])
-    print "Returned from git"
-    print source_hash
-    print "Printed hash"
+    log.debug("Using {} as dataset hash".format(source_hash))
 
-    graph = datacube.converter.data_structure_definition(dataset, variables, profile)
+    dataset = datacube.converter.data_structure_definition(dataset, variables, profile, dataset_path, source_hash)
 
-    data = util.inspector.update(graph)
+    data = util.inspector.update(dataset)
     socketio.emit('update', {'data': data}, namespace='/inspector')
 
-    with open('latest_update.ttl', 'w') as f:
-        graph.serialize(f, format='turtle')
+    with open('latest_update.trig', 'w') as f:
+        f.write(datacube.converter.serializeTrig(dataset))
 
-    query = sc.make_update(graph)
+    query = sc.make_update(dataset)
     result = sc.sparql_update(query)
 
     write_cache(dataset_path, variables)
