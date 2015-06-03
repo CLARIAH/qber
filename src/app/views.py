@@ -151,8 +151,14 @@ def variable():
     log.debug(req_json)
 
     variable_id = req_json['id']
-    description = req_json['description']
-    examples = req_json['examples']
+    if 'description' in req_json:
+        description = req_json['description']
+    else:
+        description = req_json['id']
+    if 'examples' in req_json:
+        examples = req_json['examples']
+    else:
+        examples = []
 
     log.debug(examples)
 
