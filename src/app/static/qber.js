@@ -21,17 +21,14 @@ var variables, metadata, examples, dimensions, schemes, variable;
 // Once the document is loaded
 $( document ).ready(function() {
 
+  // Hide the signout button
   $('#signout').hide();
 
-  console.log("Document loaded");
   // Hide the load button
-
   $('#load-menu').hide();
 
   // Hide the variable panel
   $('#variable-panel').hide();
-
-
 
   // Click handler for the file opening dialog
   $('#open-dataset-modal').on('show', function(){
@@ -43,8 +40,10 @@ $( document ).ready(function() {
 
 
 
-// Store the profile in a global variable
+// Store the Google user profile in a global variable
 var profile;
+
+// This is called when the g-signin2 button is clicked
 function on_sign_in(googleUser) {
   profile = googleUser.getBasicProfile();
   console.log('ID: ' + profile.getId());
@@ -63,8 +62,8 @@ function on_sign_in(googleUser) {
   $('.g-signin2').hide();
 }
 
+// This is called when the #signout button is clicked
 function signOut() {
-
   var auth2 = gapi.auth2.getAuthInstance();
   auth2.signOut().then(function () {
     console.log('User signed out.');
