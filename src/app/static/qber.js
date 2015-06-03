@@ -170,9 +170,14 @@ function initialize_menu(){
 
 
 function initialize_variable_panel(variable_id){
+  if (variable_id == '') { return ;}
+
   var payload = JSON.stringify({'id': variable_id, 'description': metadata[variable_id], 'examples': examples[variable_id]})
 
   variable = variable_id;
+
+  console.log('The stuff sent to the server to retrieve the variable UI');
+  console.log(payload);
 
   $.post('/variable/ui',data=payload, function(data){
 
@@ -181,6 +186,8 @@ function initialize_variable_panel(variable_id){
 
     var variable_panel = $('#var_'+variable_id);
 
+    // fill_selects uses the local storage to retrieve 'saved' information about the variable
+    // to fill the select elements in the variable panel.
     fill_selects(variable_id, variable_panel);
 
     $('#variable-panel').show();
@@ -191,19 +198,141 @@ function initialize_variable_panel(variable_id){
 };
 
 
+// This function fills the select dropdowns on the left hand side of the variable panel.
 function fill_selects(variable_id, variable_panel){
+
+  // Get the variable-specific identifiers of the fields we need.
   var lod_variable_field = variable_panel.attr('lod_variable_field');
   var codelist_field = variable_panel.attr('codelist_field');
   var codelist_checkbox = variable_panel.attr('codelist_checkbox');
   var learn_codelist_checkbox = variable_panel.attr('learn_codelist_checkbox');
 
-
   var save_button = variable_panel.attr('save_button');
   var form = variable_panel.attr('form');
 
-  variable_panel.children(".list-group-item-text").show();
 
 
+  // The drop down menu for external dimensions.
+  $(lod_variable_field).selectize({
+    maxItems: 1,
+    valueField: 'uri',
+    searchField: 'label',
+    options: dimensions,
+    render: {
+      option: function(data, escape) {
+        return '<div class="option">' +
+            '<span class="title">' + escape(data.label) + ' <span class="badge">'+ escape(data.refs) +'</span></span> ' +
+            '<span class="uri small">' + escape(data.uri) + '</span>' +
+          '</div>';
+      },
+      item: function(data, escape) {
+        return '<div class="item"><a href="' + escape(data.uri) + '">' + escape(data.label) + '</a></div>';
+      }
+    },
+    create: function(input){
+      return {
+        'label': input,
+        'uri': 'http://sdh.clariah.org/vocab/dimension/'+input
+      }
+
+    }
+  });
+
+
+
+
+
+  $(codelist_field).selectize({
+    maxItems: 1,
+    valueField: 'uri',
+    searchField: 'label',
+    options: schemes,
+    render: {
+      option: function(data, escape) {
+        return '<div class="option">' +
+            '<span class="title">' + escape(data.label) + ' </span> ' +
+            '<span class="uri small">' + escape(data.uri) + '</span>' +
+          '</div>';
+      },
+      item: function(data, escape) {
+        return '<div class="item"><a href="' + escape(data.uri) + '">' + escape(data.label) + '</a></div>';
+      }
+    },
+    create: function(input){
+      return {
+        'label': input,
+        'uri': 'http://sdh.clariah.org/vocab/scheme/'+input
+      }
+
+    }
+  });
+
+
+
+  $(".dimension-type-select").selectize({
+    valueField: 'uri',
+    searchField: 'label',
+    options: [
+      {
+        'label': 'Dimension Variable',
+        'uri': 'http://purl.org/linked-data/cube#DimensionProperty',
+        'description': 'Dimension variables are used to identify an observed value (e.g. location, gender)'
+      },
+      {
+        'label': 'Measure Variable',
+        'uri': 'http://purl.org/linked-data/cube#MeasureProperty',
+        'description': 'A measure variable reflects an observed value (e.g. population size)'
+      },
+      {
+        'label': 'Attribute',
+        'uri': 'http://purl.org/linked-data/cube#AttributeProperty',
+        'description': 'Attributes provide additional information about an observed value (e.g. unit of measure, currency)'
+      },
+    ],
+    render: {
+      option: function(data, escape) {
+        return '<div class="option">' +
+            '<span class="title">' + escape(data.label) + '</span> ' +
+            '<span class="description small">' + escape(data.description) + '</span>' +
+          '</div>';
+      },
+      item: function(data, escape) {
+        return '<div class="item"><a href="' + escape(data.uri) + '">' + escape(data.label) + '</a></div>';
+      }
+    },
+    create: false
+
+  });
+
+
+  // Get the data for the selected variable from local storage.
+  var data = $.localStorage.get(variable_id);
+
+  if (data) {
+    console.log(data);
+    $('.data').each(function(){
+      var field = $(this).attr('name');
+      console.log('Field is '+field);
+
+      if (field in data){
+        var value = data[field];
+        console.log('Populating '+field);
+        console.log(value);
+
+        if($(this).hasClass('selectized')){
+          $(this)[0].selectize.setValue(value);
+        } else {
+          if(value == true) {
+            $(this).prop('checked',true);
+          } else {
+            $(this).val(value);
+          }
+        }
+      }
+    });
+  }
+
+  // Initialize the event handlers.
 
   // Save the entered data to local storage
   $(save_button).on('click',function(){
@@ -249,35 +378,8 @@ function fill_selects(variable_id, variable_panel){
     console.log(data);
   });
 
-  // The drop down menu for external dimensions.
-  $(lod_variable_field).selectize({
-    maxItems: 1,
-    valueField: 'uri',
-    searchField: 'label',
-    options: dimensions,
-    render: {
-      option: function(data, escape) {
-        return '<div class="option">' +
-            '<span class="title">' + escape(data.label) + ' <span class="badge">'+ escape(data.refs) +'</span></span> ' +
-            '<span class="uri small">' + escape(data.uri) + '</span>' +
-          '</div>';
-      },
-      item: function(data, escape) {
-        return '<div class="item"><a href="' + escape(data.uri) + '">' + escape(data.label) + '</a></div>';
-      }
-    },
-    create: function(input){
-      return {
-        'label': input,
-        'uri': 'http://sdh.clariah.org/vocab/dimension/'+input
-      }
-
-    }
-  });
-
-
-
   // If we import an external dimension with a code list, add a select button for every row in the value examples table.
+  // TODO: This is not efficient for many possible codes (e.g. HISCO for occupations in the Utrecht 1829 dataset)
   $(lod_variable_field).on('change', function(){
     var dimension_uri = $(lod_variable_field).val();
     console.log('Lod variable field changed, and set to '+ dimension_uri);
@@ -293,6 +395,7 @@ function fill_selects(variable_id, variable_panel){
     $(learn_codelist_checkbox).removeAttr('disabled');
     $(learn_codelist_checkbox).attr('checked',true);
 
+    // If an empty dimension uri is selected, we reset everything to the default
     if (dimension_uri == '') {
       console.log('Dimension uri empty');
       console.log(dimension_uri);
@@ -360,30 +463,6 @@ function fill_selects(variable_id, variable_panel){
     $(codelist_field)[0].selectize.setValue('');
   });
 
-  $(codelist_field).selectize({
-    maxItems: 1,
-    valueField: 'uri',
-    searchField: 'label',
-    options: schemes,
-    render: {
-      option: function(data, escape) {
-        return '<div class="option">' +
-            '<span class="title">' + escape(data.label) + ' </span> ' +
-            '<span class="uri small">' + escape(data.uri) + '</span>' +
-          '</div>';
-      },
-      item: function(data, escape) {
-        return '<div class="item"><a href="' + escape(data.uri) + '">' + escape(data.label) + '</a></div>';
-      }
-    },
-    create: function(input){
-      return {
-        'label': input,
-        'uri': 'http://sdh.clariah.org/vocab/scheme/'+input
-      }
-
-    }
-  });
 
   $(codelist_field).on('change', function(){
     var codelist_uri = $(codelist_field).val();
@@ -458,68 +537,9 @@ function fill_selects(variable_id, variable_panel){
 
   });
 
-  $(".dimension-type-select").selectize({
-    valueField: 'uri',
-    searchField: 'label',
-    options: [
-      {
-        'label': 'Dimension Variable',
-        'uri': 'http://purl.org/linked-data/cube#DimensionProperty',
-        'description': 'Dimension variables are used to identify an observed value (e.g. location, gender)'
-      },
-      {
-        'label': 'Measure Variable',
-        'uri': 'http://purl.org/linked-data/cube#MeasureProperty',
-        'description': 'A measure variable reflects an observed value (e.g. population size)'
-      },
-      {
-        'label': 'Attribute',
-        'uri': 'http://purl.org/linked-data/cube#AttributeProperty',
-        'description': 'Attributes provide additional information about an observed value (e.g. unit of measure, currency)'
-      },
-    ],
-    render: {
-      option: function(data, escape) {
-        return '<div class="option">' +
-            '<span class="title">' + escape(data.label) + '</span> ' +
-            '<span class="description small">' + escape(data.description) + '</span>' +
-          '</div>';
-      },
-      item: function(data, escape) {
-        return '<div class="item"><a href="' + escape(data.uri) + '">' + escape(data.label) + '</a></div>';
-      }
-    },
-    create: false
+  // Make sure the code list is used to create the select cells
+  $(codelist_field).trigger('change');
 
-  });
-
-  var data = $.localStorage.get(variable_id);
-
-  if (data) {
-    js2form($('form'), data);
-
-    $('.data').each(function(){
-      var field = $(this).attr('name');
-
-      if (field in data){
-        var value = data[field];
-
-        if($(this).hasClass('selectized')){
-          $(this)[0].selectize.setValue(value);
-        } else {
-          if(value == 'on') {
-            $(this).prop('checked',true);
-          } else {
-            $(this).val(value);
-          }
-        }
-      }
-    });
-
-
-
-    $(".regex").keyup();
-  }
 
 }
 
@@ -556,33 +576,44 @@ function populate_value_selects(codelist){
     var td = $('<td></td>');
     td.addClass('codecell');
     td.attr('style','min-width: 30%;');
-    var select = $('<select></select>');
-    select.prop('name',code_id);
+
+    var show_select_button = $('<span>Select code</span>');
+    show_select_button.addClass('btn');
+    show_select_button.addClass('btn-xs');
+    show_select_button.addClass('btn-default');
+
+    show_select_button.on('click', function(e){
+      show_select_button.hide();
+      var select = $('<select></select>');
+      select.prop('name',code_id);
 
 
 
-    select.addClass('mapping');
-    td.append(select);
+      select.addClass('mapping');
+      td.append(select);
 
-    select.selectize({
-      maxItems: 1,
-      valueField: 'concept',
-      labelField: 'label',
-      searchField: 'label',
-      options: codelist,
-      create: false
-    });
+      select.selectize({
+        maxItems: 1,
+        valueField: 'concept',
+        labelField: 'label',
+        searchField: 'label',
+        options: codelist,
+        create: false
+      });
 
-    for (n in mappings) {
-      var mapping = mappings[n];
-      console.log('Checking mapping');
-      console.log(mapping);
-      if (code_id == mapping['id']) {
-        console.log('Setting mapping for  '+code_id+' to '+mapping['value']);
-        select[0].selectize.setValue(mapping['value']);
+      for (n in mappings) {
+        var mapping = mappings[n];
+        console.log('Checking mapping');
+        console.log(mapping);
+        if (code_id == mapping['id']) {
+          console.log('Setting mapping for  '+code_id+' to '+mapping['value']);
+          select[0].selectize.setValue(mapping['value']);
+        }
       }
-    }
 
+    })
+
+    td.append(show_select_button);
     row.append(td);
   });
 }
