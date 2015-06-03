@@ -246,13 +246,37 @@
           .text(function(d) { return d.name.replace('http://qber.data2semantics.org/resource/','csdh:'); });
 
       node.append("circle")
-          .attr("r", function(d) { if (d.type == 'person' || d.type == 'dataset') { return 15; } else { return 5;} })
-          .style("fill", function(d) { origins.add(d.origin); originmap[d.origin] = color2(d.origin); return color2(d.origin); });
+          .attr("r", function(d) {
+                          if (d.type == 'dataset') {
+                            return 15;
+                          } else {
+                            return 5;
+                          }
+                     })
+          .style("fill", function(d) {
+                          if (d.type == 'person') {
+                            return "#000";
+                          } else {
+                            origins.add(d.origin); originmap[d.origin] = color2(d.origin); return color2(d.origin);
+                          }
+                          });
 
       node.append("circle")
-          .attr("r", function(d) { if (d.type == 'person' || d.type == 'dataset') { return 18; } else { return 8;} })
+          .attr("r", function(d) {
+                          if (d.type == 'person') {
+                            return 7;
+                          } else if (d.type == 'dataset') { return 18; } else { return 8;}
+                     })
           .attr("class", "outer-circle")
-          .style("stroke", function(d) { types.add(d.type); typemap[d.type] = color(d.type); return color(d.type); });
+          .style("stroke", function(d) {
+                          types.add(d.type);
+                          if (d.type == 'person') {
+                            typemap[d.type] = '#000';
+                          } else {
+
+                            typemap[d.type] = color(d.type);
+                            return color(d.type);
+                          }});
 
 
 
