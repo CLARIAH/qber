@@ -2,8 +2,8 @@ from rdflib import Dataset, Graph, Namespace, Literal, URIRef, BNode, RDF, RDFS,
 import urllib
 import datetime
 
-QBRV = Namespace('http://csdh.sandbox.socialhistoryservices.org/vocab/')
-QBR = Namespace('http://csdh.sandbox.socialhistoryservices.org/resource/')
+QBRV = Namespace('http://qber.data2semantics.org/vocab/')
+QBR = Namespace('http://qber.data2semantics.org/resource/')
 
 QB = Namespace('http://purl.org/linked-data/cube#')
 SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
@@ -38,7 +38,7 @@ def data_structure_definition(dataset, variables, profile, source_path, source_h
 
     :returns: an RDF graph store containing a nanopublication
     """
-    BASE = Namespace('http://csdh.sandbox.socialhistoryservices.org/resource/{}/'.format(dataset))
+    BASE = Namespace('http://qber.data2semantics.org/resource/{}/'.format(dataset))
 
     # Initialize a conjunctive graph for the whole lot
     dataset = Dataset()
