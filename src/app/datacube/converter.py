@@ -41,14 +41,14 @@ def data_structure_definition(dataset, variables, profile, source_path, source_h
     BASE = Namespace('http://qber.data2semantics.org/resource/{}/'.format(dataset))
 
     # Initialize a conjunctive graph for the whole lot
-    dataset = Dataset()
-    dataset.bind('qbrv', QBRV)
-    dataset.bind('qbr', QBR)
-    dataset.bind('qb', QB)
-    dataset.bind('skos', SKOS)
-    dataset.bind('prov', PROV)
-    dataset.bind('np', NP)
-    dataset.bind('foaf', FOAF)
+    rdf_dataset = Dataset()
+    rdf_dataset.bind('qbrv', QBRV)
+    rdf_dataset.bind('qbr', QBR)
+    rdf_dataset.bind('qb', QB)
+    rdf_dataset.bind('skos', SKOS)
+    rdf_dataset.bind('prov', PROV)
+    rdf_dataset.bind('np', NP)
+    rdf_dataset.bind('foaf', FOAF)
 
     # Initialize the graphs needed for the nanopublication
     timestamp = datetime.datetime.now().isoformat()
@@ -58,24 +58,24 @@ def data_structure_definition(dataset, variables, profile, source_path, source_h
 
     # The Nanopublication consists of three graphs
     assertion_graph_uri = BASE['assertion/' + hash_part]
-    assertion_graph = dataset.graph(assertion_graph_uri)
+    assertion_graph = rdf_dataset.graph(assertion_graph_uri)
 
     provenance_graph_uri = BASE['provenance/' + hash_part]
-    provenance_graph = dataset.graph(provenance_graph_uri)
+    provenance_graph = rdf_dataset.graph(provenance_graph_uri)
 
     pubinfo_graph_uri = BASE['pubinfo/' + hash_part]
-    pubinfo_graph = dataset.graph(pubinfo_graph_uri)
+    pubinfo_graph = rdf_dataset.graph(pubinfo_graph_uri)
 
 
 
     # A URI that represents the author
     author_uri = QBR['person/' + profile['email']]
 
-    dataset.add((author_uri, RDF.type, FOAF['Person']))
-    dataset.add((author_uri, FOAF['name'], Literal(profile['name'])))
-    dataset.add((author_uri, FOAF['email'], Literal(profile['email'])))
-    dataset.add((author_uri, QBRV['googleId'], Literal(profile['id'])))
-    dataset.add((author_uri, FOAF['depiction'], URIRef(profile['image'])))
+    rdf_dataset.add((author_uri, RDF.type, FOAF['Person']))
+    rdf_dataset.add((author_uri, FOAF['name'], Literal(profile['name'])))
+    rdf_dataset.add((author_uri, FOAF['email'], Literal(profile['email'])))
+    rdf_dataset.add((author_uri, QBRV['googleId'], Literal(profile['id'])))
+    rdf_dataset.add((author_uri, FOAF['depiction'], URIRef(profile['image'])))
 
 
 
@@ -84,21 +84,21 @@ def data_structure_definition(dataset, variables, profile, source_path, source_h
     dataset_version_uri = BASE[source_hash]
 
     # Some information about the source file used
-    dataset.add((dataset_version_uri, QBRV['path'], Literal(source_path, datatype=XSD.string)))
-    dataset.add((dataset_version_uri, QBRV['sha1_hash'], Literal(source_hash, datatype=XSD.string)))
+    rdf_dataset.add((dataset_version_uri, QBRV['path'], Literal(source_path, datatype=XSD.string)))
+    rdf_dataset.add((dataset_version_uri, QBRV['sha1_hash'], Literal(source_hash, datatype=XSD.string)))
 
     # ----
     # The nanopublication itself
     # ----
     nanopublication_uri = BASE['nanopublication/' + hash_part]
 
-    dataset.add((nanopublication_uri, RDF.type, NP['Nanopublication']))
-    dataset.add((nanopublication_uri, NP['hasAssertion'], assertion_graph_uri))
-    dataset.add((assertion_graph_uri, RDF.type, NP['Assertion']))
-    dataset.add((nanopublication_uri, NP['hasProvenance'], provenance_graph_uri))
-    dataset.add((provenance_graph_uri, RDF.type, NP['Provenance']))
-    dataset.add((nanopublication_uri, NP['hasPublicationInfo'], pubinfo_graph_uri))
-    dataset.add((pubinfo_graph_uri, RDF.type, NP['PublicationInfo']))
+    rdf_dataset.add((nanopublication_uri, RDF.type, NP['Nanopublication']))
+    rdf_dataset.add((nanopublication_uri, NP['hasAssertion'], assertion_graph_uri))
+    rdf_dataset.add((assertion_graph_uri, RDF.type, NP['Assertion']))
+    rdf_dataset.add((nanopublication_uri, NP['hasProvenance'], provenance_graph_uri))
+    rdf_dataset.add((provenance_graph_uri, RDF.type, NP['Provenance']))
+    rdf_dataset.add((nanopublication_uri, NP['hasPublicationInfo'], pubinfo_graph_uri))
+    rdf_dataset.add((pubinfo_graph_uri, RDF.type, NP['PublicationInfo']))
 
     # ----
     # The provenance graph
@@ -207,10 +207,10 @@ def data_structure_definition(dataset, variables, profile, source_path, source_h
 
                     assertion_graph.add((safe_url(BASE, 'code/' + variable_id + '/' + source), SKOS['exactMatch'], URIRef(target)))
 
-    for c in dataset.contexts():
+    for c in rdf_dataset.contexts():
         print c
 
-    return dataset
+    return rdf_dataset
 
 
 # Because Trig serialization in RDFLib is extremely crappy
@@ -224,9 +224,9 @@ def reindent(s, numSpaces):
     return s
 
 
-def serializeTrig(dataset):
+def serializeTrig(rdf_dataset):
     turtles = []
-    for c in dataset.contexts():
+    for c in rdf_dataset.contexts():
         if c.identifier != URIRef('urn:x-rdflib:default'):
             turtle = "<{id}> {{\n".format(id=c.identifier)
             turtle += reindent(c.serialize(format='turtle'), 4)
