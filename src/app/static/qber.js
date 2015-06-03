@@ -20,6 +20,9 @@ var variables, metadata, examples, dimensions, schemes, variable;
 
 // Once the document is loaded
 $( document ).ready(function() {
+
+  $('#signout').hide();
+
   console.log("Document loaded");
   // Hide the load button
 
@@ -56,6 +59,20 @@ function on_sign_in(googleUser) {
   $('#profile-name').html(profile.getName());
 
   $('#load-menu').show();
+  $('#signout').show();
+  $('.g-signin2').hide();
+}
+
+function signOut() {
+
+  var auth2 = gapi.auth2.getAuthInstance();
+  auth2.signOut().then(function () {
+    console.log('User signed out.');
+  });
+  $('#signout').hide();
+  $('#profile-image').empty();
+  $('#profile-name').empty();
+  $('.g-signin2').show();
 }
 
 
