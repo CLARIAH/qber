@@ -105,118 +105,122 @@
 <script type="text/javascript" charset="utf-8">
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/inspector');
     var force;
-    
+
     var types = new Set([]);
     var typemap = {};
     var origins = new Set([]);
     var originmap = {};
-    
+
     socket.on('connect', function() {
       socket.emit('message', {data: 'I\'m connected!'});
     });
-    
+
     socket.on('response', function(msg) {
       console.log(msg);
     });
-    
+
     socket.on('update', function(msg){
       var nodes = msg.data.nodes;
       var links = msg.data.links;
-      
+
       fnodes = force.nodes();
       flinks = force.links();
-      
+
       fnodes.push.apply(fnodes,nodes);
       flinks.push.apply(flinks,links);
-      
+
       // force.nodes().apply(force.nodes(),nodes);
       // force.edges().apply(force.edges(),edges);
-      
+
       force.start();
-      
+
       update_legend();
-      
+
     });
-    
+
     $(function() {
-        
+
         $.get('/inspect', function(data){
-          
+
           console.log(data);
-          
+
           force = init_graph(data);
-          
+
           update_legend();
         });
-        
-        
+
+
     });
-    
-    
+
+
     function update_legend(){
       $('#legend').empty();
       var typelist = $('<div></div>');
       typelist.append('<h5>Types<h5>');
       var ul = $('<ul class="list-group"></ul>');
-      
-      
+
+
       types.forEach(function(elem){
         console.log(elem);
         ul.append('<li class="list-group-item" style="overflow: auto;"><span style="font-weight: bold; color: '+ typemap[elem] +';">'+ elem +'</span></li>');
-        
+
       });
-        
+
       typelist.append(ul);
       $('#legend').append(typelist);
-      
+
       var originlist = $('<div></div>');
 
       originlist.append('<h5>Datasets<h5>');
       var ul = $('<ul class="list-group"></ul>');
-      
-      
+
+
       origins.forEach(function(elem){
         console.log(elem);
         ul.append('<li class="list-group-item" style="overflow: auto;"><span style="font-weight: bold; color: '+ originmap[elem] +';">'+ elem.replace('http://qber.data2semantics.org/resource/','csdh:') +'</span></li>');
-  
+
       });
-        
+
       originlist.append(ul);
       $('#legend').append(originlist);
-      
+
     }
-    
+
     function init_graph(graph){
       var width = 1200,
           height = 600;
 
       // var color = d3.scale.category20b();
-      var color2 = d3.scale.ordinal().range(colorbrewer.Paired[12]);
-      
-      var color = d3.scale.ordinal().range(colorbrewer.Set2[6]);
+      var color2 = d3.scale.ordinal().range(colorbrewer.Set3[12]);
+
+      var color = d3.scale.ordinal().range(colorbrewer.Paired[3]);
 
       var force = d3.layout.force()
           .charge(-120)
-          .linkDistance(30)
+          .linkDistance(50)
           .size([width, height]);
 
       var svg = d3.select("#graph").append("svg")
           .attr("width", width)
           .attr("height", height);
-    
+
       var tip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
-          var content = "<h5>" + d.name.replace('http://qber.data2semantics.org/resource/','csdh:') + "</h5>"+
-                 "<strong>Type:</strong> <span style='color: "+ color(d.type) +";'>" + d.type + "</span><br/>" +
-                 "<strong>Origin:</strong> <span style='color: "+ color2(d.origin) +";'>" + d.origin.replace('http://qber.data2semantics.org/resource/','csdh:') + "</span>";
-                 
-          return content       
+          if (d.type == 'person'){
+            var content = "<h5>" + d.name + "</h5>"+
+                   "<img src='"+ d.image +"'></img>";
+          } else {
+            var content = "<h5>" + d.name.replace('http://qber.data2semantics.org/resource/','csdh:') + "</h5>"+
+                   "<strong>Type:</strong> <span style='color: "+ color(d.type) +";'>" + d.type + "</span><br/>" +
+                   "<strong>Origin:</strong> <span style='color: "+ color2(d.origin) +";'>" + d.origin.replace('http://qber.data2semantics.org/resource/','csdh:') + "</span>";
+          }
+          return content
         });
 
       svg.call(tip);
-      
+
       force
           .nodes(graph.nodes)
           .links(graph.links)
@@ -240,19 +244,16 @@
 
       node.append("title")
           .text(function(d) { return d.name.replace('http://qber.data2semantics.org/resource/','csdh:'); });
+
       node.append("circle")
-          .attr("r", 5)
+          .attr("r", function(d) { if (d.type == 'person' || d.type == 'dataset') { return 15; } else { return 5;} })
           .style("fill", function(d) { origins.add(d.origin); originmap[d.origin] = color2(d.origin); return color2(d.origin); });
-    
+
       node.append("circle")
-          .attr("r", 8)
+          .attr("r", function(d) { if (d.type == 'person' || d.type == 'dataset') { return 18; } else { return 8;} })
           .attr("class", "outer-circle")
           .style("stroke", function(d) { types.add(d.type); typemap[d.type] = color(d.type); return color(d.type); });
-    
-      // node.append("text")
-      //       .attr("dx", 12)
-      //       .attr("dy", ".35em")
-      //       .text(function(d) { return d.name.substr(40); });
+
 
 
 
@@ -266,10 +267,10 @@
         // node.attr("cx", function(d) { return d.x; })
         //     .attr("cy", function(d) { return d.y; });
       });
-      
+
       return force
   }
-    
+
 </script>
-    
+
 {% endblock %}
