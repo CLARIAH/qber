@@ -23,7 +23,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li class="active"><a href='#' id='dataset-name'></a></li>
-        <li id='load-menu'>            
+        <li id='load-menu'>
             <a id="load" data-toggle="modal" data-target="#open-dataset-modal">
               <span class="glyphicon glyphicon-folder-open" aria-hidden="True"></span>&nbsp;Load
             </a></li>
@@ -34,6 +34,7 @@
           <span id="profile-name"></span></a>
         </li>
         <li><a style='height: 45px; padding: 4px 6px;'><span class="g-signin2 pull-left" data-onsuccess="on_sign_in"></span></a></li>
+        <li><span id='signout' class='btn btn-info pull-left' onclick='signOut();'>Sign Out</span></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
@@ -45,7 +46,7 @@
 
     <div class="row">
         <div class="col-md-12" id='menu'>
-          
+
         </div>
     </div>
     <div class="row">
@@ -86,4 +87,3 @@
 
 
 {% endblock %}
-
