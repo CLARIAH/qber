@@ -112,7 +112,7 @@
     var originmap = {};
 
     socket.on('connect', function() {
-      socket.emit('message', {data: 'I\'m connected!'});
+      socket.emit('message', {data: 'Inspector is connected!'});
     });
 
     socket.on('response', function(msg) {
@@ -120,6 +120,8 @@
     });
 
     socket.on('update', function(msg){
+      console.log('Inspector is being updated...')
+      console.log(msg.data);
       var nodes = msg.data.nodes;
       var links = msg.data.links;
 
@@ -138,6 +140,8 @@
 
     });
 
+
+    // First time we load...
     $(function() {
 
         $.get('/inspect', function(data){
@@ -177,7 +181,7 @@
 
       origins.forEach(function(elem){
         console.log(elem);
-        ul.append('<li class="list-group-item" style="overflow: auto;"><span style="font-weight: bold; color: '+ originmap[elem] +';">'+ elem.replace('http://qber.data2semantics.org/resource/','csdh:') +'</span></li>');
+        ul.append('<li class="list-group-item" style="overflow: auto;"><span style="font-weight: bold; color: '+ originmap[elem] +';">'+ elem.replace('http://data.socialhistory.org/resource/','csdh:') +'</span></li>');
 
       });
 
@@ -212,9 +216,9 @@
             var content = "<h5>" + d.name + "</h5>"+
                    "<img src='"+ d.image +"'></img>";
           } else {
-            var content = "<h5>" + d.name.replace('http://qber.data2semantics.org/resource/','csdh:') + "</h5>"+
+            var content = "<h5>" + d.name.replace('http://data.socialhistory.org/resource/','csdh:') + "</h5>"+
                    "<strong>Type:</strong> <span style='color: "+ color(d.type) +";'>" + d.type + "</span><br/>" +
-                   "<strong>Origin:</strong> <span style='color: "+ color2(d.origin) +";'>" + d.origin.replace('http://qber.data2semantics.org/resource/','csdh:') + "</span>";
+                   "<strong>Origin:</strong> <span style='color: "+ color2(d.origin) +";'>" + d.origin.replace('http://data.socialhistory.org/resource/','csdh:') + "</span>";
           }
           return content
         });
@@ -243,7 +247,7 @@
           .on('mouseout', tip.hide);
 
       node.append("title")
-          .text(function(d) { return d.name.replace('http://qber.data2semantics.org/resource/','csdh:'); });
+          .text(function(d) { return d.name.replace('http://data.socialhistory.org/resource/','csdh:'); });
 
       node.append("circle")
           .attr("r", function(d) {

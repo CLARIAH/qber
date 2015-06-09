@@ -127,37 +127,48 @@ def build_graph(results):
             elif k in ['name2'] and not g.has_node(v):
                 g.add_node(v, {'name': v, 'type': 'person', 'image': r['image2']})
             elif not g.has_node(v) and k not in ['image2', 'image']:
+                print "Adding external {}".format(k)
                 k = k.rstrip('2')
                 g.add_node(v, {'name': v, 'type': k, 'origin': 'external'})
 
+        print "Edge between {} and {}".format(r['dataset'], r['dimension'])
         g.add_edge(r['dataset'], r['dimension'])
+        print "Edge between {} and {}".format(r['dataset'], r['name'])
         g.add_edge(r['dataset'], r['name'])
 
         if 'dimension2' in r:
+            print "dimension2 in r: {}".format(r['dimension2'])
+            print "Edge between {} and {}".format(r['dimension'], r['dimension2'])
             g.add_edge(r['dimension'], r['dimension2'])
             if 'dataset2' in r:
+                print "Edge between {} and {}".format(r['dataset2'], r['dimension2'])
                 g.add_edge(r['dataset2'], r['dimension2'])
-                g.add_edge(r['name2'], r['dataset2'])
+                print "Edge between {} and {}".format(r['dataset2'], r['name2'])
+                g.add_edge(r['dataset2'], r['name2'])
             elif 'name2' in r:
+                print "Edge between {} and {}".format(r['dataset2'], r['name2'])
                 g.add_edge(r['dimension2'], r['name2'])
 
     return g
 
 
-def update(graph = None):
-    # if graph == None :
-    #     results = query()
-    #     results = dictize(results)
-    # else :
-    #     results = graph.query(edges_query)
-    #     results = [r.asdict() for r in results]
+def update(graph=None):
+    print "Graph is: {}".format(graph)
+    if graph is None:
+        results = query()
+        results = dictize(results)
+    else:
+        results = graph.query(edges_query)
+        results = [r.asdict() for r in results]
 
-    results = query()
-    results = dictize(results)
+    # results = query()
+    # results = dictize(results)
 
     g = build_graph(results)
 
     data = json_graph.node_link_data(g)
+
+    print data
 
     with open('graph.json','w') as f:
         json.dump(data,f)
