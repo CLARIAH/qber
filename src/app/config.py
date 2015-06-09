@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import os 
+import os
 
-base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),"../../data"))
+base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),"../../../clariah-data"))
 
 # Where should QBer look for your data file.
 dataset = 'utrecht_1829'
