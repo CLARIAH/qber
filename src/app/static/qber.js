@@ -288,80 +288,6 @@ function fill_selects(variable_id, variable_panel){
 
   });
 
-
-  // Get the data for the selected variable from local storage.
-  var data = $.localStorage.get(variable_id);
-
-  if (data) {
-    console.log(data);
-    $(".data").each(function(){
-      var field = $(this).attr("name");
-      console.log("Field is "+field);
-
-      if (field in data){
-        var value = data[field];
-        console.log("Populating "+field);
-        console.log(value);
-
-        if($(this).hasClass("selectized")){
-          $(this)[0].selectize.setValue(value);
-        } else {
-          if(value === true) {
-            $(this).prop("checked",true);
-          } else {
-            $(this).val(value);
-          }
-        }
-      }
-    });
-  }
-
-  // Initialize the event handlers.
-
-  // Save the entered data to local storage
-  $(save_button).on("click",function(){
-    var data = {};
-
-    // For each data element, get its value and store it
-    $(".data").each(function(index, element){
-      var element_id = $(element).prop("name");
-      var value;
-
-      if ($(element).prop("type") == "checkbox"){
-        console.log(element_id + " is a checkbox");
-
-        value = $(element).prop("checked");
-
-      } else {
-        console.log(element_id + " is not a checkbox");
-
-        value = $(element).val();
-      }
-
-      data[element_id] = value;
-
-    });
-
-
-    // Get values
-    data.values = examples[variable_id];
-
-    // For each mapping, store the mapping
-    mappings = {};
-    $(".mapping.selectized").each(function(index, element){
-      var code_id = $(element).prop("name");
-      var value = $(element).val();
-
-      mappings[id] = {"id": code_id, "value": value};
-    });
-
-    data.mappings = mappings;
-
-    // Set the data in local storage
-    $.localStorage.set(variable_id,data);
-    console.log(data);
-  });
-
   // If we import an external dimension with a code list, add a select button for every row in the value examples table.
   // TODO: This is not efficient for many possible codes (e.g. HISCO for occupations in the Utrecht 1829 dataset)
   $(lod_variable_field).on("change", function(){
@@ -436,6 +362,85 @@ function fill_selects(variable_id, variable_panel){
       }
     });
   });
+
+
+  // Get the data for the selected variable from local storage.
+  var data = $.localStorage.get(variable_id);
+
+  if (data) {
+    console.log(data);
+    $(".data").each(function(){
+      var field = $(this).attr("name");
+      console.log("Field is "+field);
+
+      if (field in data){
+        var value = data[field];
+        console.log("Populating "+field);
+        console.log(value);
+
+        if($(this).hasClass("selectized")){
+          console.log(this + ' is selectized');
+          $(this)[0].selectize.setValue(value);
+          console.log("Value check: "+ $(this).val());
+        } else {
+          if(value === true) {
+            $(this).prop("checked",true);
+          } else {
+            $(this).val(value);
+          }
+          console.log("Value check: " + $(this).val());
+        }
+      }
+    });
+  }
+
+  // Initialize the event handlers.
+
+  // Save the entered data to local storage
+  $(save_button).on("click",function(){
+    var data = {};
+
+    // For each data element, get its value and store it
+    $(".data").each(function(index, element){
+      var element_id = $(element).prop("name");
+      var value;
+
+      if ($(element).prop("type") == "checkbox"){
+        console.log(element_id + " is a checkbox");
+
+        value = $(element).prop("checked");
+
+      } else {
+        console.log(element_id + " is not a checkbox");
+
+        value = $(element).val();
+      }
+
+      data[element_id] = value;
+
+    });
+
+
+    // Get values
+    data.values = examples[variable_id];
+
+    // For each mapping, store the mapping
+    mappings = {};
+    $(".mapping.selectized").each(function(index, element){
+      var code_id = $(element).prop("name");
+      var value = $(element).val();
+
+      mappings[code_id] = {"id": code_id, "value": value};
+    });
+
+    data.mappings = mappings;
+
+    // Set the data in local storage
+    $.localStorage.set(variable_id,data);
+    console.log(data);
+  });
+
+
 
   $(codelist_checkbox).on("change", function(){
     // We remove existing code cells from the rows
@@ -522,7 +527,7 @@ function fill_selects(variable_id, variable_panel){
   });
 
   // Make sure the code list is used to create the select cells
-  $(codelist_field).trigger("change");
+  // $(codelist_field).trigger("change");
 
 
 }
@@ -593,7 +598,7 @@ function populate_value_selects(codelist){
       if (mappings[code_id]){
         console.log("Setting mapping for  "+code_id+" to "+mapping.value);
         select[0].selectize.setValue(mapping.value);
-      } 
+      }
       // for (var n in mappings) {
       //   var mapping = mappings[n];
       //   console.log("Checking mapping");
