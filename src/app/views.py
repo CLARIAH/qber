@@ -261,7 +261,7 @@ def dimension():
 def codelist():
     """Gets the SKOS Concepts belonging to the SKOS Scheme or Collection identified by the URI parameter"""
     uri = request.args.get('uri', False)
-    log.debug(uri)
+    log.debug('Retrieving concepts for '+ uri)
 
     if uri:
         log.debug("Querying for SKOS concepts in Scheme or Collection <{}>".format(uri))
