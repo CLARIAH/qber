@@ -2,8 +2,8 @@ from rdflib import Dataset, Graph, Namespace, Literal, URIRef, BNode, RDF, RDFS,
 import urllib
 import datetime
 
-QBRV = Namespace('http://qber.data2semantics.org/vocab/')
-QBR = Namespace('http://qber.data2semantics.org/resource/')
+QBRV = Namespace('http://data.socialhistory.org/vocab/')
+QBR = Namespace('http://data.socialhistory.org/resource/')
 
 QB = Namespace('http://purl.org/linked-data/cube#')
 SKOS = Namespace('http://www.w3.org/2004/02/skos/core#')
@@ -38,7 +38,7 @@ def data_structure_definition(dataset, variables, profile, source_path, source_h
 
     :returns: an RDF graph store containing a nanopublication
     """
-    BASE = Namespace('http://qber.data2semantics.org/resource/{}/'.format(dataset))
+    BASE = Namespace('http://data.socialhistory.org/resource/{}/'.format(dataset))
 
     # Initialize a conjunctive graph for the whole lot
     rdf_dataset = Dataset()
@@ -200,8 +200,8 @@ def data_structure_definition(dataset, variables, profile, source_path, source_h
             # If we have a mapping specified, map to the codelist we selected
             if 'codelist_field' in metadata and metadata['codelist_field'] != "":
                 assertion_graph.add((codelist_uri, PROV['wasDerivedFrom'], URIRef(metadata['codelist_field'])))
-
-                for mapping in metadata['mappings']:
+                print metadata['mappings']
+                for mapping in metadata['mappings'].values():
                     source = mapping['id']
                     target = mapping['value']
 
@@ -232,7 +232,7 @@ def serializeTrig(rdf_dataset):
             turtle += reindent(c.serialize(format='turtle'), 4)
             turtle += "}\n\n"
         else :
-            turtle += c.serialize(format='turtle')
+            turtle = c.serialize(format='turtle')
             turtle += "\n\n"
 
         turtles.append(turtle)

@@ -216,7 +216,7 @@ function fill_selects(variable_id, variable_panel){
     create: function(input){
       return {
         "label": input,
-        "uri": "http://sdh.clariah.org/vocab/dimension/"+input
+        "uri": "http://data.socialhistory.org/vocab/dimension/"+input
       }
 
     }
@@ -245,7 +245,7 @@ function fill_selects(variable_id, variable_panel){
     create: function(input){
       return {
         "label": input,
-        "uri": "http://sdh.clariah.org/vocab/scheme/"+input
+        "uri": "http://data.socialhistory.org/vocab/scheme/"+input
       }
 
     }
