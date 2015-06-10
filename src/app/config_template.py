@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ## Copy this file to 'config.py' and make necessary changes for your local setup.
+import os
 
-# Where should QBer look for your data file.
-dataset = '<NAME OF DATASET>'
-dataset_file = '<RELATIVE PATH TO JSON CONFIGURATION FOR DATASET>'
+base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)),"<RELATIVE PATH TO DATA FOLDER>"))
 
 # SPARQL Endpoint Configuration
 ENDPOINT_URL = '<URL OF SPARQL ENDPOINT>'
