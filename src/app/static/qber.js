@@ -703,6 +703,11 @@ function browse(browsepane, path) {
 // And finally, once the document is loaded
 $(function() {
   "use strict";
+
+  // Enable scrolling on the document body (strange)
+
+  $('body').css({overflow: 'scroll'}); 
+
   // Hide the signout button
   $("#signout").hide();
 
