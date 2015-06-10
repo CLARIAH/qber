@@ -26,24 +26,30 @@ def resolve(uri, depth=2, current_depth=0, visited = set()):
     if uri in visited:
         print uri, "already visited"
         return True, visited
-    if ask_graph(URIRef(uri).defrag()) :
+    print uri, "not visited yet"
+
+    if ask_graph(URIRef(uri).defrag()):
         print uri, "already known"
         visited.add(uri)
         return True, visited
-    else :
+    else:
+        print uri, "not yet known"
         g = Graph()
         try :
+            print "Trying to parse", uri
             g.parse(uri)
         except :
             try :
+                print "Trying to parse", uri, "as turtle"
                 g.parse(uri, format='turtle')
             except Exception as e:
-                print "Oops", e
+                import traceback
+                traceback.print_exc()
                 visited.add(uri)
                 return False, visited
 
         # Add the gleaned triples to the store
-        update_query = make_update(g,graph_uri=URIRef(uri).defrag())
+        update_query = make_update(g, graph_uri=URIRef(uri).defrag())
         sparql_update(update_query)
         print uri, "added to triple store"
         visited.add(uri)
