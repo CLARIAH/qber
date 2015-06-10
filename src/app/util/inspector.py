@@ -17,7 +17,7 @@ edges_query = """
     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
 
-    SELECT DISTINCT ?dataset ?dimension ?name ?image ?dataset2 ?dimension2 ?name2 ?image2 WHERE {
+    SELECT DISTINCT ?dataset ?dimension ?person ?name ?image ?dataset2 ?dimension2 ?person2 ?name2 ?image2 WHERE {
         GRAPH ?provenance_graph {
             ?assertion_graph prov:wasAttributedTo ?person .
         }
@@ -122,19 +122,19 @@ def build_graph(results):
                 continue
             elif k in ['dataset', 'dimension']:
                 g.add_node(v, {'name': v, 'type': k, 'origin': r['dataset']})
-            elif k in ['name']:
-                g.add_node(v, {'name': v, 'type': 'person', 'image': r['image']})
-            elif k in ['name2'] and not g.has_node(v):
-                g.add_node(v, {'name': v, 'type': 'person', 'image': r['image2']})
-            elif not g.has_node(v) and k not in ['image2', 'image']:
+            elif k in ['person']:
+                g.add_node(v, {'name': v, 'label': r['name'], 'type': 'person', 'image': r['image']})
+            elif k in ['person2'] and not g.has_node(v):
+                g.add_node(v, {'name': v, 'label': r['name2'], 'type': 'person', 'image': r['image2']})
+            elif not g.has_node(v) and k not in ['image2', 'image', 'name', 'name2']:
                 print "Adding external {}".format(k)
                 k = k.rstrip('2')
                 g.add_node(v, {'name': v, 'type': k, 'origin': 'external'})
 
         print "Edge between {} and {}".format(r['dataset'], r['dimension'])
         g.add_edge(r['dataset'], r['dimension'])
-        print "Edge between {} and {}".format(r['dataset'], r['name'])
-        g.add_edge(r['dataset'], r['name'])
+        print "Edge between {} and {}".format(r['dataset'], r['person'])
+        g.add_edge(r['dataset'], r['person'])
 
         if 'dimension2' in r:
             print "dimension2 in r: {}".format(r['dimension2'])
@@ -143,11 +143,11 @@ def build_graph(results):
             if 'dataset2' in r:
                 print "Edge between {} and {}".format(r['dataset2'], r['dimension2'])
                 g.add_edge(r['dataset2'], r['dimension2'])
-                print "Edge between {} and {}".format(r['dataset2'], r['name2'])
-                g.add_edge(r['dataset2'], r['name2'])
+                print "Edge between {} and {}".format(r['dataset2'], r['person2'])
+                g.add_edge(r['dataset2'], r['person2'])
             elif 'name2' in r:
-                print "Edge between {} and {}".format(r['dataset2'], r['name2'])
-                g.add_edge(r['dimension2'], r['name2'])
+                print "Edge between {} and {}".format(r['dataset2'], r['person2'])
+                g.add_edge(r['dimension2'], r['person2'])
 
     return g
 

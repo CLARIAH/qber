@@ -193,6 +193,7 @@
 
     }
 
+
     function init_graph(graph){
       var width = 1200,
           height = 600;
@@ -216,7 +217,7 @@
         .offset([-10, 0])
         .html(function(d) {
           if (d.type == 'person'){
-            var content = "<h5>" + d.name + "</h5>"+
+            var content = "<h5>" + d.label + "</h5>"+
                    "<img src='"+ d.image +"'></img>";
           } else {
             var content = "<h5>" + d.name.replace('http://data.socialhistory.org/resource/','csdh:') + "</h5>"+
@@ -247,7 +248,10 @@
           .attr("class", "node")
           .call(force.drag)
           .on('mouseover', tip.show)
-          .on('mouseout', tip.hide);
+          .on('mouseout', tip.hide)
+          .on('click', function(d){
+            window.open(d.name);
+          });
 
       node.append("title")
           .text(function(d) { return d.name.replace('http://data.socialhistory.org/resource/','csdh:'); });
