@@ -66,7 +66,7 @@ def make_update(graph, graph_uri = None):
                 nt += c.serialize(format='nt')
                 nt += "}\n\n"
             else:
-                nt += c.serialize(format='nt')
+                nt = c.serialize(format='nt')
                 nt += "\n\n"
 
             nts.append(nt)
