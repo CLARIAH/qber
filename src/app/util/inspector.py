@@ -4,7 +4,6 @@ import requests
 import json
 from sparql_client import dictize
 from networkx.readwrite import json_graph
-from rdflib import Namespace
 
 
 edges_query = """
@@ -170,7 +169,7 @@ def update(graph=None):
 
     print data
 
-    with open('graph.json','w') as f:
-        json.dump(data,f)
+    with open('graph.json', 'w') as f:
+        json.dump(data, f)
 
     return data
