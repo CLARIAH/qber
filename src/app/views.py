@@ -39,20 +39,22 @@ def inspect():
     return jsonify(data)
 
 
+# Socket IO handlers
+
 @socketio.on('message', namespace='/inspector')
 def message(json):
     log.debug('SocketIO message:\n' + str(json))
-
-
-@socketio.on('connect', namespace='/inspector')
-def connect():
-    log.debug('SocketIO connected')
-    emit('response', {'data': 'Connected'})
-
-
-@socketio.on('disconnect', namespace='/inspector')
-def disconnect():
-    log.debug('SocketIO disconnected')
+#
+#
+# @socketio.on('connect', namespace='/inspector')
+# def connect():
+#     log.debug('SocketIO connected')
+#     emit('response', {'data': 'Connected'})
+#
+#
+# @socketio.on('disconnect', namespace='/inspector')
+# def disconnect():
+#     log.debug('SocketIO disconnected')
 
 
 @app.route('/metadata')
