@@ -53,6 +53,10 @@
         <div class="col-md-12" id='variable-panel'>
         </div>
     </div>
+    <div class="row">
+      <div class="col-md-12" id="test">
+      </div>
+    </div>
 </div>
 
 {% include 'open-dataset-modal.html' %}
@@ -63,6 +67,12 @@
 
 {{super()}}
 
+<script src="{{ url_for('static', filename='bower_components/flux/dist/Flux.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/react/react.min.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/react/JSXTransformer.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/selectize/dist/js/selectize.js') }}"></script>
+<script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.js') }}"></script>
+
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <script src="{{url_for('.static', filename='selectize.js')}}"></script>
 <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script> -->
@@ -72,6 +82,7 @@
 <!-- <script src="{{url_for('.static', filename='jquery.toObject.js')}}"></script> -->
 <!-- <script src="{{url_for('.static', filename='levenshtein.js')}}"></script> -->
 <script src="{{url_for('.static', filename='qber.js')}}"></script>
+<script src="{{url_for('.static', filename='js/qber.js')}}"></script>
 
 {% endblock %}
 
@@ -80,8 +91,8 @@
 
 <link rel="stylesheet"
       href="{{url_for('.static', filename='bootstrap.min.css')}}">
-<link rel="stylesheet" href="{{url_for('.static', filename='selectize.css')}}" />
-<link rel="stylesheet" href="{{url_for('.static', filename='selectize.bootstrap3.css')}}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='bower_components/selectize/dist/css/selectize.css') }}" />
+<link rel="stylesheet" href="{{url_for('.static', filename='bower_components/selectize/dist/css/selectize-bootstrap3.css')}}" />
 <link rel="stylesheet" href="{{url_for('.static', filename='qber.css')}}" />
 
 
