@@ -18,7 +18,7 @@ gulp.task('transform', function () {
 gulp.task('default', ['clean'], function () {
   console.log("Hello QBer!");
   gulp.start('transform');
-  gulp.watch('./app/static/jsx/main.js', ['transform']);
+  gulp.watch('./app/static/jsx/qber.jsx', ['transform']);
 });
 
 
