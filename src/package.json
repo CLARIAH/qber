@@ -10,6 +10,8 @@
     "gulp-rename": "^1.2.2",
     "gulp-size": "^1.2.1",
     "jquery": "^2.1.4",
+    "keymirror": "^0.1.1",
+    "object-assign": "^3.0.0",
     "react": "^0.13.3",
     "react-tools": "^0.13.3",
     "reactify": "^1.1.1",
