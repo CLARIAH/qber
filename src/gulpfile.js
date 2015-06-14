@@ -18,22 +18,22 @@ gulp.task('transform', function () {
 gulp.task('default', ['clean'], function () {
   console.log("Hello QBer!");
   gulp.start('transform');
-  gulp.watch('./app/static/jsx/qber.jsx', ['transform']);
+  gulp.watch(['./app/static/js/qber.js','./app/static/js/**/*.js'], ['transform']);
 });
 
 
 
 
 gulp.task('transform', function () {
-  return gulp.src('./app/static/jsx/qber.jsx')
+  return gulp.src('./app/static/js/qber.js')
     .pipe(browserify({transform: ['reactify']}))
-    .pipe(rename('qber.js'))
-    .pipe(gulp.dest('./app/static/js'))
+    .pipe(rename('bundle.js'))
+    .pipe(gulp.dest('./app/static/dist/js'))
     .pipe(size());
 });
 
 
 gulp.task('clean', function () {
-  return gulp.src(['./app/static/js'], {read: false})
+  return gulp.src(['./app/static/dist/js'], {read: false})
     .pipe(clean());
 });
