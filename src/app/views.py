@@ -92,6 +92,10 @@ def metadata():
     # Get the LSD dimensions from the LSD service (or a locally cached copy)
     # And concatenate it with the dimensions in the CSDH
     dimensions = get_lsd_dimensions() + get_csdh_dimensions()
+
+    dimensions_as_dict = {dim['uri']: dim for dim in dimensions}
+
+    dimensions_as_dict = OrderedDict(sorted(dimensions_as_dict.items(), key=lambda t: t[1]['refs']))
     # Get all known SKOS schemes and collections from the LOD cache service
     schemes = get_schemes() + get_csdh_schemes()
 
