@@ -2,6 +2,8 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var DatasetActions = require('../actions/DatasetActions');
 
+var VariableAttributes = require('./VariableAttributes.react');
+var CodesTable = require('./CodesTable.react');
 
 // var Mapping = require('./Mapping.react');
 
@@ -18,7 +20,7 @@ var VariablePanel = React.createClass({
    */
   render: function() {
     // This section should be hidden by default
-    // and shown when there are datasets.
+    // and shown when there is a dataset and variable.
     if (Object.keys(this.props.dataset).length < 1 || this.props.variable === undefined) {
       return null;
     }
@@ -27,13 +29,14 @@ var VariablePanel = React.createClass({
     var elements = [];
 
     for (var key in dataset) {
-      elements.push(<li> {key} </li>);
+      elements.push( <li> {key} </li> );
     }
 
     return (
       <section id="main">
         <h1>{this.props.variable}</h1>
-        <ul id="dataset-list">{elements}</ul>
+        <VariableAttributes dimensions={this.props.dataset.dimensions} variable={this.props.variable}/>
+        <CodesTable codes={this.props.dataset.examples[this.props.variable]}/>
       </section>
     );
   },

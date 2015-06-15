@@ -22,7 +22,8 @@ var DatasetStore = require('../stores/DatasetStore');
  */
 function getDatasetState() {
   return {
-    dataset: DatasetStore.get()
+    dataset: DatasetStore.get(),
+    variable: DatasetStore.getVariable()
   };
 }
 
