@@ -13,6 +13,7 @@
  */
 
 var React = require('react');
+var VariablesList = require('./VariablesList.react');
 var VariablePanel = require('./VariablePanel.react');
 var DatasetStore = require('../stores/DatasetStore');
 
@@ -21,8 +22,7 @@ var DatasetStore = require('../stores/DatasetStore');
  */
 function getDatasetState() {
   return {
-    allDatasets: DatasetStore.getAll(),
-    areAllComplete: DatasetStore.areAllComplete()
+    dataset: DatasetStore.get()
   };
 }
 
@@ -34,12 +34,6 @@ var QBer = React.createClass({
 
   componentDidMount: function() {
     DatasetStore.addChangeListener(this._onChange);
-
-    $.get(this.props.source, {file: this.props.dataset_file }, function(result) {
-      if (this.isMounted()) {
-        this.setState(result);
-      }
-    }.bind(this));
   },
 
   componentWillUnmount: function() {
@@ -52,9 +46,9 @@ var QBer = React.createClass({
   render: function() {
   	return (
       <div>
+        <VariablesList variables={this.state.dataset.variables}/>
         <VariablePanel
-          allDatasets={this.state.mappings}
-          areAllComplete={this.state.areAllComplete}
+          dataset={this.state.dataset} variable={this.state.variable}
         />
       </div>
   	);

@@ -12,11 +12,5 @@
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
-  DATASET_CREATE: null,
-  DATASET_COMPLETE: null,
-  DATASET_DESTROY: null,
-  DATASET_DESTROY_COMPLETED: null,
-  DATASET_TOGGLE_COMPLETE_ALL: null,
-  DATASET_UNDO_COMPLETE: null,
-  DATASET_UPDATE_TEXT: null
+  DATASET_INIT: null,
 });

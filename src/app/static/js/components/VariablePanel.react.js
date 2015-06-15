@@ -1,13 +1,16 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-var TodoActions = require('../actions/DatasetActions');
+var DatasetActions = require('../actions/DatasetActions');
+
+
 // var Mapping = require('./Mapping.react');
 
 var VariablePanel = React.createClass({
 
+  // This React class only works if a 'dataset' is passed through its properties.
   propTypes: {
-    allDatasets: ReactPropTypes.object.isRequired,
-    areAllComplete: ReactPropTypes.bool.isRequired
+    variable: ReactPropTypes.string.isRequired,
+    dataset: ReactPropTypes.object.isRequired
   },
 
   /**
@@ -16,27 +19,21 @@ var VariablePanel = React.createClass({
   render: function() {
     // This section should be hidden by default
     // and shown when there are datasets.
-    if (Object.keys(this.props.allDatasets).length < 1) {
+    if (Object.keys(this.props.dataset).length < 1 || this.props.variable === undefined) {
       return null;
     }
 
-    var allDatasets = this.props.allDatasets;
-    var datasets = [];
+    var dataset = this.props.dataset;
+    var elements = [];
 
-    for (var key in allDatasets) {
-      datasets.push(<li> {key} </li>);
+    for (var key in dataset) {
+      elements.push(<li> {key} </li>);
     }
 
     return (
       <section id="main">
-        <input
-          id="toggle-all"
-          type="checkbox"
-          onChange={this._onToggleCompleteAll}
-          checked={this.props.areAllComplete ? 'checked' : ''}
-        />
-        <label htmlFor="toggle-all">Mark all as complete</label>
-        <ul id="dataset-list">{datasets}</ul>
+        <h1>{this.props.variable}</h1>
+        <ul id="dataset-list">{elements}</ul>
       </section>
     );
   },
@@ -45,7 +42,7 @@ var VariablePanel = React.createClass({
    * Event handler to mark all TODOs as complete
    */
   _onToggleCompleteAll: function() {
-    TodoActions.toggleCompleteAll();
+    DatasetActions.toggleCompleteAll();
   }
 
 });
