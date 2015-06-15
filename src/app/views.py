@@ -376,13 +376,16 @@ def get_lsd_dimensions():
     """Loads the list of Linked Statistical Data dimensions (variables) from the LSD portal"""
     # TODO: Create a local copy that gets updated periodically
 
-    if os.path.exists('metadata/dimensions.json'):
-        log.debug("Loading dimensions from file...")
-        with open('metadata/dimensions.json', 'r') as f:
-            dimensions_json = f.read()
+    try:
+        if os.path.exists('metadata/dimensions.json'):
+            log.debug("Loading dimensions from file...")
+            with open('metadata/dimensions.json', 'r') as f:
+                dimensions_json = f.read()
 
-        dimensions = json.loads(dimensions_json)
-    else:
+            dimensions = json.loads(dimensions_json)
+        else:
+            raise Exception("Could not load dimensions from file...")
+    except:
         dimensions_response = requests.get("http://amp.ops.few.vu.nl/data.json")
         log.debug("Loading dimensions from LSD service...")
         try:
