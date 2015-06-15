@@ -7,6 +7,7 @@ import json
 import os
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Graph
+from collections import OrderedDict
 
 import config
 import util.sparql_client as sc
@@ -106,7 +107,7 @@ def metadata():
         'variables': variables,
         'metadata': metadata,
         'examples': examples,
-        'dimensions': dimensions,
+        'dimensions': dimensions_as_dict,
         'schemes': schemes,
         'cache': cache
     }
