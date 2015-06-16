@@ -390,17 +390,21 @@ def get_lsd_dimensions():
             dimensions = json.loads(dimensions_json)
         else:
             raise Exception("Could not load dimensions from file...")
-    except:
+    except Exception as e:
+        log.warning(e)
         dimensions_response = requests.get("http://amp.ops.few.vu.nl/data.json")
         log.debug("Loading dimensions from LSD service...")
         try:
             dimensions = json.loads(dimensions_response.content)
 
-            with open('metadata/dimensions.json', 'w') as f:
-                f.write(dimensions_response)
+            if len(dimensions_response) > 1:
+                with open('metadata/dimensions.json', 'w') as f:
+                    f.write(dimensions_response)
+                else:
+                    raise Exception("Could not load dimensions from service")
 
-        except:
-            log.error("Dimensions could not be loaded from service...")
+        except Exception as e:
+            log.error(e)
 
             dimensions = []
 
