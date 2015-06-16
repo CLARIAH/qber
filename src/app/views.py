@@ -400,8 +400,8 @@ def get_lsd_dimensions():
             if len(dimensions_response) > 1:
                 with open('metadata/dimensions.json', 'w') as f:
                     f.write(dimensions_response)
-                else:
-                    raise Exception("Could not load dimensions from service")
+            else:
+                raise Exception("Could not load dimensions from service")
 
         except Exception as e:
             log.error(e)
