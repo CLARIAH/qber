@@ -7,6 +7,8 @@ var CHANGE_EVENT = 'change';
 
 var _dataset = {};
 var _variable;
+var _variable_search;
+var _just_selected_variable = false;
 
 /**
  * Initialize the DATASET.
@@ -24,6 +26,23 @@ function initialize(dataset) {
 function setVariable(variable){
   _variable = variable;
 }
+
+/**
+ * Set the VARIABLE search function.
+ * @return {string}
+ */
+ function setVariableSearch(variable_search) {
+   _variable_search = variable_search;
+}
+
+/**
+ * Set the VARIABLE search function.
+ * @return {string}
+ */
+ function setJustSelectedVariable(selected) {
+   _just_selected_variable = selected;
+}
+
 
 /**
  * Update a DATASET item.
@@ -54,6 +73,18 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
    */
   getVariable: function() {
     return _variable;
+  },
+
+  /**
+   * Get the VARIABLE search string.
+   * @return {string}
+   */
+  getVariableSearch: function() {
+    return _variable_search;
+  },
+
+  getJustSelectedVariable: function(){
+    return _just_selected_variable;
   },
 
   emitChange: function() {
@@ -94,6 +125,18 @@ QBerDispatcher.register(function(action) {
       variable = action.variable;
       if (variable !== ""){
         setVariable(variable);
+        setVariableSearch(variable);
+        setJustSelectedVariable(true);
+        DatasetStore.emitChange();
+      }
+      break;
+
+    case DatasetConstants.SET_VARIABLE_SEARCH:
+      console.log("Setting search to:" +action.search);
+      variable_search = action.search;
+      setJustSelectedVariable(false);
+      if (variable_search !== ""){
+        setVariableSearch(variable_search);
         DatasetStore.emitChange();
       }
       break;

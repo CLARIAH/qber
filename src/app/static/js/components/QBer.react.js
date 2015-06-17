@@ -23,7 +23,9 @@ var DatasetStore = require('../stores/DatasetStore');
 function getDatasetState() {
   return {
     dataset: DatasetStore.get(),
-    variable: DatasetStore.getVariable()
+    variable: DatasetStore.getVariable(),
+    variable_search: DatasetStore.getVariableSearch(),
+    just_selected: DatasetStore.getJustSelectedVariable()
   };
 }
 
@@ -46,11 +48,15 @@ var QBer = React.createClass({
    */
   render: function() {
   	return (
-      <div>
-        <VariablesList variables={this.state.dataset.variables}/>
-        <VariablePanel
-          dataset={this.state.dataset} variable={this.state.variable}
-        />
+      <div className="row">
+        <div className="col-md-2">
+          <VariablesList variables={this.state.dataset.variables} variable={this.state.variable} search={this.state.variable_search}  justSelected={this.state.just_selected}/>
+        </div>
+        <div className="col-md-10">
+          <VariablePanel
+            dataset={this.state.dataset} variable={this.state.variable}
+          />
+        </div>
       </div>
   	);
   },
