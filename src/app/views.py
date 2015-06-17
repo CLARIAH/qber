@@ -41,21 +41,9 @@ def inspect():
 
 
 # Socket IO handlers
-
 @socketio.on('message', namespace='/inspector')
 def message(json):
     log.debug('SocketIO message:\n' + str(json))
-#
-#
-# @socketio.on('connect', namespace='/inspector')
-# def connect():
-#     log.debug('SocketIO connected')
-#     emit('response', {'data': 'Connected'})
-#
-#
-# @socketio.on('disconnect', namespace='/inspector')
-# def disconnect():
-#     log.debug('SocketIO disconnected')
 
 
 @app.route('/metadata')
@@ -82,25 +70,6 @@ def metadata():
     # Intialize a file a dapter for the dataset
     adapter = loader.adapter.get_adapter(dataset)
 
-    variables = adapter.get_header()
-    metadata = adapter.get_metadata()
-    examples = adapter.get_examples()
-
-    # Not used
-    # short_metadata = {metadata.keys()[0]: metadata[metadata.keys()[0]]}
-
-    # Get the LSD dimensions from the LSD service (or a locally cached copy)
-    # And concatenate it with the dimensions in the CSDH
-    dimensions = get_lsd_dimensions() + get_csdh_dimensions()
-
-    dimensions_as_dict = {dim['uri']: dim for dim in dimensions}
-
-    dimensions_as_dict = OrderedDict(sorted(dimensions_as_dict.items(), key=lambda t: t[1]['refs']))
-    # Get all known SKOS schemes and collections from the LOD cache service
-    schemes = get_schemes() + get_csdh_schemes()
-
-    cache = read_cache(dataset_path)
-
     (head, dataset_local_name) = os.path.split(dataset_file)
     (dataset_name, extension) = os.path.splitext(dataset_local_name)
 
@@ -108,12 +77,12 @@ def metadata():
     data = {
         'file': dataset_name,
         'path': dataset_path,
-        'variables': variables,
-        'metadata': metadata,
-        'examples': examples,
-        'dimensions': dimensions_as_dict,
-        'schemes': schemes,
-        'cache': cache
+        'variables': adapter.get_header(),
+        'metadata': adapter.get_metadata(),
+        'examples': adapter.get_examples(),
+        'dimensions': get_dimensions(),
+        'schemes': get_schemes() + get_csdh_schemes(),
+        'cache': read_cache(dataset_path)
     }
 
     return jsonify(data)
@@ -377,6 +346,17 @@ def browse():
     return jsonify({'parent': parent, 'files': filelist})
 
 
+def get_dimensions():
+    # Get the LSD dimensions from the LSD service (or a locally cached copy)
+    # And concatenate it with the dimensions in the CSDH
+    # Return an ordered dict of dimensions (ordered by number of references)
+
+    dimensions = get_lsd_dimensions() + get_csdh_dimensions()
+
+    dimensions_as_dict = {dim['uri']: dim for dim in dimensions}
+
+    return OrderedDict(sorted(dimensions_as_dict.items(), key=lambda t: t[1]['refs']))
+
 def get_lsd_dimensions():
     """Loads the list of Linked Statistical Data dimensions (variables) from the LSD portal"""
     # TODO: Create a local copy that gets updated periodically
@@ -408,6 +388,7 @@ def get_lsd_dimensions():
 
             dimensions = []
 
+    dimensions = [dim for dim in dimensions if dim['refs'] > 1]
     return dimensions
 
 
