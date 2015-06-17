@@ -28,7 +28,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="container" id='qber'>
+<div class="container-fluid" id='qber'>
 
 </div>
 
@@ -48,9 +48,7 @@
 
 {% block styles %}
 {{ super() }}
-<!-- 
-<link rel="stylesheet" href="{{ url_for('static', filename='bower_components/selectize/dist/css/selectize.css') }}" />
-<link rel="stylesheet" href="{{url_for('.static', filename='bower_components/selectize/dist/css/selectize.bootstrap3.css')}}" /> -->
+
 <link rel="stylesheet" href="{{url_for('.static', filename='react-select.css')}}" />
 <link rel="stylesheet" href="{{url_for('.static', filename='qber.css')}}" />
 
