@@ -88,9 +88,9 @@ class Adapter(object):
 
             stats[col] = istats
 
-
-
         return stats
+
+
 
 # TODO: Temporarily Disabled
 # class SavAdapter(Adapter):
@@ -146,7 +146,7 @@ class Adapter(object):
 
 class CsvAdapter(Adapter):
 
-    def __init__(self,dataset):
+    def __init__(self, dataset):
         """Initializes an adapter for reading a CSV dataset"""
         super(CsvAdapter, self).__init__(dataset)
 
@@ -160,11 +160,11 @@ class CsvAdapter(Adapter):
         with open(self.filename, 'r') as fn:
             self.data = pd.DataFrame.from_csv(fn)
 
-        if self.has_header :
+        if self.has_header:
             self.header = list(self.data.columns)
-        elif self.metadata :
+        elif self.metadata:
             self.header = self.metadata.keys()
-        else :
+        else:
             self.header = None
 
         self.metadata = self.load_metadata()
