@@ -8,7 +8,6 @@ var VariableAttributes = React.createClass({
 
   // This React class only works if a list of 'variables' is passed through its properties.
   propTypes: {
-    variable: ReactPropTypes.string.isRequired,
     dimensions: ReactPropTypes.object.isRequired
   },
 
@@ -16,11 +15,10 @@ var VariableAttributes = React.createClass({
    * @return {object}
    */
   render: function() {
-    console.log('VariableAttributes');
-
+    return null;
     // This section should be hidden by default
-    // and shown when there is a list of dimensions and a variable.
-    if (this.props.dimensions === undefined || Object.keys(this.props.dimensions).length < 1 || this.props.variable === undefined) {
+    // and shown when there is a list of dimensions.
+    if (this.props.dimensions === undefined || Object.keys(this.props.dimensions).length < 1 ) {
       return null;
     }
 

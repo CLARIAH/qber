@@ -26,17 +26,13 @@ var VariablePanel = React.createClass({
     }
 
     var dataset = this.props.dataset;
-    var elements = [];
-
-    for (var key in dataset) {
-      elements.push( <li> {key} </li> );
-    }
+    var variable = this.props.variable;
 
     return (
       <section id="main">
         <h1>{this.props.variable}</h1>
-        <VariableAttributes dimensions={this.props.dataset.dimensions} variable={this.props.variable}/>
-        <CodesTable codes={this.props.dataset.examples[this.props.variable]}/>
+        <VariableAttributes dimensions={dataset.dimensions} justSelected={this.props.justSelected}/>
+        <CodesTable codes={dataset.examples[variable]}/>
       </section>
     );
   },
