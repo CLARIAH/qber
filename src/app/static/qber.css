@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Signika:400,300,600,700);
+
 body {
   padding-top: 60px;
 }
@@ -10,4 +12,8 @@ body {
 
 nav {
   background-color: white;
+}
+
+h1, h2, h3, h4, h5, h6, nav {
+  font-family: Signika;
 }
