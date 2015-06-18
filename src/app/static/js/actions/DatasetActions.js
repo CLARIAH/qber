@@ -29,16 +29,6 @@ var DatasetActions = {
     QBerAPI.retrieveDimension(dimension);
   },
 
-
-  /**
-   * @param {string} search
-   */
-  searchVariable: function(search) {
-    QBerDispatcher.dispatch({
-      actionType: DatasetConstants.SET_VARIABLE_SEARCH,
-      search: search
-    });
-  }
 };
 
 module.exports = DatasetActions;
