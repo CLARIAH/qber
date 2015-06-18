@@ -75,18 +75,6 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
     return _variable;
   },
 
-  /**
-   * Get the VARIABLE search string.
-   * @return {string}
-   */
-  getVariableSearch: function() {
-    return _variable_search;
-  },
-
-  getJustSelectedVariable: function(){
-    return _just_selected_variable;
-  },
-
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
@@ -125,24 +113,12 @@ QBerDispatcher.register(function(action) {
       variable = action.variable;
       if (variable !== ""){
         setVariable(variable);
-        setVariableSearch(variable);
-        setJustSelectedVariable(true);
-        DatasetStore.emitChange();
-      }
-      break;
-
-    case DatasetConstants.SET_VARIABLE_SEARCH:
-      console.log("Setting search to:" +action.search);
-      variable_search = action.search;
-      setJustSelectedVariable(false);
-      if (variable_search !== ""){
-        setVariableSearch(variable_search);
         DatasetStore.emitChange();
       }
       break;
 
     default:
-      console.log('QBerDispatcher: No matching action');
+      console.log('DatasetStore: No matching action');
       // no op
   }
 });

@@ -1,40 +1,57 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-var DatasetActions = require('../actions/DatasetActions');
 
+
+var VariableSelectActions = require('../actions/VariableSelectActions');
+
+var VariableSelectStore = require('../stores/VariableSelectStore');
 var VariableItem = require('./VariableItem.react');
+
+/**
+ * Retrieve the current dataset from the DatasetStore
+ */
+function getVariableSelectState() {
+  return {
+    variables: VariableSelectStore.get(),
+    search: VariableSelectStore.getVariableSearch(),
+    selected_variable: VariableSelectStore.getSelectedVariable()
+  };
+}
 
 var VariablesList = React.createClass({
 
-  // This React class only works if a list of 'variables' is passed through its properties.
-  propTypes: {
-    variables: ReactPropTypes.array.isRequired,
-    justSelected: ReactPropTypes.bool.isRequired
+  getInitialState: function() {
+    return getVariableSelectState();
+  },
+
+  componentDidMount: function() {
+    VariableSelectStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function() {
+    VariableSelectStore.removeChangeListener(this._onChange);
   },
 
   /**
    * @return {object}
    */
   render: function() {
-    // This section should be hidden by default
-    // and shown when we do have variables in our dataset
-    if (this.props.variables === undefined || this.props.variables.length < 1) {
-      return null;
-    }
-
-    var variables = this.props.variables;
-    var search = this.props.search;
-    var selected_variable = this.props.variable;
+    console.log("In VariablesList render");
+    var variables = this.state.variables;
+    var search = this.state.search;
+    var selected_variable = this.state.selected_variable;
     var variable_items = [];
 
 
-    if (search === undefined || search.length < 1) {
+    if (search === undefined || search.length < 1 || search === "") {
+      console.log("Search is undefined or zero");
       for (var key in variables) {
         variable_items.push(
           <VariableItem key={key} variable={variables[key]} isSelected={variables[key] == selected_variable} onVariableClicked={this._handleClick} />
         );
       }
     } else {
+      console.log("Search is: '"+search+"'")
       regexp = new RegExp(search,"i");
       for (var key in variables) {
         if (variables[key].search(regexp) > -1) {
@@ -67,14 +84,21 @@ var VariablesList = React.createClass({
    * Event handler for a selection in variable list nav .
    */
   _handleClick: function(event) {
-    DatasetActions.chooseVariable(event.target.text);
+    VariableSelectActions.selectVariable(event.target.text);
   },
 
   /**
    * Event handler for a selection in the Select element.
    */
   _handleChange: function(event) {
-    DatasetActions.searchVariable(event.target.value);
+    VariableSelectActions.searchVariable(event.target.value);
+  },
+
+  /**
+   * Event handler for 'change' events coming from the DatasetStore
+   */
+  _onChange: function() {
+    this.setState(getVariableSelectState());
   }
 
 });

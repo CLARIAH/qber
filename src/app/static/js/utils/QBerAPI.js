@@ -1,5 +1,6 @@
 var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var DatasetConstants = require('../constants/DatasetConstants');
+var VariableSelectConstants = require('../constants/VariableSelectConstants');
 
 module.exports = {
   retrieveDataset: function(filename) {
@@ -7,6 +8,11 @@ module.exports = {
       QBerDispatcher.dispatch({
         actionType: DatasetConstants.DATASET_INIT,
         dataset: dataset
+      });
+
+      QBerDispatcher.dispatch({
+        actionType: VariableSelectConstants.VARIABLE_SELECT_INIT,
+        variables: dataset.variables
       });
     });
   },

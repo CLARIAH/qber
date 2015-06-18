@@ -5,8 +5,6 @@ var DatasetActions = require('../actions/DatasetActions');
 var VariableAttributes = require('./VariableAttributes.react');
 var CodesTable = require('./CodesTable.react');
 
-// var Mapping = require('./Mapping.react');
-
 var VariablePanel = React.createClass({
 
   // This React class only works if a 'dataset' is passed through its properties.
@@ -31,18 +29,11 @@ var VariablePanel = React.createClass({
     return (
       <section id="main">
         <h1>{this.props.variable}</h1>
-        <VariableAttributes dimensions={dataset.dimensions} justSelected={this.props.justSelected}/>
+        <VariableAttributes dimensions={dataset.dimensions}/>
         <CodesTable codes={dataset.examples[variable]}/>
       </section>
     );
   },
-
-  /**
-   * Event handler to mark all TODOs as complete
-   */
-  _onToggleCompleteAll: function() {
-    DatasetActions.toggleCompleteAll();
-  }
 
 });
 

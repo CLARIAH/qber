@@ -18,14 +18,12 @@ var VariablePanel = require('./VariablePanel.react');
 var DatasetStore = require('../stores/DatasetStore');
 
 /**
- * Retrieve the current TODO data from the DatasetStore
+ * Retrieve the current dataset from the DatasetStore
  */
 function getDatasetState() {
   return {
     dataset: DatasetStore.get(),
-    variable: DatasetStore.getVariable(),
-    variable_search: DatasetStore.getVariableSearch(),
-    just_selected: DatasetStore.getJustSelectedVariable()
+    variable: DatasetStore.getVariable()
   };
 }
 
@@ -50,7 +48,7 @@ var QBer = React.createClass({
   	return (
       <div className="row">
         <div className="col-md-2">
-          <VariablesList variables={this.state.dataset.variables} variable={this.state.variable} search={this.state.variable_search}  justSelected={this.state.just_selected}/>
+          <VariablesList/>
         </div>
         <div className="col-md-10">
           <VariablePanel

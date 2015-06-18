@@ -35,16 +35,7 @@ var CodesTable = React.createClass({
         </table>
       </div>
     );
-  },
-
-  /**
-   * Event handler for a selection in the Select element.
-   */
-  _handleChange: function(val) {
-    console.log("Selected: " + val);
-    DatasetActions.chooseVariable(val);
   }
-
 });
 
 module.exports = CodesTable;
