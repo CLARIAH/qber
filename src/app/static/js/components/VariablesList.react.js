@@ -70,12 +70,12 @@ var VariablesList = React.createClass({
     }
 
     return (
-        <div>
+        <section id="variables_list">
           { input }
           <ul className="nav nav-pills" role="tablist">
             {variable_items}
           </ul>
-        </div>
+        </section>
     );
   },
 
