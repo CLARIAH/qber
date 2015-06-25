@@ -28,12 +28,18 @@ var VariablePanel = React.createClass({
     return (
       <section id="variable_panel">
         <h3>{this.props.variable}</h3>
-        <VariableAttributes dimensions={dataset.dimensions}/>
+        <a className="btn btn-primary" onClick={this._handleShowDimensions}>Select Dimension</a>
+        <h4>Frequency Table</h4>
         <CodesTable codes={dataset.examples[variable]}/>
       </section>
     );
   },
 
+  _handleShowDimensions: function(){
+    DatasetActions.showDimensions();
+  }
 });
+
+
 
 module.exports = VariablePanel;
