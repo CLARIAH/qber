@@ -47,16 +47,16 @@ var VariablesList = React.createClass({
       console.log("Search is undefined or zero");
       for (var key in variables) {
         variable_items.push(
-          <VariableItem key={key} variable={variables[key]} isSelected={variables[key] == selected_variable} onVariableClicked={this._handleClick} />
+          <VariableItem key={key} variable={variables[key]} isSelected={variables[key] == selected_variable} onClicked={this._handleClick} />
         );
       }
     } else {
-      console.log("Search is: '"+search+"'")
+      console.log("Search is: '"+search+"'");
       regexp = new RegExp(search,"i");
       for (var key in variables) {
         if (variables[key].search(regexp) > -1) {
           variable_items.push(
-            <VariableItem key={key} variable={variables[key]} isSelected={variables[key] == selected_variable} onVariableClicked={this._handleClick}/>
+            <VariableItem key={key} variable={variables[key]} isSelected={variables[key] == selected_variable} onClicked={this._handleClick}/>
           );
         }
       }
