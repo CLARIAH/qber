@@ -1,10 +1,10 @@
 var React = require('react');
 var QBer = require('./components/QBer.react');
-var QBerAPI = require('./utils/QBerAPI');
+var DatasetActions = require('./actions/DatasetActions');
 
 
 // TODO: Integrate a browse modal using react-bootstrap
-QBerAPI.retrieveDataset('derived/utrecht_1829_clean_01.csv');
+DatasetActions.retrieveDataset('derived/utrecht_1829_clean_01.csv');
 
 React.render(
   <QBer />,
