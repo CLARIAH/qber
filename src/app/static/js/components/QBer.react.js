@@ -49,6 +49,7 @@ var QBer = React.createClass({
   	return (
       <div className="row">
         <div className="col-md-2">
+          <h4>Variables</h4>
           <VariablesList/>
         </div>
         <div className="col-md-10">
