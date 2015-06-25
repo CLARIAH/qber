@@ -2,6 +2,7 @@ var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var QBerAPI = require('../utils/QBerAPI');
 var DatasetConstants = require('../constants/DatasetConstants');
 var VariableSelectConstants = require('../constants/VariableSelectConstants');
+var MessageConstants = require('../constants/MessageConstants');
 
 /**
  *  Note that the QBerAPI also dispatches actions to stores!
@@ -17,7 +18,11 @@ var DatasetActions = {
     QBerAPI.retrieveDataset({
       filename: filename,
       success: function(dataset){
-        console.log(dataset);
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.SUCCESS,
+          message: 'Successfully loaded dataset '+dataset.name
+        });
+
         QBerDispatcher.dispatch({
           actionType: DatasetConstants.DATASET_INIT,
           dataset: dataset
@@ -29,7 +34,10 @@ var DatasetActions = {
         });
       },
       error: function(filename){
-        console.log('Error retrieving dataset from {}'.format(filename));
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.ERROR,
+          message: 'Error retrieving dataset from '+filename
+        });
       }
     });
   },
@@ -38,6 +46,11 @@ var DatasetActions = {
    * @param {string} variable
    */
   chooseVariable: function(variable) {
+    QBerDispatcher.dispatch({
+      actionType: MessageConstants.INFO,
+      message: 'You chose variable '+variable
+    });
+
     QBerDispatcher.dispatch({
       actionType: DatasetConstants.DATASET_CHOOSE_VARIABLE,
       variable: variable
@@ -49,14 +62,17 @@ var DatasetActions = {
    */
   chooseDimension: function(dimension) {
     QBerDispatcher.dispatch({
-      actionType: DatasetConstants.DATASET_RETRIEVING_DIMENSION,
-      status: 'loading',
-      dimension: dimension
+      actionType: MessageConstants.INFO,
+      message: 'Retrieving details for '+dimension
     });
-    
+
     QBerAPI.retrieveDimension({
       dimension: dimension,
       success: function(dimension_details){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.SUCCESS,
+          message: "Successfully retrieved dimension "+ dimension
+        });
         QBerDispatcher.dispatch({
           actionType: DatasetConstants.DATASET_SET_DIMENSION,
           dimension_details: dimension_definition
@@ -64,7 +80,7 @@ var DatasetActions = {
       },
       error: function(dimension){
         QBerDispatcher.dispatch({
-          actionType: DatasetConstants.LOADING_FAILED,
+          actionType: MessageConstants.ERROR,
           message: "Could not retrieve dimension "+ dimension
         });
       }

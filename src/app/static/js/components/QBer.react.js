@@ -15,6 +15,7 @@
 var React = require('react');
 var VariablesList = require('./VariablesList.react');
 var VariablePanel = require('./VariablePanel.react');
+var MessagePanel = require('./MessagePanel.react');
 var DatasetStore = require('../stores/DatasetStore');
 
 /**
