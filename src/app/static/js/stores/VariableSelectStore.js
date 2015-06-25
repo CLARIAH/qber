@@ -110,7 +110,7 @@ QBerDispatcher.register(function(action) {
 
 
     default:
-      console.log('DatasetStore: No matching action');
+      console.log('VariableSelectStore: No matching action');
       // no op
   }
 });

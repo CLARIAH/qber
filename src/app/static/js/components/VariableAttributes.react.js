@@ -15,7 +15,7 @@ var VariableAttributes = React.createClass({
    * @return {object}
    */
   render: function() {
-    return null;
+
     // This section should be hidden by default
     // and shown when there is a list of dimensions.
     if (this.props.dimensions === undefined || Object.keys(this.props.dimensions).length < 1 ) {

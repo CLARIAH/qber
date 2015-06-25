@@ -29,7 +29,7 @@ var VariableItem = React.createClass({
 
     return (
         <li role="presentation">
-          <a href="#" className={classes} onClick={this.props.onVariableClicked}>{variable}</a>
+          <a href="#" className={classes} onClick={this.props.onClicked}>{variable}</a>
         </li>
     );
   },

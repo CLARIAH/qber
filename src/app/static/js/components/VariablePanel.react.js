@@ -2,7 +2,6 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var DatasetActions = require('../actions/DatasetActions');
 
-var VariableAttributes = require('./VariableAttributes.react');
 var CodesTable = require('./CodesTable.react');
 
 var VariablePanel = React.createClass({
