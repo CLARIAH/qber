@@ -4,19 +4,19 @@ module.exports = {
       console.log(dataset);
       settings.success(dataset);
     }).fail(function(){
-      settings.error(filename);
+      settings.error(settings.filename);
     });
   },
 
   retrieveDimension: function(settings) {
     $.get('/variable/resolve', {'uri': settings.dimension}, function(dimension_definition){
       if(dimension_definition == 'error'){
-        settings.error(dimension);
+        settings.error(settings.dimension);
       } else {
-        settings.success(dimension_definition);
+        settings.success(settings.dimension_definition);
       }
     }).fail(function(){
-      settings.error(dimension);
+      settings.error(settings.dimension);
     });
   }
 };
