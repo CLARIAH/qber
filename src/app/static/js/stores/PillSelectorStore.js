@@ -1,7 +1,7 @@
 var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var DatasetConstants = require('../constants/DatasetConstants');
-var VariableSelectConstants = require('../constants/VariableSelectConstants');
+var PillSelectorConstants = require('../constants/PillSelectorConstants');
 var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
@@ -35,7 +35,7 @@ function initialize(variables) {
 }
 
 
-var VariableSelectStore = assign({}, EventEmitter.prototype, {
+var PillSelectorStore = assign({}, EventEmitter.prototype, {
 
   /**
    * Get the entire DATASET.
@@ -80,39 +80,39 @@ var VariableSelectStore = assign({}, EventEmitter.prototype, {
 QBerDispatcher.register(function(action) {
   switch(action.actionType) {
     // This is the INIT action for the variables
-    case VariableSelectConstants.VARIABLE_SELECT_INIT:
+    case PillSelectorConstants.INIT:
       var variables = action.variables;
 
       if (variables !== {}) {
         initialize(variables);
-        VariableSelectStore.emitChange();
+        PillSelectorStore.emitChange();
       }
       break;
 
 
-    case VariableSelectConstants.VARIABLE_SELECT_SEARCH:
+    case PillSelectorConstants.SEARCH:
       var variable_search = action.search;
 
-      if (variable_search !== VariableSelectStore.getVariableSearch()){
+      if (variable_search !== PillSelectorStore.getVariableSearch()){
         setVariableSearch(variable_search);
-        VariableSelectStore.emitChange();
+        PillSelectorStore.emitChange();
       }
       break;
 
-    case VariableSelectConstants.SELECT_VARIABLE:
+    case PillSelectorConstants.SELECT:
       var selected_variable = action.variable;
 
       if (selected_variable !== ""){
         setSelectedVariable(selected_variable);
-        VariableSelectStore.emitChange();
+        PillSelectorStore.emitChange();
       }
       break;
 
 
     default:
-      console.log('VariableSelectStore: No matching action');
+      console.log('PillSelectorStore: No matching action');
       // no op
   }
 });
 
-module.exports = VariableSelectStore;
+module.exports = PillSelectorStore;

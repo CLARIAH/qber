@@ -1,6 +1,6 @@
 var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var QBerAPI = require('../utils/QBerAPI');
-var VariableSelectConstants = require('../constants/VariableSelectConstants');
+var PillSelectorConstants = require('../constants/PillSelectorConstants');
 var DatasetConstants = require('../constants/DatasetConstants');
 var MessageConstants = require('../constants/MessageConstants');
 
@@ -15,7 +15,7 @@ var VariableSelectActions = {
   searchVariable: function(search) {
     console.log("In searchVariable action: "+search);
     QBerDispatcher.dispatch({
-      actionType: VariableSelectConstants.VARIABLE_SELECT_SEARCH,
+      actionType: PillSelectorConstants.SEARCH,
       search: search
     });
   },
@@ -30,7 +30,7 @@ var VariableSelectActions = {
     });
     console.log("In searchVariable action");
     QBerDispatcher.dispatch({
-      actionType: VariableSelectConstants.SELECT_VARIABLE,
+      actionType: PillSelectorConstants.SELECT,
       variable: variable
     });
     QBerDispatcher.dispatch({

@@ -13,7 +13,7 @@
  */
 
 var React = require('react');
-var VariablesList = require('./VariablesList.react');
+var PillSelector = require('./PillSelector.react');
 var VariablePanel = require('./VariablePanel.react');
 var MessagePanel = require('./MessagePanel.react');
 var DatasetStore = require('../stores/DatasetStore');
@@ -50,7 +50,7 @@ var QBer = React.createClass({
       <div className="row">
         <div className="col-md-2">
           <h4>Variables</h4>
-          <VariablesList/>
+          <PillSelector/>
         </div>
         <div className="col-md-10">
           <VariablePanel

@@ -4,39 +4,39 @@ var ReactPropTypes = React.PropTypes;
 
 var VariableSelectActions = require('../actions/VariableSelectActions');
 
-var VariableSelectStore = require('../stores/VariableSelectStore');
-var VariableItem = require('./VariableItem.react');
+var PillSelectorStore = require('../stores/PillSelectorStore');
+var Pill = require('./Pill.react');
 
 /**
  * Retrieve the current dataset from the DatasetStore
  */
 function getVariableSelectState() {
   return {
-    variables: VariableSelectStore.get(),
-    search: VariableSelectStore.getVariableSearch(),
-    selected_variable: VariableSelectStore.getSelectedVariable()
+    variables: PillSelectorStore.get(),
+    search: PillSelectorStore.getVariableSearch(),
+    selected_variable: PillSelectorStore.getSelectedVariable()
   };
 }
 
-var VariablesList = React.createClass({
+var PillSelector = React.createClass({
 
   getInitialState: function() {
     return getVariableSelectState();
   },
 
   componentDidMount: function() {
-    VariableSelectStore.addChangeListener(this._onChange);
+    PillSelectorStore.addChangeListener(this._onChange);
   },
 
   componentWillUnmount: function() {
-    VariableSelectStore.removeChangeListener(this._onChange);
+    PillSelectorStore.removeChangeListener(this._onChange);
   },
 
   /**
    * @return {object}
    */
   render: function() {
-    console.log("In VariablesList render");
+    console.log("In PillSelector render");
     var variables = this.state.variables;
     var search = this.state.search;
     var selected_variable = this.state.selected_variable;
@@ -47,18 +47,22 @@ var VariablesList = React.createClass({
       console.log("Search is undefined or zero");
       for (var key in variables) {
         variable_items.push(
-          <VariableItem key={key} variable={variables[key]} isSelected={variables[key] == selected_variable} onClicked={this._handleClick} />
+          <Pill key={key} value={variables[key]} isSelected={variables[key] == selected_variable} onClicked={this._handleClick} />
         );
       }
     } else {
       console.log("Search is: '"+search+"'");
       regexp = new RegExp(search,"i");
+
       for (var key in variables) {
-        if (variables[key].search(regexp) > -1) {
-          variable_items.push(
-            <VariableItem key={key} variable={variables[key]} isSelected={variables[key] == selected_variable} onClicked={this._handleClick}/>
-          );
-        }
+
+        var style = {
+          'display': (variables[key].search(regexp) > -1) ? '': 'none'
+        };
+        
+        variable_items.push(
+          <Pill key={key} style={style} value={variables[key]} isSelected={variables[key] == selected_variable} onClicked={this._handleClick}/>
+        );
       }
     }
 
@@ -103,4 +107,4 @@ var VariablesList = React.createClass({
 
 });
 
-module.exports = VariablesList;
+module.exports = PillSelector;

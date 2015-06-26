@@ -4,7 +4,7 @@ var DatasetActions = require('../actions/DatasetActions');
 
 var CodesTable = React.createClass({
 
-  // This React class only works if a list of 'variables' is passed through its properties.
+  // This React class only works if a list of 'codes' is passed through its properties.
   propTypes: {
     codes: ReactPropTypes.array.isRequired
   },
@@ -23,7 +23,7 @@ var CodesTable = React.createClass({
     var codes_rows = [];
 
     for (var key in codes) {
-      codes_rows.push(<tr><td> { codes[key].id } <span className='badge pull-right'> { codes[key].count }</span></td></tr>);
+      codes_rows.push(<tr key={codes[key].id}><td> { codes[key].id } <span className='badge pull-right'> { codes[key].count }</span></td></tr>);
     }
 
     return (

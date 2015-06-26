@@ -3,11 +3,11 @@ var ReactPropTypes = React.PropTypes;
 
 var cx = require('classnames');
 
-var VariableItem = React.createClass({
+var Pill = React.createClass({
 
   // This React class only works if a list of 'variables' is passed through its properties.
   propTypes: {
-    variable: ReactPropTypes.string.isRequired,
+    value: ReactPropTypes.string.isRequired,
     isSelected: ReactPropTypes.bool.isRequired
   },
 
@@ -17,23 +17,23 @@ var VariableItem = React.createClass({
   render: function() {
     // This section should be hidden by default
     // and shown when we do have variables in our dataset
-    if (this.props.variable === undefined) {
+    if (this.props.value === undefined) {
       return null;
     }
 
-    var variable = this.props.variable;
+    var value = this.props.value;
 
     var classes = cx({
       'active': this.props.isSelected
     });
 
     return (
-        <li role="presentation">
-          <a href="#" className={classes} onClick={this.props.onClicked}>{variable}</a>
+        <li role="presentation" style={this.props.style}>
+          <a href="#" className={classes} onClick={this.props.onClicked}>{value}</a>
         </li>
     );
   },
 
 });
 
-module.exports = VariableItem;
+module.exports = Pill;

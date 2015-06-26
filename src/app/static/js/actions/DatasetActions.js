@@ -1,7 +1,7 @@
 var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var QBerAPI = require('../utils/QBerAPI');
 var DatasetConstants = require('../constants/DatasetConstants');
-var VariableSelectConstants = require('../constants/VariableSelectConstants');
+var PillSelectorConstants = require('../constants/PillSelectorConstants');
 var SDMXDimensionConstants = require('../constants/SDMXDimensionConstants');
 
 var MessageConstants = require('../constants/MessageConstants');
@@ -31,7 +31,7 @@ var DatasetActions = {
         });
 
         QBerDispatcher.dispatch({
-          actionType: VariableSelectConstants.VARIABLE_SELECT_INIT,
+          actionType: PillSelectorConstants.INIT,
           variables: dataset.variables
         });
 
