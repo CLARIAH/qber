@@ -16,6 +16,10 @@ var DatasetActions = {
    */
   retrieveDataset: function(filename){
     console.log('Retrieving dataset from '+filename);
+    QBerDispatcher.dispatch({
+      actionType: MessageConstants.INFO,
+      message: 'Retrieving dataset from '+filename
+    });
     // Call the QBerAPI with the filename, and implement the success callback
     QBerAPI.retrieveDataset({
       filename: filename,

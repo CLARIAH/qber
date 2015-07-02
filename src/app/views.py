@@ -75,7 +75,7 @@ def metadata():
 
     # Prepare the data dictionary
     data = {
-        'file': dataset_name,
+        'name': dataset_name,
         'path': dataset_path,
         'variables': adapter.get_header(),
         'metadata': adapter.get_metadata(),
@@ -366,7 +366,7 @@ def get_lsd_dimensions():
             log.debug("Loading dimensions from file...")
             with open('metadata/dimensions.json', 'r') as f:
                 dimensions_json = f.read()
-
+            log.debug("Dimensions loaded...")
             dimensions = json.loads(dimensions_json)
         else:
             raise Exception("Could not load dimensions from file...")
@@ -394,7 +394,7 @@ def get_lsd_dimensions():
 
 def get_csdh_dimensions():
     """Loads the list of Linked Statistical Data dimensions (variables) from the CSDH"""
-
+    log.debug("Loading dimensions from the CSDH")
     query = """
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -420,9 +420,13 @@ def get_csdh_dimensions():
         }
     """
     sdh_dimensions_results = sc.sparql(query)
-    if len(sdh_dimensions_results) > 0:
-        sdh_dimensions = sc.dictize(sdh_dimensions_results)
-    else:
+    try :
+        if len(sdh_dimensions_results) > 0:
+            sdh_dimensions = sc.dictize(sdh_dimensions_results)
+        else:
+            sdh_dimensions = []
+    except Exception as e:
+        log.error(e)
         sdh_dimensions = []
 
     return sdh_dimensions
