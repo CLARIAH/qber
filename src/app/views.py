@@ -457,6 +457,7 @@ def get_csdh_schemes():
     """
 
     schemes_results = sc.sparql(query)
+    log.debug(schemes_results)
     schemes = sc.dictize(schemes_results)
 
     log.debug(schemes)

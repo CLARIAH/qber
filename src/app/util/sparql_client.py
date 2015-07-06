@@ -4,10 +4,10 @@ import requests
 import json
 
 
-### This is old style, but leaving for backwards compatibility with earlier versions of Stardog
+# This is old style, but leaving for backwards compatibility with earlier versions of Stardog
 QUERY_HEADERS = {
-                    'Accept': 'application/sparql-results+json',
-                    'SD-Connection-String': 'reasoning={}'.format(config.REASONING_TYPE)
+                 'Accept': 'application/sparql-results+json',
+                 'SD-Connection-String': 'reasoning={}'.format(config.REASONING_TYPE)
                 }
 
 UPDATE_HEADERS = {
@@ -87,12 +87,12 @@ def make_update(graph, graph_uri = None):
 
     return query
 
-def ask_graph(uri, endpoint_url = config.ENDPOINT_URL):
 
+def ask_graph(uri, endpoint_url = config.ENDPOINT_URL):
     return ask(uri, template = "ASK {{ GRAPH <{}> {{ ?s ?p ?o }} }}", endpoint_url=endpoint_url)
 
-def ask(uri, template = "ASK {{ <{}> ?p ?o }}", endpoint_url = config.ENDPOINT_URL):
 
+def ask(uri, template = "ASK {{ <{}> ?p ?o }}", endpoint_url = config.ENDPOINT_URL):
     query = template.format(uri)
     result = requests.get(endpoint_url, params={'query': query, 'reasoning': config.REASONING_TYPE}, headers={'Accept': 'text/boolean'})
 
@@ -108,7 +108,6 @@ def sparql_update(query, endpoint_url = config.UPDATE_URL):
 
     result = requests.post(endpoint_url,params={'reasoning': config.REASONING_TYPE}, data=query, headers=UPDATE_HEADERS)
 
-
     print "SPARQL UPDATE response: ", result.content
 
     return result.content
@@ -116,8 +115,8 @@ def sparql_update(query, endpoint_url = config.UPDATE_URL):
 def sparql(query, endpoint_url = config.ENDPOINT_URL):
     """This method replaces the SPARQLWrapper SPARQL interface, since SPARQLWrapper cannot handle the Stardog-style query headers needed for inferencing"""
 
-    result = requests.get(endpoint_url,params={'query': query, 'reasoning': config.REASONING_TYPE}, headers=QUERY_HEADERS)
     try :
+        result = requests.get(endpoint_url, params={'query': query, 'reasoning': config.REASONING_TYPE}, headers=QUERY_HEADERS)
         result_dict = json.loads(result.content)
     except Exception as e:
         print e
@@ -142,6 +141,5 @@ def dictize(sparql_results):
                 print k, v
 
         results.append(result)
-
 
     return results
