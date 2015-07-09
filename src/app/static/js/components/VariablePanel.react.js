@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var DatasetActions = require('../actions/DatasetActions');
-
+var SDMXDimensionPanel = require('./SDMXDimensionPanel.react');
 var CodesTable = require('./CodesTable.react');
 
 var VariablePanel = React.createClass({
@@ -27,11 +27,13 @@ var VariablePanel = React.createClass({
 
     return (
       <section id="variable_panel">
-        <h3>{this.props.variable}</h3>
-        <a className="btn btn-primary" onClick={this._handleShowDimensions}>Select Dimension</a>
+        <h4><strong>Selected</strong>: {this.props.variable}</h4>
+        <a className="btn btn-primary" onClick={this._handleShowDimensions}>Select existing dimension</a>
         <h4>Frequency Table</h4>
         <CodesTable codes={dataset.examples[variable]}/>
+        <SDMXDimensionPanel/>
       </section>
+
     );
   },
 

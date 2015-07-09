@@ -5,7 +5,7 @@ var ReactPropTypes = React.PropTypes;
 var SDMXDimensionActions = require('../actions/SDMXDimensionActions');
 
 var SDMXDimensionStore = require('../stores/SDMXDimensionStore');
-var VariableItem = require('./VariableItem.react');
+var Pill = require('./Pill.react');
 
 /**
  * Retrieve the current dataset from the DatasetStore
@@ -14,7 +14,7 @@ function getSDMXDimensionState() {
   return {
     dimensions: SDMXDimensionStore.get(),
     search: SDMXDimensionStore.getDimensionSearch(),
-    selected_dimension: SDMXDimensionStore.getSelectedVariable()
+    selected_dimension: SDMXDimensionStore.getSelectedDimension()
   };
 }
 
@@ -40,23 +40,24 @@ var SDMXDimensionList = React.createClass({
     var dimensions = this.state.dimensions;
     var search = this.state.search;
     var selected_dimension = this.state.selected_dimension;
-    var variable_items = [];
+    var dimension_items = [];
 
+    console.log(dimensions);
 
     if (search === undefined || search.length < 1 || search === "") {
       console.log("Search is undefined or zero");
       for (var key in dimensions) {
-        variable_items.push(
-          <VariableItem key={key} variable={dimensions[key]} isSelected={dimensions[key] == selected_dimension} onClicked={this._handleClick} />
+        dimension_items.push(
+          <Pill key={key} variable={dimensions[key].uri} value={dimensions[key].label} isSelected={dimensions[key].uri == selected_dimension} onClicked={this._handleClick} />
         );
       }
     } else {
       console.log("Search is: '"+search+"'");
       regexp = new RegExp(search,"i");
       for (var key in dimensions) {
-        if (dimensions[key].search(regexp) > -1) {
-          variable_items.push(
-            <VariableItem key={key} variable={dimensions[key]} isSelected={dimensions[key] == selected_dimension} onClicked={this._handleClick}/>
+        if (dimensions[key].label.search(regexp) > -1) {
+          dimension_items.push(
+            <Pill key={key} variable={dimensions[key].uri} value={dimensions[key].label} isSelected={dimensions[key].uri == selected_dimension} onClicked={this._handleClick}/>
           );
         }
       }
@@ -73,7 +74,7 @@ var SDMXDimensionList = React.createClass({
         <section id="dimensions_list">
           { input }
           <ul className="nav nav-pills" role="tablist">
-            {variable_items}
+            {dimension_items}
           </ul>
         </section>
     );
@@ -84,14 +85,14 @@ var SDMXDimensionList = React.createClass({
    * Event handler for a selection in variable list nav .
    */
   _handleClick: function(event) {
-    SDMXDimensionActions.selectVariable(event.target.text);
+    SDMXDimensionActions.selectDimension(event.target.text);
   },
 
   /**
    * Event handler for a selection in the Select element.
    */
   _handleChange: function(event) {
-    SDMXDimensionActions.searchVariable(event.target.value);
+    SDMXDimensionActions.searchDimension(event.target.value);
   },
 
   /**
