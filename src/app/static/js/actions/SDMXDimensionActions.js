@@ -34,10 +34,34 @@ var SDMXDimensionActions = {
       dimension: dimension
     });
     QBerDispatcher.dispatch({
+      actionType: SDMXDimensionConstants.SDMX_DIMENSION_HIDE,
+      dimension: dimension
+    });
+    QBerDispatcher.dispatch({
       actionType: DatasetConstants.DATASET_CHOOSE_DIMENSION,
       dimension: dimension
     });
-  }
+  },
+
+
+  /**
+   *
+   */
+  showDimensions: function() {
+    QBerDispatcher.dispatch({
+      actionType: SDMXDimensionConstants.SDMX_DIMENSION_SHOW,
+    });
+  },
+
+  /**
+   *
+   */
+  hideDimensions: function() {
+    QBerDispatcher.dispatch({
+      actionType: SDMXDimensionConstants.SDMX_DIMENSION_HIDE,
+    });
+  },
+
 };
 
 module.exports = SDMXDimensionActions;

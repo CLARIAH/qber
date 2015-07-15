@@ -2,13 +2,34 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var SDMXDimensionActions = require('../actions/SDMXDimensionActions');
 var SDMXDimensionList = require('./SDMXDimensionList.react');
+var SDMXDimensionStore = require('../stores/SDMXDimensionStore');
+
+
+
+/**
+ * Retrieve the current visibility from the SDMIXDimensionStore
+ */
+function getSDMXDimensionState() {
+  return {
+    'visible': SDMXDimensionStore.getVisible(),
+    'selected': SDMXDimensionStore.getSelectedDimension()
+  };
+}
+
 
 var SDMXDimensionPanel = React.createClass({
 
-  // This React class only works if a list of 'dimensions' is passed through its properties.
-  // propTypes: {
-  //   dimensions: ReactPropTypes.object.isRequired,
-  // },
+  getInitialState: function() {
+    return getSDMXDimensionState();
+  },
+
+  componentDidMount: function() {
+    SDMXDimensionStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function() {
+    SDMXDimensionStore.removeChangeListener(this._onChange);
+  },
 
   /**
    * @return {object}
@@ -20,18 +41,30 @@ var SDMXDimensionPanel = React.createClass({
     //   return null;
     // }
 
+    console.log('SDMXDimensionPanel visible:' + this.state.visible);
+    // Only render this component when the store says it should be visible
+    if (!this.state.visible) {
+      return null;
+    }
+
 
     return (
       <section id="sdmx_dimension_panel">
         <div className="overlay"></div>
         <div className="qber-modal">
-          <div className="container">
-            <SDMXDimensionList/>
-          </div>
+          <SDMXDimensionList/>
         </div>
       </section>
     );
   },
+
+  /**
+   * Event handler for 'change' events coming from the DatasetStore
+   */
+  _onChange: function() {
+    console.log('Something changed for SDMXDimensionPanel');
+    this.setState(getSDMXDimensionState());
+  }
 
 });
 

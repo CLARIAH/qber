@@ -48,18 +48,30 @@ var SDMXDimensionList = React.createClass({
       console.log("Search is undefined or zero");
       for (var key in dimensions) {
         dimension_items.push(
-          <Pill key={key} variable={dimensions[key].uri} value={dimensions[key].label} isSelected={dimensions[key].uri == selected_dimension} onClicked={this._handleClick} />
+          <Pill key={key} uri={dimensions[key].uri}
+                          text={dimensions[key].label}
+                          badge={dimensions[key].refs}
+                          isSelected={dimensions[key].uri == selected_dimension}
+                          onClicked={this._handleClick} />
         );
       }
     } else {
       console.log("Search is: '"+search+"'");
       regexp = new RegExp(search,"i");
       for (var key in dimensions) {
-        if (dimensions[key].label.search(regexp) > -1) {
-          dimension_items.push(
-            <Pill key={key} variable={dimensions[key].uri} value={dimensions[key].label} isSelected={dimensions[key].uri == selected_dimension} onClicked={this._handleClick}/>
-          );
-        }
+
+        var style = {
+          'display': (dimensions[key].label.search(regexp) > -1) ? '': (dimensions[key].uri.search(regexp) > -1) ? '': 'none'
+        };
+
+        dimension_items.push(
+          <Pill key={key} style={style}
+                          uri={dimensions[key].uri}
+                          text={dimensions[key].label}
+                          badge={dimensions[key].refs}
+                          isSelected={dimensions[key].uri == selected_dimension}
+                          onClicked={this._handleClick}/>
+        );
       }
     }
 
@@ -73,7 +85,7 @@ var SDMXDimensionList = React.createClass({
     return (
         <section id="dimensions_list">
           { input }
-          <ul className="nav nav-pills" role="tablist">
+          <ul className="nav nav-pills  nav-stacked" role="tablist">
             {dimension_items}
           </ul>
         </section>
@@ -82,10 +94,10 @@ var SDMXDimensionList = React.createClass({
 
 
   /**
-   * Event handler for a selection in variable list nav .
+   * Event handler for a selection in SDMX dimensions nav .
    */
   _handleClick: function(event) {
-    SDMXDimensionActions.selectDimension(event.target.text);
+    SDMXDimensionActions.selectDimension(event.currentTarget.getAttribute('value'));
   },
 
   /**

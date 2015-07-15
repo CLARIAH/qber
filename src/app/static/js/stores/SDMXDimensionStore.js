@@ -9,6 +9,7 @@ var CHANGE_EVENT = 'change';
 var _dimensions = [];
 var _dimension_search;
 var _selected_dimension;
+var _visible = false;
 
 /**
  * Initialize the list of dimensions.
@@ -27,12 +28,29 @@ function initialize(dimensions) {
 }
 
 /**
- * Set the DIMENSION search function.
+ * Set the selected dimension.
  * @return {string}
  */
  function setSelectedDimension(dimension) {
    _selected_dimension = dimension;
 }
+
+/**
+ * Make the dimension panel visible.
+ * @return {string}
+ */
+ function setVisible() {
+   _visible = true;
+}
+
+/**
+ * Make the dimension panel hidden.
+ * @return {string}
+ */
+ function setHidden() {
+   _visible = false;
+}
+
 
 
 var SDMXDimensionStore = assign({}, EventEmitter.prototype, {
@@ -57,6 +75,10 @@ var SDMXDimensionStore = assign({}, EventEmitter.prototype, {
     return _selected_dimension;
   },
 
+  getVisible: function(){
+    return _visible;
+  },
+
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
@@ -78,6 +100,7 @@ var SDMXDimensionStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 QBerDispatcher.register(function(action) {
+  console.log('SDMXDimensionStore received message from QBerDispatcher:' + action.actionType);
   switch(action.actionType) {
     // This is the INIT action for the dimensions
     case SDMXDimensionConstants.SDMX_DIMENSION_INIT:
@@ -89,6 +112,15 @@ QBerDispatcher.register(function(action) {
       }
       break;
 
+    case SDMXDimensionConstants.SDMX_DIMENSION_SHOW:
+      setVisible();
+      SDMXDimensionStore.emitChange();
+      break;
+
+    case SDMXDimensionConstants.SDMX_DIMENSION_HIDE:
+      setHidden();
+      SDMXDimensionStore.emitChange();
+      break;
 
     case SDMXDimensionConstants.SDMX_DIMENSION_SEARCH:
       var dimension_search = action.search;

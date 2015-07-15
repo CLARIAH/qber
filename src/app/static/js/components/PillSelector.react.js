@@ -47,7 +47,9 @@ var PillSelector = React.createClass({
       console.log("Search is undefined or zero");
       for (var key in variables) {
         variable_items.push(
-          <Pill key={key} value={variables[key]} isSelected={variables[key] == selected_variable} onClicked={this._handleClick} />
+          <Pill key={key} text={variables[key]}
+                          isSelected={variables[key] == selected_variable}
+                          onClicked={this._handleClick} />
         );
       }
     } else {
@@ -59,9 +61,12 @@ var PillSelector = React.createClass({
         var style = {
           'display': (variables[key].search(regexp) > -1) ? '': 'none'
         };
-        
+
         variable_items.push(
-          <Pill key={key} style={style} value={variables[key]} isSelected={variables[key] == selected_variable} onClicked={this._handleClick}/>
+          <Pill key={key} style={style}
+                          text={variables[key]}
+                          isSelected={variables[key] == selected_variable}
+                          onClicked={this._handleClick}/>
         );
       }
     }
@@ -76,7 +81,7 @@ var PillSelector = React.createClass({
     return (
         <section id="variables_list">
           { input }
-          <ul className="nav nav-pills" role="tablist">
+          <ul className="nav nav-pills nav-stacked" role="tablist">
             {variable_items}
           </ul>
         </section>
@@ -88,7 +93,7 @@ var PillSelector = React.createClass({
    * Event handler for a selection in variable list nav .
    */
   _handleClick: function(event) {
-    VariableSelectActions.selectVariable(event.target.text);
+    VariableSelectActions.selectVariable(event.currentTarget.getAttribute('value'));
   },
 
   /**
