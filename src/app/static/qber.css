@@ -30,17 +30,19 @@ body {
 }
 
 .qber-modal {
-    width: 900px;
-    height: 900px;
+    width: 70%;
+    height: 180%;
     position: absolute;
     top: 50%;
     left: 10%;
     margin-top: -100px;
     margin-left: -50px;
-    background-color: #f1c40f;
+    /*background-color: #f1c40f;*/
+    background-color: white;
     border-radius: 5px;
-    text-align: center;
+    /*text-align: center;*/
     overflow: auto;
+    padding: 2em;
     z-index: 9001; /* 1px higher than the overlay layer */
 }
 
