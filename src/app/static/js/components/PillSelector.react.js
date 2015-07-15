@@ -1,35 +1,21 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-
-
-var VariableSelectActions = require('../actions/VariableSelectActions');
-
-var PillSelectorStore = require('../stores/PillSelectorStore');
 var Pill = require('./Pill.react');
 
-/**
- * Retrieve the current dataset from the DatasetStore
- */
-function getVariableSelectState() {
-  return {
-    variables: PillSelectorStore.get(),
-    search: PillSelectorStore.getVariableSearch(),
-    selected_variable: PillSelectorStore.getSelectedVariable()
-  };
-}
 
 var PillSelector = React.createClass({
 
+  // This React class only works if a list of 'options' is passed through its properties.
+  propTypes: {
+    options: ReactPropTypes.array.isRequired,
+    doSelect: ReactPropTypes.object.isRequired
+  },
+
   getInitialState: function() {
-    return getVariableSelectState();
-  },
-
-  componentDidMount: function() {
-    PillSelectorStore.addChangeListener(this._onChange);
-  },
-
-  componentWillUnmount: function() {
-    PillSelectorStore.removeChangeListener(this._onChange);
+    return {
+            'search': undefined,
+            'selected': undefined
+          };
   },
 
   /**
@@ -37,78 +23,81 @@ var PillSelector = React.createClass({
    */
   render: function() {
     console.log("In PillSelector render");
-    var variables = this.state.variables;
+
+    var options = this.props.options;
+
+    var filter;
+    if (this.props.filterFunction){
+      filter = this.props.filterFunction;
+    } else {
+      filter = this._filter;
+    }
+
     var search = this.state.search;
-    var selected_variable = this.state.selected_variable;
-    var variable_items = [];
+    var selected = this.state.selected;
+
+    var visible_items = [];
 
 
-    if (search === undefined || search.length < 1 || search === "") {
-      console.log("Search is undefined or zero");
-      for (var key in variables) {
-        variable_items.push(
-          <Pill key={key} text={variables[key]}
-                          isSelected={variables[key] == selected_variable}
-                          onClicked={this._handleClick} />
-        );
-      }
-    } else {
-      console.log("Search is: '"+search+"'");
-      regexp = new RegExp(search,"i");
 
-      for (var key in variables) {
-
-        var style = {
-          'display': (variables[key].search(regexp) > -1) ? '': 'none'
+    for (var key in options) {
+      var style;
+      if (search !== undefined && search.length > 1 && search !== "") {
+        regexp = new RegExp(search,"i");
+        style = {
+          'display': filter(options[key])
         };
-
-        variable_items.push(
-          <Pill key={key} style={style}
-                          text={variables[key]}
-                          isSelected={variables[key] == selected_variable}
-                          onClicked={this._handleClick}/>
-        );
       }
+      visible_items.push(
+        <Pill key={key} style={style}
+                        option={options[key]}
+                        isSelected={options[key] == selected}
+                        onClicked={this._handleClick}/>
+      );
     }
 
-    var input;
-    if (this.props.justSelected) {
-      input = <input className="form-control" width="100%" onChange={this._handleChange} type="text" value={search}/>;
-    } else {
-      input = <input className="form-control" width="100%" onChange={this._handleChange} type="text"/>;
-    }
+    var input = <input className="form-control" width="100%" onChange={this._handleChange} type="text"/>;
 
     return (
-        <section id="variables_list">
+        <section>
           { input }
           <ul className="nav nav-pills nav-stacked" role="tablist">
-            {variable_items}
+            {visible_items}
           </ul>
         </section>
     );
   },
 
+  _filter: function(option){
+    return (option.search(regexp) > -1) ? '': 'none'
+  },
 
   /**
    * Event handler for a selection in variable list nav .
    */
   _handleClick: function(event) {
-    VariableSelectActions.selectVariable(event.currentTarget.getAttribute('value'));
+    var value = event.currentTarget.getAttribute('value');
+
+    var new_state = {
+      'search': this.state.search,
+      'selected': value
+    };
+
+    this.props.doSelect(value);
+    this.setState(new_state);
   },
 
   /**
    * Event handler for a selection in the Select element.
    */
   _handleChange: function(event) {
-    VariableSelectActions.searchVariable(event.target.value);
+    var new_state = {
+      'search': event.target.value,
+      'selected': this.state.selected
+    };
+    this.setState(new_state);
   },
 
-  /**
-   * Event handler for 'change' events coming from the DatasetStore
-   */
-  _onChange: function() {
-    this.setState(getVariableSelectState());
-  }
 
 });
 
