@@ -47,7 +47,6 @@ var Pill = React.createClass({
       }
     }
 
-
     var classes = cx({
       'active': this.props.isSelected
     });

@@ -66,7 +66,7 @@ var SDMXDimensionPanel = React.createClass({
    * Event handler for a selection in the PillSelector
    */
   _onSelected: function(value) {
-    SDMXDimensionActions.selectDimension(value);
+    SDMXDimensionActions.chooseDimension(value);
   },
 
   /**

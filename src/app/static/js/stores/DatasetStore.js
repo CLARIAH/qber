@@ -117,6 +117,11 @@ QBerDispatcher.register(function(action) {
       }
       break;
 
+    case DatasetConstants.DATASET_CHOOSE_DIMENSION:
+      dimension = action.dimension;
+      
+      break;
+
     default:
       console.log('DatasetStore: No matching action');
       // no op

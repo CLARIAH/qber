@@ -1,7 +1,6 @@
 var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var QBerAPI = require('../utils/QBerAPI');
 var DatasetConstants = require('../constants/DatasetConstants');
-var PillSelectorConstants = require('../constants/PillSelectorConstants');
 var SDMXDimensionConstants = require('../constants/SDMXDimensionConstants');
 
 var MessageConstants = require('../constants/MessageConstants');
@@ -32,11 +31,6 @@ var DatasetActions = {
         QBerDispatcher.dispatch({
           actionType: DatasetConstants.DATASET_INIT,
           dataset: dataset
-        });
-
-        QBerDispatcher.dispatch({
-          actionType: PillSelectorConstants.INIT,
-          variables: dataset.variables
         });
 
         QBerDispatcher.dispatch({
@@ -77,35 +71,7 @@ var DatasetActions = {
     });
   },
 
-  /**
-   * @param {string} dimension
-   */
-  chooseDimension: function(dimension) {
-    QBerDispatcher.dispatch({
-      actionType: MessageConstants.INFO,
-      message: 'Retrieving details for '+dimension
-    });
 
-    QBerAPI.retrieveDimension({
-      dimension: dimension,
-      success: function(dimension_details){
-        QBerDispatcher.dispatch({
-          actionType: MessageConstants.SUCCESS,
-          message: "Successfully retrieved dimension "+ dimension
-        });
-        QBerDispatcher.dispatch({
-          actionType: DatasetConstants.DATASET_SET_DIMENSION,
-          dimension_details: dimension_details
-        });
-      },
-      error: function(dimension){
-        QBerDispatcher.dispatch({
-          actionType: MessageConstants.ERROR,
-          message: "Could not retrieve dimension "+ dimension
-        });
-      }
-    });
-  },
 
 };
 

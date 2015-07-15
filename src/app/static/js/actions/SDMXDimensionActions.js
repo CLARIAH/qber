@@ -10,26 +10,57 @@ var MessageConstants = require('../constants/MessageConstants');
 var SDMXDimensionActions = {
 
 
+  // /**
+  //  * @param {string} search
+  //  */
+  // selectDimension: function(dimension) {
+  //   QBerDispatcher.dispatch({
+  //     actionType: MessageConstants.INFO,
+  //     message: 'You selected dimension '+dimension
+  //   });
+  //   console.log("In searchDimension action");
+  //   QBerDispatcher.dispatch({
+  //     actionType: SDMXDimensionConstants.SELECT_DIMENSION,
+  //     dimension: dimension
+  //   });
+  //
+  //   QBerDispatcher.dispatch({
+  //     actionType: DatasetConstants.DATASET_CHOOSE_DIMENSION,
+  //     dimension: dimension
+  //   });
+  // },
+
   /**
-   * @param {string} search
+   * @param {string} dimension
    */
-  selectDimension: function(dimension) {
+  chooseDimension: function(dimension) {
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
-      message: 'You selected dimension '+dimension
+      message: 'Retrieving details for '+dimension
     });
-    console.log("In searchDimension action");
-    QBerDispatcher.dispatch({
-      actionType: SDMXDimensionConstants.SELECT_DIMENSION,
-      dimension: dimension
-    });
+
     QBerDispatcher.dispatch({
       actionType: SDMXDimensionConstants.SDMX_DIMENSION_HIDE,
       dimension: dimension
     });
-    QBerDispatcher.dispatch({
-      actionType: DatasetConstants.DATASET_CHOOSE_DIMENSION,
-      dimension: dimension
+    QBerAPI.retrieveDimension({
+      dimension: dimension,
+      success: function(dimension_details){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.SUCCESS,
+          message: "Successfully retrieved dimension "+ dimension
+        });
+        QBerDispatcher.dispatch({
+          actionType: DatasetConstants.DATASET_SET_DIMENSION,
+          dimension_details: dimension_details
+        });
+      },
+      error: function(dimension){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.ERROR,
+          message: "Could not retrieve dimension "+ dimension
+        });
+      }
     });
   },
 
