@@ -1,16 +1,16 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var SDMXDimensionActions = require('../actions/SDMXDimensionActions');
-var SDMXDimensionList = require('./SDMXDimensionList.react');
 var SDMXDimensionStore = require('../stores/SDMXDimensionStore');
-
+var PillSelector = require('./PillSelector.react');
 
 
 /**
- * Retrieve the current visibility from the SDMIXDimensionStore
+ * Retrieve the current visibility from the SDMXDimensionStore
  */
 function getSDMXDimensionState() {
   return {
+    'dimensions': SDMXDimensionStore.get(),
     'visible': SDMXDimensionStore.getVisible(),
     'selected': SDMXDimensionStore.getSelectedDimension()
   };
@@ -52,10 +52,21 @@ var SDMXDimensionPanel = React.createClass({
       <section id="sdmx_dimension_panel">
         <div className="overlay"></div>
         <div className="qber-modal">
-          <SDMXDimensionList/>
+          <PillSelector options={this.state.dimensions} doSelect={this._onSelected} filterFunction={this._filter}/>
         </div>
       </section>
     );
+  },
+
+  _filter: function(option){
+    return (option.label.search(regexp) > -1) ? '': (option.uri.search(regexp) > -1) ? '': 'none';
+  },
+
+  /**
+   * Event handler for a selection in the PillSelector
+   */
+  _onSelected: function(value) {
+    SDMXDimensionActions.selectDimension(value);
   },
 
   /**

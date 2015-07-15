@@ -9,16 +9,6 @@ var MessageConstants = require('../constants/MessageConstants');
  */
 var SDMXDimensionActions = {
 
-  /**
-   * @param {string} search
-   */
-  searchDimension: function(search) {
-    console.log("In searchDimension action: "+search);
-    QBerDispatcher.dispatch({
-      actionType: SDMXDimensionConstants.SDMX_DIMENSION_SEARCH,
-      search: search
-    });
-  },
 
   /**
    * @param {string} search
