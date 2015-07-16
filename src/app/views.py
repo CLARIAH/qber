@@ -169,7 +169,11 @@ def dimension():
                 PREFIX dct: <http://purl.org/dc/terms/>
                 PREFIX qb: <http://purl.org/linked-data/cube#>
 
-                SELECT (<{URI}> as ?uri) ?type ?description ?measured_concept WHERE {{
+                SELECT (<{URI}> as ?uri) ?type ?label ?description ?measured_concept WHERE {{
+                    OPTIONAL
+                    {{
+                        <{URI}>   rdfs:label ?label .
+                    }}
                     OPTIONAL
                     {{
                         <{URI}>   rdfs:comment ?description .
@@ -208,11 +212,11 @@ def dimension():
                 PREFIX dct: <http://purl.org/dc/terms/>
                 PREFIX qb: <http://purl.org/linked-data/cube#>
 
-                SELECT DISTINCT ?cl ?cl_label WHERE {{
+                SELECT DISTINCT ?uri ?label WHERE {{
                       <{URI}>   a               qb:CodedProperty .
                       BIND(qb:DimensionProperty AS ?type )
-                      <{URI}>   qb:codeList     ?cl .
-                      ?cl       rdfs:label      ?cl_label .
+                      <{URI}>   qb:codeList     ?uri .
+                      ?uri       rdfs:label      ?label .
                 }}""".format(URI=uri)
 
             codelist_results = sc.sparql(query)
@@ -220,9 +224,12 @@ def dimension():
             log.debug(codelist_results)
 
             if len(codelist_results) > 0 :
-                codelist = sc.dictize(codelist_results)
+                # Only take the first result (won't allow multiple code lists)
+                # TODO: Check how this potentially interacts with user-added codes and lists
+                codelist = sc.dictize(codelist_results)[0]
                 variable_definition['codelist'] = codelist
 
+            log.debug("Definition for: {}".format(uri))
             log.debug(variable_definition)
             return jsonify(variable_definition)
 
