@@ -12,7 +12,7 @@ var Pill = React.createClass({
 
   // This React class only works if a list of 'variables' is passed through its properties.
   propTypes: {
-    option: ReactPropTypes.string.isRequired,
+    option: ReactPropTypes.object.isRequired,
     isSelected: ReactPropTypes.bool.isRequired
   },
 

@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-var VariableSelectActions = require('../actions/VariableSelectActions');
+var DatasetActions = require('../actions/DatasetActions');
 var PillSelector = require('./PillSelector.react');
 
 
@@ -28,7 +28,7 @@ var VariableSelectPanel = React.createClass({
    * Event handler for selections in the PillSelector
    */
   _onSelected: function(value) {
-    VariableSelectActions.selectVariable(value);
+    DatasetActions.chooseVariable(value);
   }
 
 });

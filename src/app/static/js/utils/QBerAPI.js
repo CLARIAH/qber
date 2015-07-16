@@ -10,10 +10,12 @@ module.exports = {
 
   retrieveDimension: function(settings) {
     $.get('/variable/resolve', {'uri': settings.dimension}, function(dimension_definition){
+      console.log("QBerAPI retrieveDimension");
+      console.log(dimension_definition);
       if(dimension_definition == 'error'){
         settings.error(settings.dimension);
       } else {
-        settings.success(settings.dimension_definition);
+        settings.success(dimension_definition);
       }
     }).fail(function(){
       settings.error(settings.dimension);

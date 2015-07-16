@@ -6,10 +6,14 @@ var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
 
+// The list of dimensions obtained from the LOD cloud + CSDH
 var _dimensions = [];
-var _dimension_search;
-var _selected_dimension;
-var _visible = false;
+// The visibility status of the SDMX Dimension Modal
+var _modal_visible = false;
+// The accumulated mappings between variables in the dataset and selected dimensions
+var _mappings = {};
+// The selected variable
+var _variable
 
 /**
  * Initialize the list of dimensions.
@@ -20,63 +24,79 @@ function initialize(dimensions) {
 }
 
 /**
- * Set the DIMENSION search function.
- * @return {string}
+ * Make the dimension modal visible.
  */
- function setDimensionSearch(dimension_search) {
-   _dimension_search = dimension_search;
+ function setModalVisible() {
+   _modal_visible = true;
 }
 
 /**
- * Set the selected dimension.
- * @return {string}
+ * Make the dimension modal hidden.
  */
- function setSelectedDimension(dimension) {
-   _selected_dimension = dimension;
+ function setModalHidden() {
+   _modal_visible = false;
 }
 
 /**
- * Make the dimension panel visible.
- * @return {string}
+ * Set the currently selected variable (for mappings).
+ * @param  {string} variable The selected variable
  */
- function setVisible() {
-   _visible = true;
+ function setVariable(variable) {
+   console.log('Variable set to '+ variable)
+   _variable = variable;
 }
 
 /**
- * Make the dimension panel hidden.
- * @return {string}
+ * Assign the selected dimension to the currently selected variable
+ * @param  {object} dimension The selected dimension details
  */
- function setHidden() {
-   _visible = false;
+ function assignDimension(dimension) {
+   console.log('Assigning dimension');
+   console.log(dimension);
+   // First we clear out any existing information about this variable
+   // (e.g. previously added mappings)
+   _mappings[_variable] = {};
+   // Assign the dimension to the variable.
+   _mappings[_variable].dimension = dimension;
 }
-
 
 
 var SDMXDimensionStore = assign({}, EventEmitter.prototype, {
 
   /**
-   * Get the entire DATASET.
+   * Get the list of dimensions.
    * @return {object}
    */
-  get: function() {
+  getDimensions: function() {
     return _dimensions;
   },
 
   /**
-   * Get the DIMENSION search string.
+   * Get the currently selected variable
    * @return {string}
    */
-  getDimensionSearch: function() {
-    return _dimension_search;
+  getVariable: function() {
+    return _variable;
   },
 
-  getSelectedDimension: function(){
-    return _selected_dimension;
+  /**
+   * Get the dimension assigned to the currently selected variable
+   * @return {object} The dimension details
+   */
+  getDimension: function() {
+    if (_mappings[_variable] !== undefined){
+      return _mappings[_variable].dimension;
+    } else {
+      return undefined;
+    }
   },
 
-  getVisible: function(){
-    return _visible;
+  /**
+   * Get the visibility status of the SDMX Dimension modal
+   * @return {object}
+   */
+  getModalVisible: function(){
+    return _modal_visible;
   },
 
   emitChange: function() {
@@ -101,6 +121,7 @@ var SDMXDimensionStore = assign({}, EventEmitter.prototype, {
 // Register callback to handle all updates
 QBerDispatcher.register(function(action) {
   console.log('SDMXDimensionStore received message from QBerDispatcher:' + action.actionType);
+
   switch(action.actionType) {
     // This is the INIT action for the dimensions
     case SDMXDimensionConstants.SDMX_DIMENSION_INIT:
@@ -111,33 +132,27 @@ QBerDispatcher.register(function(action) {
         SDMXDimensionStore.emitChange();
       }
       break;
-
+    // Once a variable from the source dataset is selected, make this known to the SDMX Store
+    case SDMXDimensionConstants.SDMX_DIMENSION_SET_VARIABLE:
+      var variable = action.variable;
+      setVariable(variable);
+      SDMXDimensionStore.emitChange();
+      break;
+    // Once a dimension has been selected in the modal, assign it to the variable in our mappings dictionary
+    case SDMXDimensionConstants.SDMX_DIMENSION_ASSIGN:
+      var dimension = action.dimension_details;
+      assignDimension(dimension);
+      SDMXDimensionStore.emitChange();
+      break;
+    // The dimension panel should be made visible
     case SDMXDimensionConstants.SDMX_DIMENSION_SHOW:
-      setVisible();
+      setModalVisible();
       SDMXDimensionStore.emitChange();
       break;
-
+    // The dimension panel should be made hidden
     case SDMXDimensionConstants.SDMX_DIMENSION_HIDE:
-      setHidden();
+      setModalHidden();
       SDMXDimensionStore.emitChange();
-      break;
-
-    case SDMXDimensionConstants.SDMX_DIMENSION_SEARCH:
-      var dimension_search = action.search;
-
-      if (dimension_search !== SDMXDimensionStore.getDimensionSearch()){
-        setDimensionSearch(dimension_search);
-        SDMXDimensionStore.emitChange();
-      }
-      break;
-
-    case SDMXDimensionConstants.SELECT_DIMENSION:
-      var selected_dimension = action.dimension;
-
-      if (selected_dimension !== ""){
-        setSelectedDimension(selected_dimension);
-        SDMXDimensionStore.emitChange();
-      }
       break;
 
 

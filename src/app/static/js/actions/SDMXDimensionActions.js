@@ -4,45 +4,22 @@ var SDMXDimensionConstants = require('../constants/SDMXDimensionConstants');
 var DatasetConstants = require('../constants/DatasetConstants');
 var MessageConstants = require('../constants/MessageConstants');
 
-/**
- *  Note that the QBerAPI also dispatches actions to stores!
- */
+
 var SDMXDimensionActions = {
 
-
-  // /**
-  //  * @param {string} search
-  //  */
-  // selectDimension: function(dimension) {
-  //   QBerDispatcher.dispatch({
-  //     actionType: MessageConstants.INFO,
-  //     message: 'You selected dimension '+dimension
-  //   });
-  //   console.log("In searchDimension action");
-  //   QBerDispatcher.dispatch({
-  //     actionType: SDMXDimensionConstants.SELECT_DIMENSION,
-  //     dimension: dimension
-  //   });
-  //
-  //   QBerDispatcher.dispatch({
-  //     actionType: DatasetConstants.DATASET_CHOOSE_DIMENSION,
-  //     dimension: dimension
-  //   });
-  // },
 
   /**
    * @param {string} dimension
    */
   chooseDimension: function(dimension) {
+    console.log("You chose dimension: "+dimension);
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
       message: 'Retrieving details for '+dimension
     });
 
-    QBerDispatcher.dispatch({
-      actionType: SDMXDimensionConstants.SDMX_DIMENSION_HIDE,
-      dimension: dimension
-    });
+    this.hideDimensions();
+
     QBerAPI.retrieveDimension({
       dimension: dimension,
       success: function(dimension_details){
@@ -51,7 +28,7 @@ var SDMXDimensionActions = {
           message: "Successfully retrieved dimension "+ dimension
         });
         QBerDispatcher.dispatch({
-          actionType: DatasetConstants.DATASET_SET_DIMENSION,
+          actionType: SDMXDimensionConstants.SDMX_DIMENSION_ASSIGN,
           dimension_details: dimension_details
         });
       },
@@ -60,7 +37,24 @@ var SDMXDimensionActions = {
           actionType: MessageConstants.ERROR,
           message: "Could not retrieve dimension "+ dimension
         });
+
+        // Dispatch an 'empty' dimension_details object
+        var dimension_details = {'uri': dimension};
+        QBerDispatcher.dispatch({
+          actionType: SDMXDimensionConstants.SDMX_DIMENSION_ASSIGN,
+          dimension_details: dimension_details
+        });
       }
+    });
+  },
+
+  /**
+   * Updated dimension details, assign them to the current variable.
+   */
+  updateDimension: function(dimension_details) {
+    QBerDispatcher.dispatch({
+      actionType: SDMXDimensionConstants.SDMX_DIMENSION_ASSIGN,
+      dimension_details: dimension_details
     });
   },
 
