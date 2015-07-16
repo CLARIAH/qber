@@ -37,6 +37,9 @@ var SDMXDimensionForm = React.createClass({
 
     var form;
     if (this.state.visible) {
+      var label = this.props.dimension.label ? this.props.dimension.label : ''
+      var description = this.props.dimension.description ? this.props.dimension.description : ''
+
       form =  <form className="form-horizontal">
                 <div className="form-group">
                   <label for="inputName" className="col-sm-1 control-label">Name</label>
@@ -45,7 +48,7 @@ var SDMXDimensionForm = React.createClass({
                            className="form-control"
                            id="inputName"
                            placeholder="Name"
-                           value={this.props.dimension.label}
+                           value={label}
                            onChange={this._onLabelChange}></input>
                   </div>
                 </div>
@@ -67,7 +70,7 @@ var SDMXDimensionForm = React.createClass({
                               className="form-control"
                               id="inputDescription"
                               placeholder="Description"
-                              value={this.props.dimension.description}
+                              value={description}
                               onChange={this._onDescriptionChange}></textarea>
                   </div>
                 </div>
