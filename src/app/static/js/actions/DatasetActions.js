@@ -53,23 +53,21 @@ var DatasetActions = {
   chooseVariable: function(variable) {
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
-      message: 'You chose variable '+variable
+      message: 'You selected variable '+variable
     });
 
     QBerDispatcher.dispatch({
       actionType: DatasetConstants.DATASET_CHOOSE_VARIABLE,
       variable: variable
     });
-  },
 
-  /**
-   * @param {string} variable
-   */
-  showDimensions: function() {
     QBerDispatcher.dispatch({
-      actionType: SDMXDimensionConstants.SDMX_DIMENSION_SHOW,
+      actionType: SDMXDimensionConstants.SDMX_DIMENSION_SET_VARIABLE,
+      variable: variable
     });
   },
+
+
 
 
 
