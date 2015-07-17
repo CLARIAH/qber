@@ -77,6 +77,39 @@ var SDMXDimensionActions = {
     });
   },
 
+  /**
+   * @param {string} iri
+   */
+  retrieveIRI: function(unsafe_iri){
+    console.log('Retrieving safe IRI based on '+unsafe_iri);
+    QBerDispatcher.dispatch({
+      actionType: MessageConstants.INFO,
+      message: 'Retrieving safe IRI based on '+unsafe_iri
+    });
+    // Call the QBerAPI with the filename, and implement the success callback
+    QBerAPI.retrieveIRI({
+      iri: unsafe_iri,
+      success: function(iri){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.SUCCESS,
+          message: 'Successfully minted fresh IRI '+iri
+        });
+
+        QBerDispatcher.dispatch({
+          actionType: SDMXDimensionConstants.SDMX_DIMENSION_UPDATE_IRI,
+          iri: iri
+        });
+      },
+      error: function(unsafe_iri){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.ERROR,
+          message: 'Could not generate safe IRI from '+filename
+        });
+      }
+    });
+  },
+
+
 };
 
 module.exports = SDMXDimensionActions;

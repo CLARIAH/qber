@@ -20,5 +20,19 @@ module.exports = {
     }).fail(function(){
       settings.error(settings.dimension);
     });
+  },
+
+  retrieveIRI: function(settings) {
+    $.get('/iri', {'iri': settings.iri}, function(data){
+      console.log("QBerAPI retrieveIRI");
+      console.log(data);
+      if(data.response == 'error'){
+        settings.error(settings.iri);
+      } else {
+        settings.success(data.response);
+      }
+    }).fail(function(){
+      settings.error(settings.iri);
+    });
   }
 };
