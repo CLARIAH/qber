@@ -29,12 +29,9 @@ var Pill = React.createClass({
     var value, text, link, badge;
 
     if (isString(this.props.option)){
-      console.log("It is a string...");
       text = <span>{this.props.option}</span>;
       value = this.props.option;
     } else {
-      console.log("It is an object...");
-
       text = <span>{this.props.option.label}</span>;
       if (this.props.option.uri){
         link = <span className="small">&nbsp;&lt;{this.props.option.uri}&gt;</span>;
