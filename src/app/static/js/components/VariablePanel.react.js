@@ -2,7 +2,6 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var DatasetActions = require('../actions/DatasetActions');
 var SDMXDimensionPanel = require('./SDMXDimensionPanel.react');
-var CodesTable = require('./CodesTable.react');
 
 var VariablePanel = React.createClass({
 
@@ -22,17 +21,21 @@ var VariablePanel = React.createClass({
       return null;
     }
 
-    var dataset = this.props.dataset;
     var variable = this.props.variable;
+    var codes = this.props.dataset.examples[variable]
 
     return (
       <section id="variable_panel">
-        <h4><strong>Selected</strong>: {this.props.variable}</h4>
-        <SDMXDimensionPanel/>
-        <h4>Frequency Table</h4>
-        <CodesTable codes={dataset.examples[variable]}/>
+        <h5>Details</h5>
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <h3 className="panel-title">Selected: <em>{this.props.variable}</em></h3>
+          </div>
+          <div className="panel-body">
+            <SDMXDimensionPanel codes={codes} datasetName={this.props.dataset.name}/>
+          </div>
+        </div>
       </section>
-
     );
   }
 });

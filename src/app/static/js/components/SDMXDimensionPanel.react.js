@@ -4,6 +4,7 @@ var SDMXDimensionActions = require('../actions/SDMXDimensionActions');
 var SDMXDimensionStore = require('../stores/SDMXDimensionStore');
 var SDMXDimensionModal = require('./SDMXDimensionModal.react');
 var SDMXDimensionForm = require('./SDMXDimensionForm.react');
+var CodesTable = require('./CodesTable.react');
 
 
 
@@ -21,6 +22,12 @@ function getSDMXDimensionPanelState() {
 
 
 var SDMXDimensionPanel = React.createClass({
+
+  // This React class only works if a list of 'codes' and the name of the dataset is passed through its properties.
+  propTypes: {
+    codes: ReactPropTypes.object.isRequired,
+    datasetName: ReactPropTypes.string.isRequired
+  },
 
   getInitialState: function() {
     return getSDMXDimensionPanelState();
@@ -47,14 +54,26 @@ var SDMXDimensionPanel = React.createClass({
 
     return (
       <section id="sdmx_dimension_panel">
-        <a className="btn btn-primary" onClick={this._handleShowDimensions}>Select existing dimension</a>
-        <SDMXDimensionForm dimension={this.state.dimension}
-                           doUpdate={this._onUpdate}/>
+        <SDMXDimensionForm variable={this.state.variable}
+                           dimension={this.state.dimension}
+                           doUpdate={this._handleUpdate}
+                           doSelectDimension={this._handleShowDimensions}
+                           doBuildDimension={this._handleBuildDimension}/>
         <SDMXDimensionModal visible={this.state.modal_visible}
                             dimensions={this.state.dimensions}
-                            doSelect={this._onSelected} />
+                            doSelect={this._handleSelected}
+                            doClose={this._handleHideDimensions} />
+        <CodesTable codes={this.props.codes}/>
       </section>
     );
+  },
+
+
+  /**
+   * Event handler for the button that generates a Dimension definition
+   */
+  _handleBuildDimension: function(){
+    SDMXDimensionActions.buildDimension(this.props.codes, this.props.datasetName);
   },
 
   /**
@@ -65,13 +84,20 @@ var SDMXDimensionPanel = React.createClass({
   },
 
   /**
+   * Event handler for the button that hides the Dimensions modal
+   */
+  _handleHideDimensions: function(){
+    SDMXDimensionActions.hideDimensions();
+  },
+
+  /**
    * Event handler for a selection in the Dimension modal
    */
-  _onSelected: function(value) {
+  _handleSelected: function(value) {
     SDMXDimensionActions.chooseDimension(value);
   },
 
-  _onUpdate: function(dimension) {
+  _handleUpdate: function(dimension) {
     SDMXDimensionActions.updateDimension(dimension);
   },
 

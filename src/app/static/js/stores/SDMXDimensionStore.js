@@ -13,7 +13,7 @@ var _modal_visible = false;
 // The accumulated mappings between variables in the dataset and selected dimensions
 var _mappings = {};
 // The selected variable
-var _variable
+var _variable;
 
 /**
  * Initialize the list of dimensions.
@@ -42,7 +42,7 @@ function initialize(dimensions) {
  * @param  {string} variable The selected variable
  */
  function setVariable(variable) {
-   console.log('Variable set to '+ variable)
+   console.log('Variable set to '+ variable);
    _variable = variable;
 }
 
@@ -58,6 +58,58 @@ function initialize(dimensions) {
    _mappings[_variable] = {};
    // Assign the dimension to the variable.
    _mappings[_variable].dimension = dimension;
+}
+/**
+ * Generate a dimension from the variable, its codes, and the name of the datasset
+ * @param  {object} codes The codes for this variable
+ * @param  {string} datasetName The name of the current dataset
+ */
+function buildDimension(codes, datasetName){
+  var URI_BASE = "http://data.socialhistory.org/resource/";
+
+  // A simple URI based on the variable name (probably not valid)
+  var uri = URI_BASE + datasetName + '/dimension/' + _variable;
+  var label = _variable;
+  var description = "The dimension '" +_variable + "' as taken from the '" + datasetName + "' dataset";
+  var type = "http://purl.org/linked-data/cube#DimensionProperty";
+
+  var codelist_uri = URI_BASE + datasetName + '/codelist/' + _variable;
+  var codelist_label = 'Code list for ' + _variable;
+  var codelist = [];
+
+  for (var key in codes){
+   var code_label = codes[key].id;
+   var code_uri = URI_BASE + datasetName + '/code/' + codes[key].id;
+
+   codelist.push({
+     uri: code_uri,
+     label: code_label
+   });
+  }
+
+  var dimension = {
+    uri: uri,
+    label: label,
+    description: description,
+    type: type,
+    codelist: {
+      uri: codelist_uri,
+      label: codelist_label,
+      codes: codelist
+    }
+  };
+
+  assignDimension(dimension);
+
+ }
+
+/**
+ * Build a dimension from the current variable name and codes
+ * @param  {string} iri The new IRI
+ */
+ function setIRI(iri) {
+   console.log('IRI set to '+ iri)
+   _mappings[_variable].dimension.uri = iri;
 }
 
 
@@ -142,6 +194,13 @@ QBerDispatcher.register(function(action) {
     case SDMXDimensionConstants.SDMX_DIMENSION_ASSIGN:
       var dimension = action.dimension_details;
       assignDimension(dimension);
+      SDMXDimensionStore.emitChange();
+      break;
+    // We've obtained a safe IRI based on the dataset and variable name
+    case SDMXDimensionConstants.SDMX_DIMENSION_BUILD:
+      var codes = action.codes;
+      var datasetName = action.datasetName;
+      buildDimension(codes, datasetName);
       SDMXDimensionStore.emitChange();
       break;
     // The dimension panel should be made visible

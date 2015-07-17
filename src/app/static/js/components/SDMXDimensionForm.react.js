@@ -7,7 +7,10 @@ var SDMXDimensionForm = React.createClass({
   // This React class only works if a list of 'dimensions' is passed through its properties.
   propTypes: {
     dimension: ReactPropTypes.object.isRequired,
-    doUpdate: ReactPropTypes.object.isRequired
+    variable: ReactPropTypes.string.isRequired,
+    doUpdate: ReactPropTypes.object.isRequired,
+    doSelectDimension: ReactPropTypes.object.isRequired,
+    doBuildDimension: ReactPropTypes.object.isRequired
   },
 
   getInitialState: function() {
@@ -20,12 +23,11 @@ var SDMXDimensionForm = React.createClass({
    * @return {object}
    */
   render: function() {
-    // This section should be hidden by default
+    // This section should be shown by default
     // and shown when we do have variables in our dataset
-    if (this.props.dimension === undefined) {
-      return null;
-    }
-    console.log(this.props.dimension);
+    // if (this.props.dimension === undefined) {
+    //   return null;
+    // }
 
     var caret;
     if (this.state.visible){
@@ -37,10 +39,42 @@ var SDMXDimensionForm = React.createClass({
 
     var form;
     if (this.state.visible) {
-      var label = this.props.dimension.label ? this.props.dimension.label : ''
-      var description = this.props.dimension.description ? this.props.dimension.description : ''
+      var label;
+      var description;
+      var uri;
+      if (this.props.dimension !== undefined){
+        label = this.props.dimension.label ? this.props.dimension.label : '';
+        description = this.props.dimension.description ? this.props.dimension.description : '';
+        uri = this.props.dimension.uri;
+      } else {
+        label = this.props.variable;
+        description = '';
+        uri = '';
+      }
+
 
       form =  <form className="form-horizontal">
+                <div className="form-group">
+                  <label for="inputURI" className="col-sm-1 control-label">URI</label>
+                  <div className="col-sm-11">
+                    <div className="input-group">
+                      <input type="text"
+                             className="form-control"
+                             id="inputURI"
+                             placeholder="URI"
+                             value={uri}
+                             readOnly></input>
+                      <span className="input-group-btn">
+                        <button className="btn btn-primary"
+                              onClick={this.props.doSelectDimension}>Select</button>
+                      </span>
+                      <span className="input-group-btn">
+                        <span className="btn btn-default"
+                              onClick={this.props.doBuildDimension}>Build</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
                 <div className="form-group">
                   <label for="inputName" className="col-sm-1 control-label">Name</label>
                   <div className="col-sm-11">
@@ -50,17 +84,6 @@ var SDMXDimensionForm = React.createClass({
                            placeholder="Name"
                            value={label}
                            onChange={this._onLabelChange}></input>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label for="inputURI" className="col-sm-1 control-label">URI</label>
-                  <div className="col-sm-11">
-                    <input type="text"
-                           className="form-control"
-                           id="inputURI"
-                           placeholder="URI"
-                           value={this.props.dimension.uri}
-                           readOnly></input>
                   </div>
                 </div>
                 <div className="form-group">
@@ -79,7 +102,7 @@ var SDMXDimensionForm = React.createClass({
 
     return (
       <section id="dimension_form">
-        <h4 onClick={this._onToggle} aria-expanded={this.state.visible}>Dimension Metadata {caret}</h4>
+        <h4 onClick={this._onToggle} aria-expanded={this.state.visible}>Metadata {caret}</h4>
         {form}
       </section>
     );

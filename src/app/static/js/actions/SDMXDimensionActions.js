@@ -78,6 +78,18 @@ var SDMXDimensionActions = {
   },
 
   /**
+   *
+   */
+  buildDimension: function(codes, datasetName){
+    QBerDispatcher.dispatch({
+      actionType: SDMXDimensionConstants.SDMX_DIMENSION_BUILD,
+      codes: codes,
+      datasetName: datasetName
+    })
+  },
+
+
+  /**
    * @param {string} iri
    */
   retrieveIRI: function(unsafe_iri){
