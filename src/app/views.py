@@ -5,6 +5,7 @@ import logging
 import requests
 import json
 import os
+import iribaker
 from SPARQLWrapper import SPARQLWrapper, JSON
 from rdflib import Graph
 from collections import OrderedDict
@@ -351,6 +352,19 @@ def browse():
     filelist, parent = fc.browse(config.base_path, path)
 
     return jsonify({'parent': parent, 'files': filelist})
+
+
+@app.route('/iri', methods=['GET'])
+def iri():
+    """Bake an IRI using iribaker"""
+
+    unsafe_iri = request.args.get('iri',None)
+
+    if unsafe_iri is not None:
+        response = {'result': iribaker.to_iri(unsafe_iri)}
+    else :
+        response = {'result': 'error'}
+    return jsonify(response)
 
 
 def get_dimensions():
