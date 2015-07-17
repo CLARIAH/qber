@@ -9,6 +9,7 @@ var SDMXDimensionModal = React.createClass({
   propTypes: {
     dimensions: ReactPropTypes.object.isRequired,
     doSelect: ReactPropTypes.object.isRequired,
+    doClose: ReactPropTypes.object.isRequired,
     visible: ReactPropTypes.bool.isRequired
   },
 
@@ -23,8 +24,8 @@ var SDMXDimensionModal = React.createClass({
     }
 
     return (
-      <section id="sdmx_dimension_modal">
-        <div className="overlay"/>
+      <section id="sdmx_dimension_modal" onKeyUp={this._handleKeyUp}>
+        <div className="overlay" onClick={this.props.doClose}/>
         <div className="qber-modal">
           <PillSelector options={this.props.dimensions} doSelect={this.props.doSelect} filterFunction={this._filter} />
         </div>
@@ -35,6 +36,13 @@ var SDMXDimensionModal = React.createClass({
   _filter: function(option){
     return (option.label.search(regexp) > -1) ? '': (option.uri.search(regexp) > -1) ? '': 'none';
   },
+
+  _handleKeyUp: function(e){
+    // If the escape key is pressed, close the modal.
+    if (e.which == 27) {
+      this.props.doClose();
+    }
+  }
 
 });
 
