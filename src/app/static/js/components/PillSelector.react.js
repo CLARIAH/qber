@@ -2,6 +2,9 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var Pill = require('./Pill.react');
 
+function isString(o) {
+    return (typeof o == "string" || o['constructor'] === String);
+}
 
 var PillSelector = React.createClass({
 
@@ -11,6 +14,8 @@ var PillSelector = React.createClass({
     doSelect: ReactPropTypes.object.isRequired
   },
 
+  visibleItems: [],
+
   getInitialState: function() {
     return {
             'search': undefined,
@@ -18,12 +23,14 @@ var PillSelector = React.createClass({
           };
   },
 
+  componentDidMount: function() {
+    React.findDOMNode(this.refs.dimensionInput).focus();
+  },
+
   /**
    * @return {object}
    */
   render: function() {
-    console.log("In PillSelector render");
-
     var options = this.props.options;
 
     var filter;
@@ -35,8 +42,9 @@ var PillSelector = React.createClass({
 
     var search = this.state.search;
     var selected = this.state.selected;
-
-    var visible_items = [];
+    var items = [];
+    // Reset the visible items
+    this.visibleItems = [];
 
 
 
@@ -44,11 +52,15 @@ var PillSelector = React.createClass({
       var style;
       if (search !== undefined && search.length > 1 && search !== "") {
         regexp = new RegExp(search,"i");
+        var visible = filter(options[key]);
         style = {
-          'display': filter(options[key])
+          'display': visible
         };
+        if (visible !== 'none'){
+          this.visibleItems.push(options[key]);
+        }
       }
-      visible_items.push(
+      items.push(
         <Pill key={key} style={style}
                         option={options[key]}
                         isSelected={options[key] == selected}
@@ -56,13 +68,19 @@ var PillSelector = React.createClass({
       );
     }
 
-    var input = <input className="form-control" width="100%" onChange={this._handleChange} type="text"/>;
+
+    var input = <input className="form-control"
+                       ref="dimensionInput"
+                       width="100%"
+                       onChange={this._handleChange}
+                       onKeyUp={this._handleKeyUp}
+                       type="text"/>;
 
     return (
         <section>
           { input }
           <ul className="nav nav-pills nav-stacked" role="tablist">
-            {visible_items}
+            {items}
           </ul>
         </section>
     );
@@ -78,13 +96,7 @@ var PillSelector = React.createClass({
   _handleClick: function(event) {
     var value = event.currentTarget.getAttribute('value');
 
-    var new_state = {
-      'search': this.state.search,
-      'selected': value
-    };
-
-    this.props.doSelect(value);
-    this.setState(new_state);
+    this._handleSelect(value);
   },
 
   /**
@@ -96,6 +108,28 @@ var PillSelector = React.createClass({
       'selected': this.state.selected
     };
     this.setState(new_state);
+  },
+
+  _handleSelect: function(value) {
+    var new_state = {
+      'search': this.state.search,
+      'selected': value
+    };
+
+    this.props.doSelect(value);
+    this.setState(new_state);
+  },
+
+  _handleKeyUp: function(e){
+    // If the return/enter key is pressed, and the list of visible items is of length 1, select that option.
+    if (e.which == 13 && this.visibleItems.length == 1){
+      var value = this.visibleItems[0];
+      if (isString(value)) {
+        this._handleSelect(value);
+      } else {
+        this._handleSelect(value.uri);
+      }
+    }
   },
 
 
