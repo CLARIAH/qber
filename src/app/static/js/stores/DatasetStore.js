@@ -15,6 +15,8 @@ var _just_selected_variable = false;
  * @param  {object} dataset The content of the DATASET
  */
 function initialize(dataset) {
+  console.log("Initializing DatasetStore");
+  console.log(dataset);
   _dataset = dataset;
 }
 
@@ -25,33 +27,6 @@ function initialize(dataset) {
  */
 function setVariable(variable){
   _variable = variable;
-}
-
-/**
- * Set the VARIABLE search function.
- * @return {string}
- */
- function setVariableSearch(variable_search) {
-   _variable_search = variable_search;
-}
-
-/**
- * Set the VARIABLE search function.
- * @return {string}
- */
- function setJustSelectedVariable(selected) {
-   _just_selected_variable = selected;
-}
-
-
-/**
- * Update a DATASET item.
- * @param  {string} id
- * @param {object} updates An object literal containing only the data to be
- *     updated.
- */
-function update(id, updates) {
-  _dataset[id] = assign({}, _dataset[id], updates);
 }
 
 
@@ -115,11 +90,6 @@ QBerDispatcher.register(function(action) {
         setVariable(variable);
         DatasetStore.emitChange();
       }
-      break;
-
-    case DatasetConstants.DATASET_CHOOSE_DIMENSION:
-      dimension = action.dimension;
-      
       break;
 
     default:
