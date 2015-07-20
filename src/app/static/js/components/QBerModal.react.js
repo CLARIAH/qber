@@ -27,7 +27,14 @@ var QBerModal = React.createClass({
       <section id="qber_modal_component" onKeyUp={this._handleKeyUp}>
         <div className="overlay" onClick={this.props.doClose}/>
         <div className="qber-modal">
-          <PillSelector options={this.props.options} doSelect={this.props.doSelect} filterFunction={this._filter} />
+          <div className="panel panel-default">
+            <div className="panel-heading">
+              <h4>{this.props.title}</h4>
+            </div>
+            <div className="panel-body">
+              <PillSelector options={this.props.options} doSelect={this.props.doSelect} filterFunction={this._filter} />
+            </div>
+          </div>
         </div>
       </section>
     );
