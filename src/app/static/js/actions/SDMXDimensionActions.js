@@ -33,6 +33,11 @@ var SDMXDimensionActions = {
         });
 
         if (dimension_details.codelist) {
+          QBerDispatcher.dispatch({
+            actionType: MessageConstants.INFO,
+            message: "Retrieving codes for "+ dimension_details.codelist.uri
+          });
+
           QBerAPI.retrieveCodes({
             codelist_uri: dimension_details.codelist.uri,
             success: function(codes){
