@@ -60,6 +60,7 @@ var SDMXDimensionPanel = React.createClass({
                            doSelectDimension={this._handleShowDimensions}
                            doBuildDimension={this._handleBuildDimension}/>
         <QBerModal visible={this.state.modal_visible}
+                            title="Select an external SDMX dimension definition"
                             options={this.state.dimensions}
                             doSelect={this._handleSelected}
                             doClose={this._handleHideDimensions} />

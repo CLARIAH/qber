@@ -61,8 +61,11 @@ var CodesTable = React.createClass({
       var modal;
       if (this.props.dimension && this.props.dimension.codelist){
         console.log(this.props.dimension.codelist);
+        var title = <span>Select corresponding code for <strong> {this.state.selected_code}</strong></span>;
         // Codelist present
         modal = <QBerModal visible={this.state.modal_visible}
+                   title={title}
+                   value={this.state.selected_code}
                    options={this.props.dimension.codelist.codes}
                    doSelect={this._handleSelected}
                    doClose={this._handleHideModal} />;
@@ -94,6 +97,7 @@ var CodesTable = React.createClass({
 
   _handleShowCodes: function(e){
     var new_state = this.state;
+    new_state.selected_code = e.currentTarget.getAttribute('value');
     new_state.modal_visible = !this.state.modal_visible;
     this.setState(new_state);
   },

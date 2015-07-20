@@ -32,7 +32,7 @@ var QBerModal = React.createClass({
               <h4>{this.props.title}</h4>
             </div>
             <div className="panel-body">
-              <PillSelector options={this.props.options} doSelect={this.props.doSelect} filterFunction={this._filter} />
+              <PillSelector options={this.props.options} value={this.props.value} doSelect={this.props.doSelect} filterFunction={this._filter} />
             </div>
           </div>
         </div>
