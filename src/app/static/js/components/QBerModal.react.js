@@ -3,11 +3,11 @@ var ReactPropTypes = React.PropTypes;
 var PillSelector = require('./PillSelector.react');
 
 
-var SDMXDimensionModal = React.createClass({
+var QBerModal = React.createClass({
 
   // This React class only works if a list of 'variables' is passed through its properties.
   propTypes: {
-    dimensions: ReactPropTypes.object.isRequired,
+    options: ReactPropTypes.object.isRequired,
     doSelect: ReactPropTypes.object.isRequired,
     doClose: ReactPropTypes.object.isRequired,
     visible: ReactPropTypes.bool.isRequired
@@ -24,10 +24,10 @@ var SDMXDimensionModal = React.createClass({
     }
 
     return (
-      <section id="sdmx_dimension_modal" onKeyUp={this._handleKeyUp}>
+      <section id="qber_modal_component" onKeyUp={this._handleKeyUp}>
         <div className="overlay" onClick={this.props.doClose}/>
         <div className="qber-modal">
-          <PillSelector options={this.props.dimensions} doSelect={this.props.doSelect} filterFunction={this._filter} />
+          <PillSelector options={this.props.options} doSelect={this.props.doSelect} filterFunction={this._filter} />
         </div>
       </section>
     );
@@ -46,4 +46,4 @@ var SDMXDimensionModal = React.createClass({
 
 });
 
-module.exports = SDMXDimensionModal;
+module.exports = QBerModal;
