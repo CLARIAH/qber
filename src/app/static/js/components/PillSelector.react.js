@@ -46,7 +46,9 @@ var PillSelector = React.createClass({
     // Reset the visible items
     this.visibleItems = [];
 
-
+    if (this.props.value && search === undefined ) {
+      search = this.props.value;
+    }
 
     for (var key in options) {
       var style;

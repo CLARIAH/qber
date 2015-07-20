@@ -256,12 +256,12 @@ def codelist():
             PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
             PREFIX dct: <http://purl.org/dc/terms/>
 
-            SELECT DISTINCT ?concept ?label ?notation WHERE {{
-              {{ ?concept skos:inScheme <{URI}> . }}
+            SELECT DISTINCT ?uri ?label ?notation WHERE {{
+              {{ ?uri skos:inScheme <{URI}> . }}
               UNION
-              {{ <{URI}> skos:member+ ?concept . }}
-              ?concept skos:prefLabel ?label .
-              OPTIONAL {{ ?concept skos:notation ?notation . }}
+              {{ <{URI}> skos:member+ ?uri . }}
+              ?uri skos:prefLabel ?label .
+              OPTIONAL {{ ?uri skos:notation ?notation . }}
             }}
         """.format(URI=uri)
 
