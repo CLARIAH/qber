@@ -63,7 +63,8 @@ var SDMXDimensionPanel = React.createClass({
                             options={this.state.dimensions}
                             doSelect={this._handleSelected}
                             doClose={this._handleHideDimensions} />
-        <CodesTable codes={this.props.codes}/>
+        <CodesTable codes={this.props.codes}
+                            dimension={this.state.dimension}/>
       </section>
     );
   },

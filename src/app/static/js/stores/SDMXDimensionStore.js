@@ -102,6 +102,21 @@ function buildDimension(codes, datasetName){
   assignDimension(dimension);
 
  }
+ /**
+  * Assign the retrieved codes to the currently selected dimension
+  * @param  {object} codes The retrieved codes
+  */
+  function assignCodes(codes) {
+    console.log('Assigning codes');
+    console.log(codes);
+    // First we clear out any existing information about this codelist
+    // (e.g. previously added mappings)
+    _mappings[_variable].dimension.codelist.codes = [];
+    // Assign the codes to the codelist.
+    _mappings[_variable].dimension.codelist.codes = codes;
+ }
+
+
 
 /**
  * Build a dimension from the current variable name and codes
@@ -201,6 +216,12 @@ QBerDispatcher.register(function(action) {
       var codes = action.codes;
       var datasetName = action.datasetName;
       buildDimension(codes, datasetName);
+      SDMXDimensionStore.emitChange();
+      break;
+      // We've obtained a safe IRI based on the dataset and variable name
+    case SDMXDimensionConstants.SDMX_CODES_ASSIGN:
+      var codes = action.codes;
+      assignCodes(codes);
       SDMXDimensionStore.emitChange();
       break;
     // The dimension panel should be made visible
