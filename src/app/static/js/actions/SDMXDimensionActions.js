@@ -31,6 +31,30 @@ var SDMXDimensionActions = {
           actionType: SDMXDimensionConstants.SDMX_DIMENSION_ASSIGN,
           dimension_details: dimension_details
         });
+
+        if (dimension_details.codelist) {
+          QBerAPI.retrieveCodes({
+            codelist_uri: dimension_details.codelist.uri,
+            success: function(codes){
+              QBerDispatcher.dispatch({
+                actionType: MessageConstants.SUCCESS,
+                message: "Retrieved codes for "+ dimension_details.codelist.uri
+              });
+              QBerDispatcher.dispatch({
+                actionType: SDMXDimensionConstants.SDMX_CODES_ASSIGN,
+                codes: codes
+              });
+            },
+            error: function(codelist_uri){
+              QBerDispatcher.dispatch({
+                actionType: MessageConstants.ERROR,
+                message: "Could not retrieve codes for "+ dimension_details.codelist.uri
+              });
+            }
+          });
+
+        }
+
       },
       error: function(dimension){
         QBerDispatcher.dispatch({

@@ -22,6 +22,20 @@ module.exports = {
     });
   },
 
+  retrieveCodes: function(settings) {
+    $.get('/codelist/concepts', {'uri': settings.codelist_uri}, function(codes){
+      console.log("QBerAPI retrieveCodes");
+      console.log(codes);
+      if(codes.response && codes.response == 'error'){
+        settings.error(settings.codelist_uri);
+      } else {
+        settings.success(codes.codelist);
+      }
+    }).fail(function(){
+      settings.error(settings.codelist_uri);
+    });
+  },
+
   retrieveIRI: function(settings) {
     $.get('/iri', {'iri': settings.iri}, function(data){
       console.log("QBerAPI retrieveIRI");
