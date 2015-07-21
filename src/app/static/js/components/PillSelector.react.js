@@ -7,6 +7,7 @@ function isString(o) {
 }
 
 var PillSelector = React.createClass({
+  input: undefined,
 
   // This React class only works if a list of 'options' is passed through its properties.
   propTypes: {
@@ -25,6 +26,12 @@ var PillSelector = React.createClass({
 
   componentDidMount: function() {
     React.findDOMNode(this.refs.dimensionInput).focus();
+  },
+
+  componentWillReceiveProps: function(nextProps){
+    if (nextProps.value !== undefined){
+      React.findDOMNode(this.refs.dimensionInput).setAttribute('value',nextProps.value);
+    }
   },
 
   /**
@@ -52,9 +59,9 @@ var PillSelector = React.createClass({
 
     for (var key in options) {
       var style;
-      if (search !== undefined && search.length > 1 && search !== "") {
+      if (search !== undefined && search.length > 0 && search !== "") {
         regexp = new RegExp(search,"i");
-        var visible = filter(options[key]);
+        var visible = filter(regexp, options[key]);
         style = {
           'display': visible
         };
@@ -68,8 +75,9 @@ var PillSelector = React.createClass({
                         isSelected={options[key] == selected}
                         onClicked={this._handleClick}/>
       );
-    }
 
+
+    }
 
     var input = <input className="form-control"
                        ref="dimensionInput"
@@ -77,6 +85,7 @@ var PillSelector = React.createClass({
                        onChange={this._handleChange}
                        onKeyUp={this._handleKeyUp}
                        type="text"/>;
+
 
     return (
         <section>
@@ -88,7 +97,7 @@ var PillSelector = React.createClass({
     );
   },
 
-  _filter: function(option){
+  _filter: function(regexp, option){
     return (option.search(regexp) > -1) ? '': 'none'
   },
 
@@ -123,6 +132,7 @@ var PillSelector = React.createClass({
   },
 
   _handleKeyUp: function(e){
+    console.log(e.which);
     // If the return/enter key is pressed, and the list of visible items is of length 1, select that option.
     if (e.which == 13 && this.visibleItems.length == 1){
       var value = this.visibleItems[0];
@@ -131,7 +141,7 @@ var PillSelector = React.createClass({
       } else {
         this._handleSelect(value.uri);
       }
-    }
+    } 
   },
 
 

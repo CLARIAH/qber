@@ -1,7 +1,14 @@
 var React = require('react');
+var _ = require('lodash');
 var ReactPropTypes = React.PropTypes;
 var PillSelector = require('./PillSelector.react');
 var QBerModal = require('./QBerModal.react');
+
+function findByURI(source, uri) {
+    return source.filter(function( obj ) {
+        return obj.uri === uri;
+    })[ 0 ];
+}
 
 
 var CodesTable = React.createClass({
@@ -45,30 +52,36 @@ var CodesTable = React.createClass({
       for (var key in codes) {
 
         codes_rows.push(<tr key={codes[key].id}>
-                          <td> { codes[key].id } </td>
                           <td>
-                            <span className='badge pull-right'> { codes[key].count }</span>
+                            { codes[key].id }
+                          </td>
+                          <td>
                             <span className='btn btn-default btn-xs'
                                   value={codes[key].id}
-                                  onClick={this._handleShowCodes}
+                                  onClick={this._handleToggleModal}
                                   disabled={button_disabled}>
-                                  Map
+                                  <span className="glyphicon glyphicon-random"/>
                             </span>
                           </td>
-                          </tr>);
+                          <td width="100%">
+                            <span className='badge pull-right'> { codes[key].count }</span>
+                          </td>
+                        </tr>);
       }
 
       var modal;
       if (this.props.dimension && this.props.dimension.codelist){
         console.log(this.props.dimension.codelist);
-        var title = <span>Select corresponding code for <strong> {this.state.selected_code}</strong></span>;
+        var title = <span>Select corresponding code for <strong>{this.state.selected_code}</strong></span>;
+
+        var sorted_codes = _.sortBy(this.props.dimension.codelist.codes,'label');
         // Codelist present
         modal = <QBerModal visible={this.state.modal_visible}
                    title={title}
                    value={this.state.selected_code}
-                   options={this.props.dimension.codelist.codes}
+                   options={sorted_codes}
                    doSelect={this._handleSelected}
-                   doClose={this._handleHideModal} />;
+                   doClose={this._handleToggleModal} />;
       }
 
       table = <div style={{overflow: 'scroll', maxHeight: '300px'}}>
@@ -95,7 +108,26 @@ var CodesTable = React.createClass({
     return (option.label.search(regexp) > -1) ? '': (option.uri.search(regexp) > -1) ? '': 'none';
   },
 
-  _handleShowCodes: function(e){
+  _handleSelected: function(value){
+    console.log(value);
+    var codes = this.props.codes;
+    // Get the index of this element + 1 (the next element)
+    var index = _.findIndex(codes, 'id', this.state.selected_code) + 1;
+
+    // Set index to 0 if the index is outside the codes array
+    if (index == codes.length){
+      index = 0;
+    }
+
+    // TODO: Add mapping between the selected code and the external code value (in 'value')
+
+    var new_state = this.state;
+    new_state.selected_code = codes[index].id;
+    this.setState(new_state);
+  },
+
+
+  _handleToggleModal: function(e){
     var new_state = this.state;
     new_state.selected_code = e.currentTarget.getAttribute('value');
     new_state.modal_visible = !this.state.modal_visible;

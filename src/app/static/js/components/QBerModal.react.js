@@ -40,14 +40,14 @@ var QBerModal = React.createClass({
     );
   },
 
-  _filter: function(option){
+  _filter: function(regexp, option){
     return (option.label.search(regexp) > -1) ? '': (option.uri.search(regexp) > -1) ? '': 'none';
   },
 
   _handleKeyUp: function(e){
     // If the escape key is pressed, close the modal.
     if (e.which == 27) {
-      this.props.doClose();
+      this.props.doClose(e);
     }
   }
 
