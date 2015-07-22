@@ -22,7 +22,7 @@ var VariablePanel = React.createClass({
     }
 
     var variable = this.props.variable;
-    var codes = this.props.dataset.examples[variable]
+    var values = this.props.dataset.examples[variable]
 
     return (
       <section id="variable_panel">
@@ -32,7 +32,7 @@ var VariablePanel = React.createClass({
             <h3 className="panel-title">Selected: <em>{this.props.variable}</em></h3>
           </div>
           <div className="panel-body">
-            <SDMXDimensionPanel codes={codes} datasetName={this.props.dataset.name}/>
+            <SDMXDimensionPanel values={values} datasetName={this.props.dataset.name}/>
           </div>
         </div>
       </section>

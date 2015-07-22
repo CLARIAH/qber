@@ -22,7 +22,7 @@ var CodesTable = React.createClass({
     return {
       'visible': true,
       'modal_visible': false,
-      'selected_code': undefined
+      'selected_value': undefined
     };
   },
 
@@ -72,13 +72,13 @@ var CodesTable = React.createClass({
       var modal;
       if (this.props.dimension && this.props.dimension.codelist){
         console.log(this.props.dimension.codelist);
-        var title = <span>Select corresponding code for <strong>{this.state.selected_code}</strong></span>;
+        var title = <span>Select corresponding code for <strong>{this.state.selected_value}</strong></span>;
 
         var sorted_codes = _.sortBy(this.props.dimension.codelist.codes,'label');
         // Codelist present
         modal = <QBerModal visible={this.state.modal_visible}
                    title={title}
-                   value={this.state.selected_code}
+                   value={this.state.selected_value}
                    options={sorted_codes}
                    doSelect={this._handleSelected}
                    doClose={this._handleToggleModal} />;
@@ -108,11 +108,12 @@ var CodesTable = React.createClass({
     return (option.label.search(regexp) > -1) ? '': (option.uri.search(regexp) > -1) ? '': 'none';
   },
 
-  _handleSelected: function(value){
-    console.log(value);
+  _handleSelected: function(code){
+    console.log(code);
     var codes = this.props.codes;
+    var selected_value = this.state.selected_value;
     // Get the index of this element + 1 (the next element)
-    var index = _.findIndex(codes, 'id', this.state.selected_code) + 1;
+    var index = _.findIndex(codes, 'id', this.state.selected_value) + 1;
 
     // Set index to 0 if the index is outside the codes array
     if (index == codes.length){
@@ -122,14 +123,16 @@ var CodesTable = React.createClass({
     // TODO: Add mapping between the selected code and the external code value (in 'value')
 
     var new_state = this.state;
-    new_state.selected_code = codes[index].id;
+    new_state.selected_value = codes[index].id;
     this.setState(new_state);
+
+    this.props.doMapping(selected_value, value);
   },
 
 
   _handleToggleModal: function(e){
     var new_state = this.state;
-    new_state.selected_code = e.currentTarget.getAttribute('value');
+    new_state.selected_value = e.currentTarget.getAttribute('value');
     new_state.modal_visible = !this.state.modal_visible;
     this.setState(new_state);
   },

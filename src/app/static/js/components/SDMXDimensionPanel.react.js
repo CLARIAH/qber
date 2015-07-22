@@ -25,7 +25,7 @@ var SDMXDimensionPanel = React.createClass({
 
   // This React class only works if a list of 'codes' and the name of the dataset is passed through its properties.
   propTypes: {
-    codes: ReactPropTypes.object.isRequired,
+    values: ReactPropTypes.object.isRequired,
     datasetName: ReactPropTypes.string.isRequired
   },
 
@@ -59,13 +59,14 @@ var SDMXDimensionPanel = React.createClass({
                            doUpdate={this._handleUpdate}
                            doSelectDimension={this._handleShowDimensions}
                            doBuildDimension={this._handleBuildDimension}/>
-        <QBerModal visible={this.state.modal_visible}
-                            title="Select an external SDMX dimension definition"
-                            options={this.state.dimensions}
-                            doSelect={this._handleSelected}
-                            doClose={this._handleHideDimensions} />
-        <CodesTable codes={this.props.codes}
-                            dimension={this.state.dimension}/>
+        <QBerModal  visible={this.state.modal_visible}
+                    title="Select an external SDMX dimension definition"
+                    options={this.state.dimensions}
+                    doSelect={this._handleSelected}
+                    doClose={this._handleHideDimensions} />
+        <CodesTable values={this.props.values}
+                    dimension={this.state.dimension}
+                    doMapping={this._handleMapping} />
       </section>
     );
   },
@@ -75,7 +76,7 @@ var SDMXDimensionPanel = React.createClass({
    * Event handler for the button that generates a Dimension definition
    */
   _handleBuildDimension: function(){
-    SDMXDimensionActions.buildDimension(this.props.codes, this.props.datasetName);
+    SDMXDimensionActions.buildDimension(this.props.values, this.props.datasetName);
   },
 
   /**
@@ -101,6 +102,10 @@ var SDMXDimensionPanel = React.createClass({
 
   _handleUpdate: function(dimension) {
     SDMXDimensionActions.updateDimension(dimension);
+  },
+
+  _handleMapping: function(value, code) {
+    SDMXDimensionActions.addMapping(value, code);
   },
 
   /**
