@@ -1,6 +1,7 @@
 from rdflib import Dataset, Graph, Namespace, Literal, URIRef, BNode, RDF, RDFS, OWL, XSD
 import urllib
 import datetime
+import iribaker
 
 QBRV = Namespace('http://data.socialhistory.org/vocab/')
 QBR = Namespace('http://data.socialhistory.org/resource/')
@@ -22,6 +23,24 @@ def safe_url(NS, local):
     """
     safe_local = local.replace(' ', '_')
     return NS[safe_local]
+
+
+def get_base_uri(dataset):
+    return Namespace('http://data.socialhistory.org/resource/{}/'.format(dataset))
+
+
+def get_value_uri(dataset, variable, value):
+    """Generates a variable value IRI for a given combination of dataset, variable and value"""
+    BASE = get_base_uri(dataset)
+
+    return iribaker.to_iri(BASE['code/' + variable + '/' + value])
+
+
+def get_variable_uri(dataset, variable):
+    """Generates a variable IRI for a given combination of dataset and variable"""
+    BASE = get_base_uri(dataset)
+
+    return iribaker.to_iri(BASE[variable])
 
 
 def data_structure_definition(dataset, variables, profile, source_path, source_hash):
