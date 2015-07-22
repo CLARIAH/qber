@@ -74,13 +74,15 @@ def metadata():
     (head, dataset_local_name) = os.path.split(dataset_file)
     (dataset_name, extension) = os.path.splitext(dataset_local_name)
 
+
+
     # Prepare the data dictionary
     data = {
         'name': dataset_name,
         'path': dataset_path,
         'variables': adapter.get_header(),
         'metadata': adapter.get_metadata(),
-        'examples': adapter.get_examples(),
+        'values': adapter.get_values(),
         'dimensions': get_dimensions(),
         'schemes': get_schemes() + get_csdh_schemes(),
         'cache': read_cache(dataset_path)

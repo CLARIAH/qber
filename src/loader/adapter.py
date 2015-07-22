@@ -69,7 +69,7 @@ class Adapter(object):
             print "No header or no metadata present"
             return False
 
-    def get_examples(self):
+    def get_values(self):
         """Return all unique values, and converts it to samples for each column."""
 
         # Get all unique values for each column
