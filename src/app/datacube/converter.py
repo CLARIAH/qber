@@ -200,8 +200,14 @@ def data_structure_definition(dataset, variables, profile, source_path, source_h
             # If we have a mapping specified, map to the codelist we selected
             if 'codelist_field' in metadata and metadata['codelist_field'] != "":
                 assertion_graph.add((codelist_uri, PROV['wasDerivedFrom'], URIRef(metadata['codelist_field'])))
+                print "one"
                 print metadata['mappings']
-                for mapping in metadata['mappings'].values():
+
+                if isinstance(metadata['mappings'],list):
+                    values = metadata['mappings']
+                else :
+                    values = metadata['mappings'].values()
+                for mapping in values:
                     source = mapping['id']
                     target = mapping['value']
 
