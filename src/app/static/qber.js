@@ -685,7 +685,7 @@ function browse(browsepane, path) {
                 a.append(badge);
 
                 a.on("click", function() {
-                  $("#open-dataset-modal").toggle();
+                  $("#open-dataset-modal").modal("hide");
                   load_dataset(value.path);
                 });
             }
@@ -706,7 +706,7 @@ $(function() {
 
   // Enable scrolling on the document body (strange)
 
-  $('body').css({overflow: 'scroll'}); 
+  $('body').css({overflow: 'scroll'});
 
   // Hide the signout button
   $("#signout").hide();
@@ -719,6 +719,7 @@ $(function() {
 
   // Click handler for the file opening dialog
   $("#open-dataset-modal").on("show", function(){
+    $('.modal-backdrop').remove();
     // Start the file browser with the current directory as the starting path.
     browse("#browser", ".");
   });
