@@ -22,7 +22,7 @@ var VariablePanel = React.createClass({
     }
 
     var variable = this.props.variable;
-    var values = this.props.dataset.examples[variable]
+    var values = this.props.dataset.values[variable]
 
     return (
       <section id="variable_panel">
