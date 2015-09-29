@@ -50,7 +50,7 @@ var QBer = React.createClass({
   render: function() {
   	return (
       <div className="row">
-        <div className="col-md-2">
+        <div className="col-md-2" id="left_menu">
           <VariableSelectPanel
             options={this.state.variable_names}
           />

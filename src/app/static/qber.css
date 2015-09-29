@@ -18,6 +18,11 @@ body {
   }
 }
 
+#left_menu {
+  background-color: #fafafa;
+  box-shadow: 2px 2px 5px #eee;
+}
+
 /* overlay styles, all needed */
 .overlay {
     position: fixed;
