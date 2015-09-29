@@ -126,7 +126,7 @@ var CodesTable = React.createClass({
     new_state.selected_value = codes[index].id;
     this.setState(new_state);
 
-    this.props.doMapping(selected_value, value);
+    this.props.doMapping(selected_value, code);
   },
 
 
