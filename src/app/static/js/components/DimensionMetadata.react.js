@@ -52,27 +52,26 @@ var DimensionMetadata = React.createClass({
         uri = '';
       }
 
-
-      form =  <form className="form-horizontal">
+      // TODO: Don't use buttons, use justified pills with an active state
+      // TODO: Also don't place these within the metadata form (the toggle button will make it disappear)
+      var menu =  <div className="btn-group btn-group-justified" role="group">
+                    <a className="btn btn-primary" role="button"
+                          onClick={this.props.doSelectDimension}>Coded</a>
+                    <a className="btn btn-success" role="button"
+                          onClick={this.props.doBuildDimension}>Identifier</a>
+                    <a className="btn btn-info" role="button"
+                          onClick={this.props.doBuildDimension}>Other</a>
+                  </div>
+      var form =  <form className="form-horizontal">
                 <div className="form-group">
                   <label for="inputURI" className="col-sm-1 control-label">URI</label>
                   <div className="col-sm-11">
-                    <div className="input-group">
                       <input type="text"
                              className="form-control"
                              id="inputURI"
                              placeholder="URI"
                              value={uri}
                              readOnly></input>
-                      <span className="input-group-btn">
-                        <button className="btn btn-primary"
-                              onClick={this.props.doSelectDimension}>Select</button>
-                      </span>
-                      <span className="input-group-btn">
-                        <span className="btn btn-default"
-                              onClick={this.props.doBuildDimension}>Build</span>
-                      </span>
-                    </div>
                   </div>
                 </div>
                 <div className="form-group">
@@ -102,6 +101,7 @@ var DimensionMetadata = React.createClass({
 
     return (
       <section id="dimension_form">
+        {menu}
         <h4 onClick={this._onToggle} aria-expanded={this.state.visible}>Metadata {caret}</h4>
         {form}
       </section>
