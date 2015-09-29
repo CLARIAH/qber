@@ -80,9 +80,8 @@ def metadata():
     data = {
         'name': dataset_name,
         'path': dataset_path,
-        'variables': adapter.get_header(),
         'metadata': adapter.get_metadata(),
-        'values': adapter.get_values(),
+        'codes': adapter.get_values(),
         'dimensions': get_dimensions(),
         'schemes': get_schemes() + get_csdh_schemes(),
         'cache': read_cache(dataset_path)
