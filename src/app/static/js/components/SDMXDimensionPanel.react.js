@@ -64,7 +64,7 @@ var SDMXDimensionPanel = React.createClass({
                     options={this.state.dimensions}
                     doSelect={this._handleSelected}
                     doClose={this._handleHideDimensions} />
-        <CodesTable values={this.props.values}
+        <CodesTable codes={this.props.values}
                     dimension={this.state.dimension}
                     doMapping={this._handleMapping} />
       </section>
