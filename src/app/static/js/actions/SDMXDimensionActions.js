@@ -78,7 +78,8 @@ var SDMXDimensionActions = {
   },
 
   /**
-   * Updated dimension details, assign them to the current variable.
+   * Updated dimension details (e.g. the URI of a definition, a pre-existing code
+   * list etc.), assign them to the current variable.
    */
   updateDimension: function(dimension_details) {
     QBerDispatcher.dispatch({
@@ -89,7 +90,7 @@ var SDMXDimensionActions = {
 
 
   /**
-   *
+   * Show the dimension panel (the modal in which codes are mapped to dimensions)
    */
   showDimensions: function() {
     QBerDispatcher.dispatch({
@@ -98,7 +99,7 @@ var SDMXDimensionActions = {
   },
 
   /**
-   *
+   * Close the dimension panel (the modal in which codes are mapped to dimensions)
    */
   hideDimensions: function() {
     QBerDispatcher.dispatch({
@@ -107,7 +108,8 @@ var SDMXDimensionActions = {
   },
 
   /**
-   *
+   * The user has specified to prefer to use a generated dimension definition
+   * rather than a pre-existing one
    */
   buildDimension: function(codes, datasetName){
     QBerDispatcher.dispatch({
@@ -119,7 +121,7 @@ var SDMXDimensionActions = {
 
 
   /**
-   * @param {string} iri
+   * @param {string} unsafe_iri
    */
   retrieveIRI: function(unsafe_iri){
     console.log('Retrieving safe IRI based on '+unsafe_iri);
