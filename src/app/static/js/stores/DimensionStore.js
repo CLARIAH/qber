@@ -205,7 +205,7 @@ QBerDispatcher.register(function(action) {
       setVariable(variable);
       DimensionStore.emitChange();
       break;
-    // Once a dimension has been selected in the modal, assign it to the variable in our mappings dictionary
+    // Once a dimension has been selected in the modal, or a value has changed in the dimension metadata panel
     case DimensionConstants.SDMX_DIMENSION_ASSIGN:
       var dimension = action.dimension_details;
       assignDimension(dimension);
