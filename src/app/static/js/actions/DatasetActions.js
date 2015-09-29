@@ -1,7 +1,7 @@
 var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var QBerAPI = require('../utils/QBerAPI');
 var DatasetConstants = require('../constants/DatasetConstants');
-var SDMXDimensionConstants = require('../constants/SDMXDimensionConstants');
+var DimensionConstants = require('../constants/DimensionConstants');
 
 var MessageConstants = require('../constants/MessageConstants');
 
@@ -34,7 +34,7 @@ var DatasetActions = {
         });
 
         QBerDispatcher.dispatch({
-          actionType: SDMXDimensionConstants.SDMX_DIMENSION_INIT,
+          actionType: DimensionConstants.SDMX_DIMENSION_INIT,
           dimensions: dataset.dimensions
         });
       },
@@ -62,7 +62,7 @@ var DatasetActions = {
     });
 
     QBerDispatcher.dispatch({
-      actionType: SDMXDimensionConstants.SDMX_DIMENSION_SET_VARIABLE,
+      actionType: DimensionConstants.SDMX_DIMENSION_SET_VARIABLE,
       variable: variable
     });
   },

@@ -2,7 +2,7 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 
 
-var SDMXDimensionForm = React.createClass({
+var DimensionMetadata = React.createClass({
 
   // This React class only works if a list of 'dimensions' is passed through its properties.
   propTypes: {
@@ -135,4 +135,4 @@ var SDMXDimensionForm = React.createClass({
 
 });
 
-module.exports = SDMXDimensionForm;
+module.exports = DimensionMetadata;

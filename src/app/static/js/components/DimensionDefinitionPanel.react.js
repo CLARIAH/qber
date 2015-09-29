@@ -1,44 +1,44 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-var SDMXDimensionActions = require('../actions/SDMXDimensionActions');
-var SDMXDimensionStore = require('../stores/SDMXDimensionStore');
+var DimensionActions = require('../actions/DimensionActions');
+var DimensionStore = require('../stores/DimensionStore');
 var QBerModal = require('./QBerModal.react');
-var SDMXDimensionForm = require('./SDMXDimensionForm.react');
-var CodesTable = require('./CodesTable.react');
+var DimensionMetadata = require('./DimensionMetadata.react');
+var CodeDefinitionTable = require('./CodeDefinitionTable.react');
 
 
 
 /**
- * Retrieve the current visibility from the SDMXDimensionStore
+ * Retrieve the current visibility from the DimensionStore
  */
-function getSDMXDimensionPanelState() {
+function getDimensionDefinitionPanelState() {
   return {
-    'dimensions': SDMXDimensionStore.getDimensions(),
-    'variable': SDMXDimensionStore.getVariable(),
-    'dimension': SDMXDimensionStore.getDimension(),
-    'modal_visible': SDMXDimensionStore.getModalVisible(),
+    'dimensions': DimensionStore.getDimensions(),
+    'variable': DimensionStore.getVariable(),
+    'dimension': DimensionStore.getDimension(),
+    'modal_visible': DimensionStore.getModalVisible(),
   };
 }
 
 
-var SDMXDimensionPanel = React.createClass({
+var DimensionDefinitionPanel = React.createClass({
 
   // This React class only works if a list of 'codes' and the name of the dataset is passed through its properties.
   propTypes: {
-    values: ReactPropTypes.object.isRequired,
+    codes: ReactPropTypes.object.isRequired,
     datasetName: ReactPropTypes.string.isRequired
   },
 
   getInitialState: function() {
-    return getSDMXDimensionPanelState();
+    return getDimensionDefinitionPanelState();
   },
 
   componentDidMount: function() {
-    SDMXDimensionStore.addChangeListener(this._onChange);
+    DimensionStore.addChangeListener(this._onChange);
   },
 
   componentWillUnmount: function() {
-    SDMXDimensionStore.removeChangeListener(this._onChange);
+    DimensionStore.removeChangeListener(this._onChange);
   },
 
   /**
@@ -54,7 +54,7 @@ var SDMXDimensionPanel = React.createClass({
 
     return (
       <section id="sdmx_dimension_panel">
-        <SDMXDimensionForm variable={this.state.variable}
+        <DimensionMetadata variable={this.state.variable}
                            dimension={this.state.dimension}
                            doUpdate={this._handleUpdate}
                            doSelectDimension={this._handleShowDimensions}
@@ -64,7 +64,7 @@ var SDMXDimensionPanel = React.createClass({
                     options={this.state.dimensions}
                     doSelect={this._handleSelected}
                     doClose={this._handleHideDimensions} />
-        <CodesTable codes={this.props.values}
+        <CodeDefinitionTable codes={this.props.codes}
                     dimension={this.state.dimension}
                     doMapping={this._handleMapping} />
       </section>
@@ -76,46 +76,46 @@ var SDMXDimensionPanel = React.createClass({
    * Event handler for the button that generates a Dimension definition
    */
   _handleBuildDimension: function(){
-    SDMXDimensionActions.buildDimension(this.props.values, this.props.datasetName);
+    DimensionActions.buildDimension(this.props.codes, this.props.datasetName);
   },
 
   /**
    * Event handler for the button that shows the Dimensions modal
    */
   _handleShowDimensions: function(){
-    SDMXDimensionActions.showDimensions();
+    DimensionActions.showDimensions();
   },
 
   /**
    * Event handler for the button that hides the Dimensions modal
    */
   _handleHideDimensions: function(){
-    SDMXDimensionActions.hideDimensions();
+    DimensionActions.hideDimensions();
   },
 
   /**
    * Event handler for a selection in the Dimension modal
    */
   _handleSelected: function(value) {
-    SDMXDimensionActions.chooseDimension(value);
+    DimensionActions.chooseDimension(value);
   },
 
   _handleUpdate: function(dimension) {
-    SDMXDimensionActions.updateDimension(dimension);
+    DimensionActions.updateDimension(dimension);
   },
 
   _handleMapping: function(value, code) {
-    SDMXDimensionActions.addMapping(value, code);
+    DimensionActions.addMapping(value, code);
   },
 
   /**
    * Event handler for 'change' events coming from the DatasetStore
    */
   _onChange: function() {
-    console.log('Something changed for SDMXDimensionPanel');
-    this.setState(getSDMXDimensionPanelState());
+    console.log('Something changed for DimensionDefinitionPanel');
+    this.setState(getDimensionDefinitionPanelState());
   }
 
 });
 
-module.exports = SDMXDimensionPanel;
+module.exports = DimensionDefinitionPanel;

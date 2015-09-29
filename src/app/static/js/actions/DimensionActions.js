@@ -1,11 +1,11 @@
 var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var QBerAPI = require('../utils/QBerAPI');
-var SDMXDimensionConstants = require('../constants/SDMXDimensionConstants');
+var DimensionConstants = require('../constants/DimensionConstants');
 var DatasetConstants = require('../constants/DatasetConstants');
 var MessageConstants = require('../constants/MessageConstants');
 
 
-var SDMXDimensionActions = {
+var DimensionActions = {
 
 
   /**
@@ -28,7 +28,7 @@ var SDMXDimensionActions = {
           message: "Successfully retrieved dimension "+ dimension
         });
         QBerDispatcher.dispatch({
-          actionType: SDMXDimensionConstants.SDMX_DIMENSION_ASSIGN,
+          actionType: DimensionConstants.SDMX_DIMENSION_ASSIGN,
           dimension_details: dimension_details
         });
 
@@ -46,7 +46,7 @@ var SDMXDimensionActions = {
                 message: "Retrieved codes for "+ dimension_details.codelist.uri
               });
               QBerDispatcher.dispatch({
-                actionType: SDMXDimensionConstants.SDMX_CODES_ASSIGN,
+                actionType: DimensionConstants.SDMX_CODES_ASSIGN,
                 codes: codes
               });
             },
@@ -70,7 +70,7 @@ var SDMXDimensionActions = {
         // Dispatch an 'empty' dimension_details object
         var dimension_details = {'uri': dimension};
         QBerDispatcher.dispatch({
-          actionType: SDMXDimensionConstants.SDMX_DIMENSION_ASSIGN,
+          actionType: DimensionConstants.SDMX_DIMENSION_ASSIGN,
           dimension_details: dimension_details
         });
       }
@@ -83,7 +83,7 @@ var SDMXDimensionActions = {
    */
   updateDimension: function(dimension_details) {
     QBerDispatcher.dispatch({
-      actionType: SDMXDimensionConstants.SDMX_DIMENSION_ASSIGN,
+      actionType: DimensionConstants.SDMX_DIMENSION_ASSIGN,
       dimension_details: dimension_details
     });
   },
@@ -94,7 +94,7 @@ var SDMXDimensionActions = {
    */
   showDimensions: function() {
     QBerDispatcher.dispatch({
-      actionType: SDMXDimensionConstants.SDMX_DIMENSION_SHOW,
+      actionType: DimensionConstants.SDMX_DIMENSION_SHOW,
     });
   },
 
@@ -103,7 +103,7 @@ var SDMXDimensionActions = {
    */
   hideDimensions: function() {
     QBerDispatcher.dispatch({
-      actionType: SDMXDimensionConstants.SDMX_DIMENSION_HIDE,
+      actionType: DimensionConstants.SDMX_DIMENSION_HIDE,
     });
   },
 
@@ -113,7 +113,7 @@ var SDMXDimensionActions = {
    */
   buildDimension: function(codes, datasetName){
     QBerDispatcher.dispatch({
-      actionType: SDMXDimensionConstants.SDMX_DIMENSION_BUILD,
+      actionType: DimensionConstants.SDMX_DIMENSION_BUILD,
       codes: codes,
       datasetName: datasetName
     })
@@ -139,7 +139,7 @@ var SDMXDimensionActions = {
         });
 
         QBerDispatcher.dispatch({
-          actionType: SDMXDimensionConstants.SDMX_DIMENSION_UPDATE_IRI,
+          actionType: DimensionConstants.SDMX_DIMENSION_UPDATE_IRI,
           iri: iri
         });
       },
@@ -155,4 +155,4 @@ var SDMXDimensionActions = {
 
 };
 
-module.exports = SDMXDimensionActions;
+module.exports = DimensionActions;

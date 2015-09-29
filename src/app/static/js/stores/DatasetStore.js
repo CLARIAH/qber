@@ -41,6 +41,18 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
     return _dataset;
   },
 
+  /**
+   * Get all variable names in the DATASET.
+   * @return {object}
+   */
+  getVariableNames: function() {
+    if (_dataset == {} || _dataset.codes === undefined){
+      return []
+    } else {
+      return Object.keys(_dataset.codes);
+    }
+  },
+
 
   /**
    * Get the selected VARIABLE.

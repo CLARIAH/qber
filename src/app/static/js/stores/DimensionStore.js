@@ -1,7 +1,7 @@
 var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var DatasetConstants = require('../constants/DatasetConstants');
-var SDMXDimensionConstants = require('../constants/SDMXDimensionConstants');
+var DimensionConstants = require('../constants/DimensionConstants');
 var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
@@ -128,7 +128,7 @@ function buildDimension(codes, datasetName){
 }
 
 
-var SDMXDimensionStore = assign({}, EventEmitter.prototype, {
+var DimensionStore = assign({}, EventEmitter.prototype, {
 
   /**
    * Get the list of dimensions.
@@ -187,59 +187,59 @@ var SDMXDimensionStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 QBerDispatcher.register(function(action) {
-  console.log('SDMXDimensionStore received message from QBerDispatcher:' + action.actionType);
+  console.log('DatasetStore: received '+action.actionType);
 
   switch(action.actionType) {
     // This is the INIT action for the dimensions
-    case SDMXDimensionConstants.SDMX_DIMENSION_INIT:
+    case DimensionConstants.SDMX_DIMENSION_INIT:
       var dimensions = action.dimensions;
 
       if (dimensions !== {}) {
         initialize(dimensions);
-        SDMXDimensionStore.emitChange();
+        DimensionStore.emitChange();
       }
       break;
     // Once a variable from the source dataset is selected, make this known to the SDMX Store
-    case SDMXDimensionConstants.SDMX_DIMENSION_SET_VARIABLE:
+    case DimensionConstants.SDMX_DIMENSION_SET_VARIABLE:
       var variable = action.variable;
       setVariable(variable);
-      SDMXDimensionStore.emitChange();
+      DimensionStore.emitChange();
       break;
     // Once a dimension has been selected in the modal, assign it to the variable in our mappings dictionary
-    case SDMXDimensionConstants.SDMX_DIMENSION_ASSIGN:
+    case DimensionConstants.SDMX_DIMENSION_ASSIGN:
       var dimension = action.dimension_details;
       assignDimension(dimension);
-      SDMXDimensionStore.emitChange();
+      DimensionStore.emitChange();
       break;
     // We've obtained a safe IRI based on the dataset and variable name
-    case SDMXDimensionConstants.SDMX_DIMENSION_BUILD:
+    case DimensionConstants.SDMX_DIMENSION_BUILD:
       var codes = action.codes;
       var datasetName = action.datasetName;
       buildDimension(codes, datasetName);
-      SDMXDimensionStore.emitChange();
+      DimensionStore.emitChange();
       break;
-      // We've obtained a safe IRI based on the dataset and variable name
-    case SDMXDimensionConstants.SDMX_CODES_ASSIGN:
+    // The dimension details have been updated (codes)
+    case DimensionConstants.SDMX_CODES_ASSIGN:
       var codes = action.codes;
       assignCodes(codes);
-      SDMXDimensionStore.emitChange();
+      DimensionStore.emitChange();
       break;
     // The dimension panel should be made visible
-    case SDMXDimensionConstants.SDMX_DIMENSION_SHOW:
+    case DimensionConstants.SDMX_DIMENSION_SHOW:
       setModalVisible();
-      SDMXDimensionStore.emitChange();
+      DimensionStore.emitChange();
       break;
     // The dimension panel should be made hidden
-    case SDMXDimensionConstants.SDMX_DIMENSION_HIDE:
+    case DimensionConstants.SDMX_DIMENSION_HIDE:
       setModalHidden();
-      SDMXDimensionStore.emitChange();
+      DimensionStore.emitChange();
       break;
 
 
     default:
-      console.log('SDMXDimensionStore: No matching action');
+      console.log('DimensionStore: No matching action');
       // no op
   }
 });
 
-module.exports = SDMXDimensionStore;
+module.exports = DimensionStore;

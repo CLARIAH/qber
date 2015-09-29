@@ -25,6 +25,7 @@ var DatasetStore = require('../stores/DatasetStore');
 function getDatasetState() {
   return {
     dataset: DatasetStore.get(),
+    variable_names: DatasetStore.getVariableNames(),
     variable: DatasetStore.getVariable()
   };
 }
@@ -51,7 +52,7 @@ var QBer = React.createClass({
       <div className="row">
         <div className="col-md-2">
           <VariableSelectPanel
-            options={this.state.dataset.variables}
+            options={this.state.variable_names}
           />
         </div>
         <div className="col-md-10">

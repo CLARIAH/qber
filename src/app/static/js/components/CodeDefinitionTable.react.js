@@ -11,7 +11,7 @@ function findByURI(source, uri) {
 }
 
 
-var CodesTable = React.createClass({
+var CodeDefinitionTable = React.createClass({
 
   // This React class only works if a list of 'codes' is passed through its properties.
   propTypes: {
@@ -120,12 +120,13 @@ var CodesTable = React.createClass({
       index = 0;
     }
 
-    // TODO: Add mapping between the selected code and the external code value (in 'value')
+    // TODO: Add mapping between the selected code and the external code value (in 'code')
 
     var new_state = this.state;
     new_state.selected_value = codes[index].id;
     this.setState(new_state);
 
+    // Call the externally defined function that handles the mappings between (external) values and the source codes.
     this.props.doMapping(selected_value, code);
   },
 
@@ -147,4 +148,4 @@ var CodesTable = React.createClass({
   },
 });
 
-module.exports = CodesTable;
+module.exports = CodeDefinitionTable;
