@@ -1,5 +1,4 @@
-from rdflib import Dataset, Graph, Namespace, Literal, URIRef, BNode, RDF, RDFS, OWL, XSD
-import urllib
+from rdflib import Dataset, Namespace, Literal, URIRef, RDF, RDFS, XSD
 import datetime
 import iribaker
 
