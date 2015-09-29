@@ -26,15 +26,8 @@ var VariablePanel = React.createClass({
 
     return (
       <section id="variable_panel">
-        <h5>Details</h5>
-        <div className="panel panel-default">
-          <div className="panel-heading">
-            <h3 className="panel-title">Selected: <em>{this.props.variable}</em></h3>
-          </div>
-          <div className="panel-body">
-            <DimensionDefinitionPanel codes={codes} datasetName={this.props.dataset.name}/>
-          </div>
-        </div>
+        <h4>Details for the variable <em>"{this.props.variable}"</em></h4>
+        <DimensionDefinitionPanel codes={codes} datasetName={this.props.dataset.name}/>
       </section>
     );
   }
