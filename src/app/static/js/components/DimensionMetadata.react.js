@@ -102,7 +102,7 @@ var DimensionMetadata = React.createClass({
 
     return (
       <section id="dimension_form">
-        <h4 onClick={this._onToggle} aria-expanded={this.state.visible}>Metadata {caret}</h4>
+        <h5 onClick={this._onToggle} aria-expanded={this.state.visible}>Metadata {caret}</h5>
         {form}
       </section>
     );
