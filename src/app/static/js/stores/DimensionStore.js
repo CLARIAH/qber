@@ -71,7 +71,8 @@ function buildDimension(codes, datasetName){
   var uri = URI_BASE + datasetName + '/dimension/' + _variable;
   var label = _variable;
   var description = "The dimension '" +_variable + "' as taken from the '" + datasetName + "' dataset";
-  var type = "http://purl.org/linked-data/cube#DimensionProperty";
+  var type = "coded" // One of community, coded, identifier, other 
+  // var type = "http://purl.org/linked-data/cube#DimensionProperty";
 
   var codelist_uri = URI_BASE + datasetName + '/codelist/' + _variable;
   var codelist_label = 'Code list for ' + _variable;
