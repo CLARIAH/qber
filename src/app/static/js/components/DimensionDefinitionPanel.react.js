@@ -3,6 +3,7 @@ var ReactPropTypes = React.PropTypes;
 var DimensionActions = require('../actions/DimensionActions');
 var DimensionStore = require('../stores/DimensionStore');
 var QBerModal = require('./QBerModal.react');
+var DimensionType = require('./Dimensiontype.react');
 var DimensionMetadata = require('./DimensionMetadata.react');
 var CodeDefinitionTable = require('./CodeDefinitionTable.react');
 
@@ -51,16 +52,22 @@ var DimensionDefinitionPanel = React.createClass({
     //   return null;
     // }
 
+    // TODO: Want this to work the first time the variable is shown
+    // TODO: Make this more elegant as this really should not occur in the render function.
+    if (this.state.dimension === undefined) {
+      DimensionActions.buildDimension(this.props.codes, this.props.datasetName);
+    }
 
     return (
       <section id="sdmx_dimension_panel">
+        <DimensionType type={this.state.dimension === undefined ? "coded" : this.state.dimension.type}
+                       doSelectDimension={this._handleShowDimensions}
+                       doBuildDimension={this._handleBuildDimension}/>
         <DimensionMetadata variable={this.state.variable}
                            dimension={this.state.dimension}
-                           doUpdate={this._handleUpdate}
-                           doSelectDimension={this._handleShowDimensions}
-                           doBuildDimension={this._handleBuildDimension}/>
+                           doUpdate={this._handleUpdate}/>
         <QBerModal  visible={this.state.modal_visible}
-                    title="Select an external SDMX dimension definition"
+                    title="Select a community provided variable name"
                     options={this.state.dimensions}
                     doSelect={this._handleSelected}
                     doClose={this._handleHideDimensions} />

@@ -8,9 +8,7 @@ var DimensionMetadata = React.createClass({
   propTypes: {
     dimension: ReactPropTypes.object.isRequired,
     variable: ReactPropTypes.string.isRequired,
-    doUpdate: ReactPropTypes.object.isRequired,
-    doSelectDimension: ReactPropTypes.object.isRequired,
-    doBuildDimension: ReactPropTypes.object.isRequired
+    doUpdate: ReactPropTypes.object.isRequired
   },
 
   getInitialState: function() {
@@ -36,33 +34,25 @@ var DimensionMetadata = React.createClass({
       caret = <span className="small glyphicon glyphicon-chevron-down"></span>;
     }
 
-
     var form;
     if (this.state.visible) {
       var label;
       var description;
       var uri;
+      var codelist_uri
       if (this.props.dimension !== undefined){
         label = this.props.dimension.label ? this.props.dimension.label : '';
         description = this.props.dimension.description ? this.props.dimension.description : '';
         uri = this.props.dimension.uri;
+        codelist_uri = this.props.codelist_uri;
       } else {
         label = this.props.variable;
         description = '';
         uri = '';
+        codelist_uri = '';
       }
 
-      // TODO: Don't use buttons, use justified pills with an active state
-      // TODO: Also don't place these within the metadata form (the toggle button will make it disappear)
-      var menu =  <div className="btn-group btn-group-justified" role="group">
-                    <a className="btn btn-primary" role="button"
-                          onClick={this.props.doSelectDimension}>Coded</a>
-                    <a className="btn btn-success" role="button"
-                          onClick={this.props.doBuildDimension}>Identifier</a>
-                    <a className="btn btn-info" role="button"
-                          onClick={this.props.doBuildDimension}>Other</a>
-                  </div>
-      var form =  <form className="form-horizontal">
+      form =  <form className="form-horizontal">
                 <div className="form-group">
                   <label for="inputURI" className="col-sm-1 control-label">URI</label>
                   <div className="col-sm-11">
@@ -72,6 +62,17 @@ var DimensionMetadata = React.createClass({
                              placeholder="URI"
                              value={uri}
                              readOnly></input>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label for="inputCodelist" className="col-sm-1 control-label">Code list</label>
+                  <div className="col-sm-11">
+                    <textarea type="text"
+                              className="form-control"
+                              id="inputCodelist"
+                              placeholder="Codelist"
+                              value={codelist_uri}
+                              readOnly></textarea>
                   </div>
                 </div>
                 <div className="form-group">
@@ -101,7 +102,6 @@ var DimensionMetadata = React.createClass({
 
     return (
       <section id="dimension_form">
-        {menu}
         <h4 onClick={this._onToggle} aria-expanded={this.state.visible}>Metadata {caret}</h4>
         {form}
       </section>
