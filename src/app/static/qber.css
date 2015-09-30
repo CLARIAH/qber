@@ -36,9 +36,9 @@ body {
 
 .qber-modal {
     width: 70%;
-    height: 180%;
+    height: 100%;
     position: absolute;
-    top: 50%;
+    top: 20%;
     left: 10%;
     margin-top: -100px;
     margin-left: -50px;
