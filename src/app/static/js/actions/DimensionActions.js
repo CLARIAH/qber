@@ -29,6 +29,7 @@ var DimensionActions = {
         });
         QBerDispatcher.dispatch({
           actionType: DimensionConstants.SDMX_DIMENSION_ASSIGN,
+          dimension_type: 'community',
           dimension_details: dimension_details
         });
 

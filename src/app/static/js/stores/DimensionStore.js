@@ -50,7 +50,7 @@ function initialize(dimensions) {
  * Assign the selected dimension to the currently selected variable
  * @param  {object} dimension The selected dimension details
  */
- function assignDimension(dimension) {
+ function assignDimension(type, dimension) {
    console.log('Assigning dimension');
    console.log(dimension);
    // First we clear out any existing information about this variable
@@ -58,6 +58,7 @@ function initialize(dimensions) {
    _mappings[_variable] = {};
    // Assign the dimension to the variable.
    _mappings[_variable].dimension = dimension;
+   _mappings[_variable].dimension.type = type;
 }
 /**
  * Generate a dimension from the variable, its codes, and the name of the datasset
@@ -92,7 +93,6 @@ function buildDimension(codes, datasetName){
     uri: uri,
     label: label,
     description: description,
-    type: type,
     codelist: {
       uri: codelist_uri,
       label: codelist_label,
@@ -100,7 +100,7 @@ function buildDimension(codes, datasetName){
     }
   };
 
-  assignDimension(dimension);
+  assignDimension(type, dimension);
 
  }
  /**
@@ -209,7 +209,8 @@ QBerDispatcher.register(function(action) {
     // Once a dimension has been selected in the modal, or a value has changed in the dimension metadata panel
     case DimensionConstants.SDMX_DIMENSION_ASSIGN:
       var dimension = action.dimension_details;
-      assignDimension(dimension);
+      var type = action.dimension_type;
+      assignDimension(type, dimension);
       DimensionStore.emitChange();
       break;
     // We've obtained a safe IRI based on the dataset and variable name
