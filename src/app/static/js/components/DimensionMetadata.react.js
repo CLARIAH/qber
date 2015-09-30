@@ -44,13 +44,29 @@ var DimensionMetadata = React.createClass({
         label = this.props.dimension.label ? this.props.dimension.label : '';
         description = this.props.dimension.description ? this.props.dimension.description : '';
         uri = this.props.dimension.uri;
-        codelist_uri = this.props.codelist_uri;
       } else {
         label = this.props.variable;
         description = '';
         uri = '';
-        codelist_uri = '';
       }
+
+      // The variable that will hold the JSX for the codelist, if present.
+      var codelist_row;
+      if (this.props.dimension && this.props.dimension.codelist){
+        codelist_row =  <div className="form-group">
+                          <label for="inputCodelist" className="col-sm-1 control-label">Code list</label>
+                          <div className="col-sm-11">
+                            <input type="text"
+                                   className="form-control"
+                                   id="inputCodelist"
+                                   placeholder="Codelist"
+                                   value={this.props.dimension.codelist.uri}
+                                   readOnly></input>
+                          </div>
+                        </div>;
+      }
+
+
 
       form =  <form className="form-horizontal">
                 <div className="form-group">
@@ -64,17 +80,7 @@ var DimensionMetadata = React.createClass({
                              readOnly></input>
                   </div>
                 </div>
-                <div className="form-group">
-                  <label for="inputCodelist" className="col-sm-1 control-label">Code list</label>
-                  <div className="col-sm-11">
-                    <textarea type="text"
-                              className="form-control"
-                              id="inputCodelist"
-                              placeholder="Codelist"
-                              value={codelist_uri}
-                              readOnly></textarea>
-                  </div>
-                </div>
+                {codelist_row}
                 <div className="form-group">
                   <label for="inputName" className="col-sm-1 control-label">Name</label>
                   <div className="col-sm-11">
