@@ -70,7 +70,14 @@ var DimensionType = React.createClass({
     return (
       <section id="dimension_type_menu">
         <h5 onClick={this._onToggle} aria-expanded={this.state.visible}>Variable Type {caret}</h5>
-        {options}
+        <div className="row">
+          <div className="col-sm-1" style={{textAlign: 'right'}}>
+            <small>Select a type</small>
+          </div>
+          <div className="col-sm-11">
+            {options}
+          </div>
+        </div>
       </section>
     );
   },
