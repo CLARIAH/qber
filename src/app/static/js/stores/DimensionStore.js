@@ -70,8 +70,8 @@ function buildDimension(codes, datasetName){
   // A simple URI based on the variable name (probably not valid)
   var uri = URI_BASE + datasetName + '/dimension/' + _variable;
   var label = _variable;
-  var description = "The dimension '" +_variable + "' as taken from the '" + datasetName + "' dataset";
-  var type = "coded" // One of community, coded, identifier, other 
+  var description = "The dimension '" + _variable + "' as taken from the '" + datasetName + "' dataset";
+  var type = "coded" // One of community, coded, identifier, other
   // var type = "http://purl.org/linked-data/cube#DimensionProperty";
 
   var codelist_uri = URI_BASE + datasetName + '/codelist/' + _variable;
