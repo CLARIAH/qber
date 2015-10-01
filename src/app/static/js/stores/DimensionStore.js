@@ -61,26 +61,26 @@ function initialize(dimensions) {
 }
 /**
  * Generate a dimension from the variable, its codes, and the name of the datasset
- * @param  {object} codes The codes for this variable
+ * @param  {type} string The type for this variable (one of coded, identifier, )
+ * @param  {object} values The codes for this variable
  * @param  {string} datasetName The name of the current dataset
  */
-function buildDimension(codes, datasetName){
+function buildDimension(type, values, datasetName){
   var URI_BASE = "http://data.socialhistory.org/resource/";
 
   // A simple URI based on the variable name (probably not valid)
   var uri = URI_BASE + datasetName + '/dimension/' + _variable;
   var label = _variable;
   var description = "The dimension '" +_variable + "' as taken from the '" + datasetName + "' dataset";
-  var type = "coded" // One of community, coded, identifier, other 
   // var type = "http://purl.org/linked-data/cube#DimensionProperty";
 
   var codelist_uri = URI_BASE + datasetName + '/codelist/' + _variable;
   var codelist_label = 'Code list for ' + _variable;
   var codelist = [];
 
-  for (var key in codes){
-   var code_label = codes[key].id;
-   var code_uri = URI_BASE + datasetName + '/code/' + codes[key].id;
+  for (var key in values){
+   var code_label = values[key].id;
+   var code_uri = URI_BASE + datasetName + '/code/' + values[key].id;
 
    codelist.push({
      uri: code_uri,
@@ -124,7 +124,7 @@ function buildDimension(codes, datasetName){
  * @param  {string} iri The new IRI
  */
  function setIRI(iri) {
-   console.log('IRI set to '+ iri)
+   console.log('IRI set to '+ iri);
    _mappings[_variable].dimension.uri = iri;
 }
 
@@ -214,9 +214,10 @@ QBerDispatcher.register(function(action) {
       break;
     // We've obtained a safe IRI based on the dataset and variable name
     case DimensionConstants.SDMX_DIMENSION_BUILD:
-      var codes = action.codes;
+      var type = action.type;
+      var values = action.values;
       var datasetName = action.datasetName;
-      buildDimension(codes, datasetName);
+      buildDimension(type, values, datasetName);
       DimensionStore.emitChange();
       break;
     // The dimension details have been updated (codes)

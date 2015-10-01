@@ -111,14 +111,38 @@ var DimensionActions = {
    * The user has specified to prefer to use a generated dimension definition
    * rather than a pre-existing one
    */
-  buildDimension: function(codes, datasetName){
+  buildDimension: function(values, datasetName){
     QBerDispatcher.dispatch({
       actionType: DimensionConstants.SDMX_DIMENSION_BUILD,
-      codes: codes,
+      type: 'coded',
+      values: values,
       datasetName: datasetName
-    })
+    });
   },
 
+  /**
+   * The user has specified that the selected variable values are identifiers (not codes)
+   */
+  buildIdentifier: function(values, datasetName){
+    QBerDispatcher.dispatch({
+      actionType: DimensionConstants.SDMX_DIMENSION_BUILD,
+      type: 'identifier',
+      values: values,
+      datasetName: datasetName
+    });
+  },
+
+  /**
+   * The user has specified that this variable is in fact a measurement (i.e. a literal)
+   */
+  buildMeasurement: function(values, datasetName){
+    QBerDispatcher.dispatch({
+      actionType: DimensionConstants.SDMX_DIMENSION_BUILD,
+      type: 'measurement',
+      values: values,
+      datasetName: datasetName
+    });
+  },
 
   /**
    * @param {string} unsafe_iri
@@ -146,7 +170,7 @@ var DimensionActions = {
       error: function(unsafe_iri){
         QBerDispatcher.dispatch({
           actionType: MessageConstants.ERROR,
-          message: 'Could not generate safe IRI from '+filename
+          message: 'Could not generate safe IRI from '+unsafe_iri
         });
       }
     });

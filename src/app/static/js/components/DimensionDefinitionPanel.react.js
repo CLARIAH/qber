@@ -31,7 +31,18 @@ var DimensionDefinitionPanel = React.createClass({
   },
 
   getInitialState: function() {
-    return getDimensionDefinitionPanelState();
+    // Get the state from the store
+    var state = getDimensionDefinitionPanelState();
+
+    // Check if there's already a dimension defined
+    if (state.dimension === undefined) {
+      // If not, build it as if it is a 'coded' dimension.
+      DimensionActions.buildDimension(this.props.codes, this.props.datasetName);
+      // Get the new state
+      state = getDimensionDefinitionPanelState();
+    }
+    // Return the initial state
+    return state;
   },
 
   componentDidMount: function() {
@@ -62,7 +73,9 @@ var DimensionDefinitionPanel = React.createClass({
       <section id="sdmx_dimension_panel">
         <DimensionType type={this.state.dimension === undefined ? "coded" : this.state.dimension.type}
                        doSelectDimension={this._handleShowDimensions}
-                       doBuildDimension={this._handleBuildDimension}/>
+                       doBuildDimension={this._handleBuildDimension}
+                       doBuildIdentifier={this._handleBuildIdentifier}
+                       doBuildMeasurement={this._handleBuildMeasurement}/>
         <DimensionMetadata variable={this.state.variable}
                            dimension={this.state.dimension}
                            doUpdate={this._handleUpdate}/>
@@ -78,7 +91,13 @@ var DimensionDefinitionPanel = React.createClass({
     );
   },
 
-
+  /**
+   * Event handler for the button that shows the Dimensions modal for community-provided dimension definitions
+   */
+  _handleShowDimensions: function(){
+    DimensionActions.showDimensions();
+  },
+  
   /**
    * Event handler for the button that generates a Dimension definition
    */
@@ -87,10 +106,17 @@ var DimensionDefinitionPanel = React.createClass({
   },
 
   /**
-   * Event handler for the button that shows the Dimensions modal
+   * Event handler for the button that generates a Dimension definition
    */
-  _handleShowDimensions: function(){
-    DimensionActions.showDimensions();
+  _handleBuildIdentifier: function(){
+    DimensionActions.buildIdentifier(this.props.codes, this.props.datasetName);
+  },
+
+  /**
+   * Event handler for the button that generates a Dimension definition
+   */
+  _handleBuildMeasurement: function(){
+    DimensionActions.buildMeasurement(this.props.codes, this.props.datasetName);
   },
 
   /**
