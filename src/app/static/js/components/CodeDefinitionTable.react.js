@@ -98,7 +98,7 @@ var CodeDefinitionTable = React.createClass({
 
     return (
       <section id="codes_table">
-        <h4 onClick={this._onToggle} aria-expanded={this.state.visible}>Frequency Table {caret}</h4>
+        <h5 onClick={this._onToggle} aria-expanded={this.state.visible}>Frequency Table {caret}</h5>
         {table}
       </section>
     );
