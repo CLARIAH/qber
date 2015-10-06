@@ -15,7 +15,7 @@
 var React = require('react');
 var PillSelector = require('./PillSelector.react');
 var VariablePanel = require('./VariablePanel.react');
-var VariableSelectPanel = require('./VariableSelectPanel.react');
+var Sidebar = require('./Sidebar.react');
 var MessagePanel = require('./MessagePanel.react');
 var DatasetStore = require('../stores/DatasetStore');
 
@@ -51,7 +51,7 @@ var QBer = React.createClass({
   	return (
       <div className="row">
         <div className="col-md-2" id="left_menu">
-          <VariableSelectPanel
+          <Sidebar
             options={this.state.variable_names}
           />
         </div>

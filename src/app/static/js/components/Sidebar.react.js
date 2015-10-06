@@ -5,7 +5,7 @@ var PillSelector = require('./PillSelector.react');
 
 
 
-var VariableSelectPanel = React.createClass({
+var Sidebar = React.createClass({
 
   // This React class only works if a list of 'options' is passed through its properties.
   propTypes: {
@@ -33,4 +33,4 @@ var VariableSelectPanel = React.createClass({
 
 });
 
-module.exports = VariableSelectPanel;
+module.exports = Sidebar;
