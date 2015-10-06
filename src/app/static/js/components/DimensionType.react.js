@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
+var Caret = require('./Caret.react');
 
 
 var DimensionType = React.createClass({
@@ -24,12 +25,6 @@ var DimensionType = React.createClass({
    */
   render: function() {
 
-    var caret;
-    if (this.state.visible){
-      caret = <span className="small glyphicon glyphicon-chevron-up"></span>;
-    } else {
-      caret = <span className="small glyphicon glyphicon-chevron-down"></span>;
-    }
 
     var options;
     if (this.state.visible) {
@@ -67,16 +62,26 @@ var DimensionType = React.createClass({
                 </ul>;
     }
 
+    console.log("Now returning code, including Caret");
     return (
       <section id="dimension_type_menu">
-        <h5 onClick={this._onToggle} aria-expanded={this.state.visible}>Variable Type {caret}</h5>
-        <div className="row">
-          <div className="col-sm-1" style={{textAlign: 'right'}}>
-            <small>Select a type</small>
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <h5 className="panel-title" onClick={this._onToggle} aria-expanded={this.state.visible}>
+              <span>Variable Type</span>
+              <Caret visible={this.state.visible}/>
+            </h5>
           </div>
-          <div className="col-sm-11">
-            {options}
-          </div>
+          <div className={this.state.visible ? 'panel-body' : 'panel-body hidden'} >
+              <div className="row">
+                <div className="col-sm-1" style={{textAlign: 'right'}}>
+                  <small>Select a type</small>
+                </div>
+                <div className="col-sm-11">
+                  {options}
+                </div>
+              </div>
+            </div>
         </div>
       </section>
     );
