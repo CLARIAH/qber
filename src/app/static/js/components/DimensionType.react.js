@@ -68,7 +68,7 @@ var DimensionType = React.createClass({
         <div className="panel panel-default">
           <div className="panel-heading">
             <h5 className="panel-title" onClick={this._onToggle} aria-expanded={this.state.visible}>
-              <span>Variable Type</span>
+              Variable Type
               <Caret visible={this.state.visible}/>
             </h5>
           </div>

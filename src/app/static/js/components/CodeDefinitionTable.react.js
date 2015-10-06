@@ -3,6 +3,7 @@ var _ = require('lodash');
 var ReactPropTypes = React.PropTypes;
 var PillSelector = require('./PillSelector.react');
 var QBerModal = require('./QBerModal.react');
+var Caret = require('./Caret.react');
 
 function findByURI(source, uri) {
     return source.filter(function( obj ) {
@@ -34,13 +35,6 @@ var CodeDefinitionTable = React.createClass({
     // and shown when we do have variables in our dataset
     if (this.props.codes === undefined || this.props.codes.length < 1) {
       return null;
-    }
-
-    var caret;
-    if (this.state.visible){
-      caret = <span className="small glyphicon glyphicon-chevron-up"></span>;
-    } else {
-      caret = <span className="small glyphicon glyphicon-chevron-down"></span>;
     }
 
     var table;
@@ -98,8 +92,17 @@ var CodeDefinitionTable = React.createClass({
 
     return (
       <section id="codes_table">
-        <h5 onClick={this._onToggle} aria-expanded={this.state.visible}>Frequency Table {caret}</h5>
-        {table}
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <h5 className="panel-title" onClick={this._onToggle} aria-expanded={this.state.visible}>
+              Frequency Table
+              <Caret visible={this.state.visible}/>
+            </h5>
+          </div>
+          <div className={this.state.visible ? 'panel-body' : 'panel-body hidden'} >
+              {table}
+          </div>
+        </div>
       </section>
     );
   },

@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-
+var Caret = require('./Caret.react');
 
 var DimensionMetadata = React.createClass({
 
@@ -26,13 +26,6 @@ var DimensionMetadata = React.createClass({
     // if (this.props.dimension === undefined) {
     //   return null;
     // }
-
-    var caret;
-    if (this.state.visible){
-      caret = <span className="small glyphicon glyphicon-chevron-up"></span>;
-    } else {
-      caret = <span className="small glyphicon glyphicon-chevron-down"></span>;
-    }
 
     var form;
     if (this.state.visible) {
@@ -108,8 +101,17 @@ var DimensionMetadata = React.createClass({
 
     return (
       <section id="dimension_form">
-        <h5 onClick={this._onToggle} aria-expanded={this.state.visible}>Metadata {caret}</h5>
-        {form}
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <h5 className="panel-title" onClick={this._onToggle} aria-expanded={this.state.visible}>
+              Metadata
+              <Caret visible={this.state.visible}/>
+            </h5>
+          </div>
+          <div className={this.state.visible ? 'panel-body' : 'panel-body hidden'} >
+              {form}
+          </div>
+        </div>
       </section>
     );
   },
