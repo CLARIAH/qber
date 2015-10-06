@@ -50,16 +50,12 @@ var QBer = React.createClass({
   render: function() {
   	return (
       <div className="row">
-        <div className="col-md-2" id="left_menu">
-          <Sidebar
-            options={this.state.variable_names}
-          />
-        </div>
-        <div className="col-md-10">
-          <VariablePanel
-            dataset={this.state.dataset} variable={this.state.variable}
-          />
-        </div>
+        <Sidebar
+          options={this.state.variable_names}
+        />
+        <VariablePanel
+          dataset={this.state.dataset} variable={this.state.variable}
+        />
       </div>
   	);
   },

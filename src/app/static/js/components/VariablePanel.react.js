@@ -25,10 +25,12 @@ var VariablePanel = React.createClass({
     var codes = this.props.dataset.codes[variable]
 
     return (
-      <section id="variable_panel">
-        <h4>Definition of <em>"{this.props.variable}"</em></h4>
-        <DimensionDefinitionPanel codes={codes} datasetName={this.props.dataset.name}/>
-      </section>
+      <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <section id="variable_panel">
+          <h4>Definition of <em>"{this.props.variable}"</em></h4>
+          <DimensionDefinitionPanel codes={codes} datasetName={this.props.dataset.name}/>
+        </section>
+      </div>
     );
   }
 });
