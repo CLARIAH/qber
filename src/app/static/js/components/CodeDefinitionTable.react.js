@@ -23,7 +23,8 @@ var CodeDefinitionTable = React.createClass({
     return {
       'visible': true,
       'modal_visible': false,
-      'selected_value': undefined
+      'selected_value': undefined,
+      'selected_code': undefined
     };
   },
 
@@ -73,6 +74,7 @@ var CodeDefinitionTable = React.createClass({
         modal = <QBerModal visible={this.state.modal_visible}
                    title={title}
                    value={this.state.selected_value}
+                   selection={this.state.selected_value !== undefined ? this.props.dimension.codelist.mappings[this.state.selected_value] : undefined}
                    options={sorted_codes}
                    doSelect={this._handleSelected}
                    doClose={this._handleToggleModal} />;
@@ -115,6 +117,7 @@ var CodeDefinitionTable = React.createClass({
     console.log(code);
     var codes = this.props.codes;
     var selected_value = this.state.selected_value;
+
     // Get the index of this element + 1 (the next element)
     var index = _.findIndex(codes, 'id', this.state.selected_value) + 1;
 

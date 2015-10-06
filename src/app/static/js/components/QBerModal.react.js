@@ -10,7 +10,9 @@ var QBerModal = React.createClass({
     options: ReactPropTypes.object.isRequired,
     doSelect: ReactPropTypes.object.isRequired,
     doClose: ReactPropTypes.object.isRequired,
-    visible: ReactPropTypes.bool.isRequired
+    visible: ReactPropTypes.bool.isRequired,
+    value: ReactPropTypes.string.isRequired,
+    selection: ReactPropTypes.string.isRequired
   },
 
   /**
@@ -32,6 +34,7 @@ var QBerModal = React.createClass({
               <h4>{this.props.title}</h4>
             </div>
             <div className="panel-body">
+              <div>{this.props.selection}</div>
               <PillSelector options={this.props.options} value={this.props.value} doSelect={this.props.doSelect} filterFunction={this._filter} />
             </div>
           </div>

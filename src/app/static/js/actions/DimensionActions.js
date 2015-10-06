@@ -146,6 +146,17 @@ var DimensionActions = {
   },
 
   /**
+   * The user has specified that a value in the data matches a certain code
+   */
+  addMapping: function(value, code){
+    QBerDispatcher.dispatch({
+      actionType: DimensionConstants.SDMX_DIMENSION_MAP,
+      value: value,
+      code: code
+    });
+  },
+
+  /**
    * @param {string} unsafe_iri
    */
   retrieveIRI: function(unsafe_iri){

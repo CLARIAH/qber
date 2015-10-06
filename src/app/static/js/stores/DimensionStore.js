@@ -96,18 +96,20 @@ function buildDimension(type, values, datasetName){
     codelist: {
       uri: codelist_uri,
       label: codelist_label,
-      codes: codelist
+      codes: codelist,
+      mappings: {}
     }
   };
 
   assignDimension(type, dimension);
 
  }
- /**
-  * Assign the retrieved codes to the currently selected dimension
-  * @param  {object} codes The retrieved codes
-  */
-  function assignCodes(codes) {
+
+/**
+ * Assign the retrieved codes to the currently selected dimension
+ * @param  {object} codes The retrieved codes
+ */
+function assignCodes(codes) {
     console.log('Assigning codes');
     console.log(codes);
     // First we clear out any existing information about this codelist
@@ -116,6 +118,18 @@ function buildDimension(type, values, datasetName){
     // Assign the codes to the codelist.
     _mappings[_variable].dimension.codelist.codes = codes;
  }
+
+/**
+* Assign the retrieved codes to the currently selected dimension
+* @param  {object} codes The retrieved codes
+*/
+function assignMapping(value, code) {
+   console.log('Assigning code to value');
+   console.log(value + " > " + code);
+
+   // Assign the code to the value.
+   _mappings[_variable].dimension.codelist.mappings[value] = code;
+}
 
 
 
@@ -237,8 +251,12 @@ QBerDispatcher.register(function(action) {
       setModalHidden();
       DimensionStore.emitChange();
       break;
+    case DimensionConstants.SDMX_DIMENSION_MAP:
+      var value = action.value;
+      var code = action.code;
 
-
+      assignMapping(value, code);
+      break;
     default:
       console.log('DimensionStore: No matching action');
       // no op

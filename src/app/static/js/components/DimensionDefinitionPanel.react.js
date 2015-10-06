@@ -81,6 +81,8 @@ var DimensionDefinitionPanel = React.createClass({
                            doUpdate={this._handleUpdate}/>
         <QBerModal  visible={this.state.modal_visible}
                     title="Select a community provided variable name"
+                    value={this.state.variable}
+                    selection={this.state.dimension !== undefined ? this.state.dimension.uri: undefined}
                     options={this.state.dimensions}
                     doSelect={this._handleSelected}
                     doClose={this._handleHideDimensions} />
@@ -97,7 +99,7 @@ var DimensionDefinitionPanel = React.createClass({
   _handleShowDimensions: function(){
     DimensionActions.showDimensions();
   },
-  
+
   /**
    * Event handler for the button that generates a Dimension definition
    */

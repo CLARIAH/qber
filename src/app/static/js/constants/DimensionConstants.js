@@ -9,5 +9,6 @@ module.exports = keyMirror({
   SDMX_DIMENSION_UPDATE: null,
   SDMX_DIMENSION_UPDATE_IRI: null,
   SDMX_DIMENSION_BUILD: null,
-  SDMX_CODES_ASSIGN: null
+  SDMX_CODES_ASSIGN: null,
+  SDMX_DIMENSION_MAP: null
 });
