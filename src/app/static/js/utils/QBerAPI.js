@@ -9,13 +9,13 @@ module.exports = {
   },
 
   retrieveDimension: function(settings) {
-    $.get('/variable/resolve', {'uri': settings.dimension}, function(dimension_definition){
+    $.get('/variable/resolve', {'uri': settings.dimension}, function(dimension_details){
       console.log("QBerAPI retrieveDimension");
-      console.log(dimension_definition);
-      if(dimension_definition == 'error'){
+      console.log(dimension_details);
+      if(dimension_details == 'error'){
         settings.error(settings.dimension);
       } else {
-        settings.success(dimension_definition);
+        settings.success(dimension_details);
       }
     }).fail(function(){
       settings.error(settings.dimension);

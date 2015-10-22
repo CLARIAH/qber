@@ -74,10 +74,10 @@ var DimensionType = React.createClass({
           </div>
           <div className={this.state.visible ? 'panel-body' : 'panel-body hidden'} >
               <div className="row">
-                <div className="col-sm-1" style={{textAlign: 'right'}}>
-                  <small>Select a type</small>
+                <div className="col-sm-2 control-label" style={{textAlign: 'right', paddingTop: '5px'}}>
+                  Select a type
                 </div>
-                <div className="col-sm-11">
+                <div className="col-sm-10">
                   {options}
                 </div>
               </div>
