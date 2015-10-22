@@ -259,8 +259,8 @@ QBerDispatcher.register(function(action) {
     case DimensionConstants.SDMX_DIMENSION_MAP:
       var value = action.value;
       var uri = action.uri;
-
       assignMapping(value, uri);
+      DimensionStore.emitChange();
       break;
     default:
       console.log('DimensionStore: No matching action');
