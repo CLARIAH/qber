@@ -117,18 +117,22 @@ function assignCodes(codes) {
     _mappings[_variable].dimension.codelist.codes = [];
     // Assign the codes to the codelist.
     _mappings[_variable].dimension.codelist.codes = codes;
+    // Make sure that the mappings dictionary is initialized (not the case with community codes)
+    if(_mappings[_variable].dimension.codelist.mappings === undefined) {
+      _mappings[_variable].dimension.codelist.mappings = {};
+    }
  }
 
 /**
 * Assign the retrieved codes to the currently selected dimension
 * @param  {object} codes The retrieved codes
 */
-function assignMapping(value, code) {
-   console.log('Assigning code to value');
-   console.log(value + " > " + code);
+function assignMapping(value, uri) {
+   console.log('Assigning code uri to code value');
+   console.log(value + " > " + uri);
 
    // Assign the code to the value.
-   _mappings[_variable].dimension.codelist.mappings[value] = code;
+   _mappings[_variable].dimension.codelist.mappings[value] = uri;
 }
 
 
@@ -223,16 +227,16 @@ QBerDispatcher.register(function(action) {
     // Once a dimension has been selected in the modal, or a value has changed in the dimension metadata panel
     case DimensionConstants.SDMX_DIMENSION_ASSIGN:
       var dimension = action.dimension_details;
-      var type = action.dimension_type;
-      assignDimension(type, dimension);
+      var assign_dimension_type = action.dimension_type;
+      assignDimension(assign_dimension_type, dimension);
       DimensionStore.emitChange();
       break;
     // We've obtained a safe IRI based on the dataset and variable name
     case DimensionConstants.SDMX_DIMENSION_BUILD:
-      var type = action.type;
+      var build_dimension_type = action.dimension_type;
       var values = action.values;
       var datasetName = action.datasetName;
-      buildDimension(type, values, datasetName);
+      buildDimension(build_dimension_type, values, datasetName);
       DimensionStore.emitChange();
       break;
     // The dimension details have been updated (codes)
@@ -251,11 +255,12 @@ QBerDispatcher.register(function(action) {
       setModalHidden();
       DimensionStore.emitChange();
       break;
+    // A mapping has been selected between a code value and a code uri
     case DimensionConstants.SDMX_DIMENSION_MAP:
       var value = action.value;
-      var code = action.code;
+      var uri = action.uri;
 
-      assignMapping(value, code);
+      assignMapping(value, uri);
       break;
     default:
       console.log('DimensionStore: No matching action');

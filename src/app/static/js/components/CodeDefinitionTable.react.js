@@ -23,8 +23,8 @@ var CodeDefinitionTable = React.createClass({
     return {
       'visible': true,
       'modal_visible': false,
-      'selected_value': undefined,
-      'selected_code': undefined
+      'selected_code_value': undefined,
+      'selected_code_uri': undefined
     };
   },
 
@@ -67,14 +67,14 @@ var CodeDefinitionTable = React.createClass({
       var modal;
       if (this.props.dimension && this.props.dimension.codelist){
         console.log(this.props.dimension.codelist);
-        var title = <span>Select corresponding code for <strong>{this.state.selected_value}</strong></span>;
+        var title = <span>Select corresponding code for <strong>{this.state.selected_code_value}</strong></span>;
 
         var sorted_codes = _.sortBy(this.props.dimension.codelist.codes,'label');
         // Codelist present
         modal = <QBerModal visible={this.state.modal_visible}
                    title={title}
-                   value={this.state.selected_value}
-                   selection={this.state.selected_value !== undefined ? this.props.dimension.codelist.mappings[this.state.selected_value] : undefined}
+                   value={this.state.selected_code_value}
+                   selection={(this.state.selected_code_value !== undefined && this.props.dimension.codelist.mappings !== undefined) ? this.props.dimension.codelist.mappings[this.state.selected_code_value] : undefined}
                    options={sorted_codes}
                    doSelect={this._handleSelected}
                    doClose={this._handleToggleModal} />;
@@ -113,33 +113,37 @@ var CodeDefinitionTable = React.createClass({
     return (option.label.search(regexp) > -1) ? '': (option.uri.search(regexp) > -1) ? '': 'none';
   },
 
-  _handleSelected: function(code){
-    console.log(code);
+  _handleSelected: function(code_uri){
+    // The code uri is the selected uri in the QBerModal PillSelector.
+    console.log(code_uri);
+    // Codes is the list of code values for this variable
     var codes = this.props.codes;
-    var selected_value = this.state.selected_value;
+    // The selected code value, is the currently visible code value
+    var selected_code_value = this.state.selected_code_value;
 
-    // Get the index of this element + 1 (the next element)
-    var index = _.findIndex(codes, 'id', this.state.selected_value) + 1;
+    // Get the index of the selected code value, and increment it by 1 (the next code value)
+    var next_index = _.findIndex(codes, 'id', this.state.selected_code_value) + 1;
 
-    // Set index to 0 if the index is outside the codes array
-    if (index == codes.length){
-      index = 0;
+    // Set index to 0 if the resulting index is outside the codes array (looping)
+    if (next_index == codes.length){
+      next_index = 0;
     }
 
-    // TODO: Add mapping between the selected code and the external code value (in 'code')
-
+    // Copy the current state
     var new_state = this.state;
-    new_state.selected_value = codes[index].id;
+    // Set the selected code value to the next id in the codes array (i.e. the code at the next index)
+    new_state.selected_code_value = codes[next_index].id;
+    // Update the state
     this.setState(new_state);
 
     // Call the externally defined function that handles the mappings between (external) values and the source codes.
-    this.props.doMapping(selected_value, code);
+    this.props.doMapping(selected_code_value, code_uri);
   },
 
 
   _handleToggleModal: function(e){
     var new_state = this.state;
-    new_state.selected_value = e.currentTarget.getAttribute('value');
+    new_state.selected_code_value = e.currentTarget.getAttribute('value');
     new_state.modal_visible = !this.state.modal_visible;
     this.setState(new_state);
   },

@@ -18,19 +18,39 @@ var PillSelector = React.createClass({
   visibleItems: [],
 
   getInitialState: function() {
+    // Search is the value of the input field
+    // Selected is the id of the selected Pill
     return {
-            'search': undefined,
-            'selected': undefined
+            'search': this.props.value,
+            'selected': this.props.selection
           };
   },
 
   componentDidMount: function() {
-    React.findDOMNode(this.refs.dimensionInput).focus();
+    var input = React.findDOMNode(this.refs.dimensionInput);
+
+    if (this.props.selection !== undefined) {
+      input.value = this.props.selection;
+    } else if (this.props.value !== undefined){
+      input.value = this.props.value;
+    }
   },
 
   componentWillReceiveProps: function(nextProps){
-    if (nextProps.value !== undefined){
-      React.findDOMNode(this.refs.dimensionInput).setAttribute('value',nextProps.value);
+    // Make sure that the value of the input is set to the selected mapping, or the value of the next item.
+    // e.g. if a variable value is 'f', then the input should be set to 'f' and the PillSelector
+    // should show only the pills that contain 'f'
+    var input = React.findDOMNode(this.refs.dimensionInput);
+
+    if (nextProps.selection !== undefined) {
+      input.value = nextProps.selection;
+      this.state.selected = nextProps.selection;
+      this.state.search = nextProps.selection;
+    } else if (nextProps.value !== undefined){
+      input.value = nextProps.value;
+      this.state.search = nextProps.value;
+    } else {
+      input.setAttribute('value','');
     }
   },
 
@@ -40,6 +60,19 @@ var PillSelector = React.createClass({
   render: function() {
     var options = this.props.options;
 
+    // The search string
+    var search = this.state.search;
+    // The selected item
+    var selected = this.state.selected;
+
+    // If search turns out to be undefined, we will use the value provided through the props..
+    if (this.props.selection && search === undefined ) {
+      search = this.props.selection;
+    } if (this.props.value && search === undefined ) {
+      search = this.props.value;
+    }
+
+    // A custom filter function (e.g. one that filters on multiple attributes of the pills)
     var filter;
     if (this.props.filterFunction){
       filter = this.props.filterFunction;
@@ -47,17 +80,14 @@ var PillSelector = React.createClass({
       filter = this._filter;
     }
 
-    var search = this.state.search;
-    var selected = this.state.selected;
+    // The list of items (the Pills we will build from the options)
     var items = [];
+
     // Reset the visible items
     this.visibleItems = [];
 
-    if (this.props.value && search === undefined ) {
-      search = this.props.value;
-    }
-
     for (var key in options) {
+      // The style attributes
       var style;
       if (search !== undefined && search.length > 0 && search !== "") {
         regexp = new RegExp(search,"i");
@@ -84,6 +114,7 @@ var PillSelector = React.createClass({
                        width="100%"
                        onChange={this._handleChange}
                        onKeyUp={this._handleKeyUp}
+                       value={this.state.value}
                        type="text"/>;
 
 
@@ -102,16 +133,17 @@ var PillSelector = React.createClass({
   },
 
   /**
-   * Event handler for a selection in variable list nav .
+   * Event handler for a selection in the list.
    */
   _handleClick: function(event) {
     var value = event.currentTarget.getAttribute('value');
 
+    // Now that we have the value, we can use it to actually 'select' the pill.
     this._handleSelect(value);
   },
 
   /**
-   * Event handler for a selection in the Select element.
+   * Event handler for a change in the input element
    */
   _handleChange: function(event) {
     var new_state = {
@@ -121,14 +153,18 @@ var PillSelector = React.createClass({
     this.setState(new_state);
   },
 
+  /**
+   * Event handler for a change in the selection
+   */
   _handleSelect: function(value) {
+    // We update the state with the selected value.
     var new_state = {
-      'search': this.state.search,
+      'search': undefined,
       'selected': value
     };
 
-    this.props.doSelect(value);
     this.setState(new_state);
+    this.props.doSelect(value);
   },
 
   _handleKeyUp: function(e){
@@ -141,7 +177,7 @@ var PillSelector = React.createClass({
       } else {
         this._handleSelect(value.uri);
       }
-    } 
+    }
   },
 
 

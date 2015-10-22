@@ -25,17 +25,19 @@ var QBerModal = React.createClass({
       return null;
     }
 
+    var selection_small = this.props.selection ? <small>({this.props.selection})</small> : undefined;
+
     return (
       <section id="qber_modal_component" onKeyUp={this._handleKeyUp}>
         <div className="overlay" onClick={this.props.doClose}/>
         <div className="qber-modal">
           <div className="panel panel-default">
             <div className="panel-heading">
-              <h4>{this.props.title}</h4>
+              <button type="button" className="close" onClick={this.props.doClose} aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4>{this.props.title} {selection_small}</h4>
             </div>
             <div className="panel-body">
-              <div>{this.props.selection}</div>
-              <PillSelector options={this.props.options} value={this.props.value} doSelect={this.props.doSelect} filterFunction={this._filter} />
+              <PillSelector options={this.props.options} selection={this.props.selection} value={this.props.value} doSelect={this.props.doSelect} filterFunction={this._filter} />
             </div>
           </div>
         </div>

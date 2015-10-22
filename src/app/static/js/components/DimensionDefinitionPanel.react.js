@@ -131,16 +131,16 @@ var DimensionDefinitionPanel = React.createClass({
   /**
    * Event handler for a selection in the Dimension modal
    */
-  _handleSelected: function(value) {
-    DimensionActions.chooseDimension(value);
+  _handleSelected: function(dimension_uri) {
+    DimensionActions.chooseDimension(dimension_uri);
   },
 
   _handleUpdate: function(dimension) {
     DimensionActions.updateDimension(dimension);
   },
 
-  _handleMapping: function(value, code) {
-    DimensionActions.addMapping(value, code);
+  _handleMapping: function(code_value, code_uri) {
+    DimensionActions.addMapping(code_value, code_uri);
   },
 
   /**
