@@ -47,8 +47,8 @@ var DimensionMetadata = React.createClass({
       var codelist_row;
       if (this.props.dimension && this.props.dimension.codelist){
         codelist_row =  <div className="form-group">
-                          <label for="inputCodelist" className="col-sm-1 control-label">Code list</label>
-                          <div className="col-sm-11">
+                          <label for="inputCodelist" className="col-sm-2 control-label">Code list</label>
+                          <div className="col-sm-10">
                             <input type="text"
                                    className="form-control"
                                    id="inputCodelist"
@@ -63,8 +63,8 @@ var DimensionMetadata = React.createClass({
 
       form =  <form className="form-horizontal">
                 <div className="form-group">
-                  <label for="inputURI" className="col-sm-1 control-label">URI</label>
-                  <div className="col-sm-11">
+                  <label for="inputURI" className="col-sm-2 control-label">URI</label>
+                  <div className="col-sm-10">
                       <input type="text"
                              className="form-control"
                              id="inputURI"
@@ -75,8 +75,8 @@ var DimensionMetadata = React.createClass({
                 </div>
                 {codelist_row}
                 <div className="form-group">
-                  <label for="inputName" className="col-sm-1 control-label">Name</label>
-                  <div className="col-sm-11">
+                  <label for="inputName" className="col-sm-2 control-label">Name</label>
+                  <div className="col-sm-10">
                     <input type="text"
                            className="form-control"
                            id="inputName"
@@ -86,8 +86,8 @@ var DimensionMetadata = React.createClass({
                   </div>
                 </div>
                 <div className="form-group">
-                  <label for="inputDescription" className="col-sm-1 control-label">Description</label>
-                  <div className="col-sm-11">
+                  <label for="inputDescription" className="col-sm-2 control-label">Description</label>
+                  <div className="col-sm-10">
                     <textarea type="text"
                               className="form-control"
                               id="inputDescription"
