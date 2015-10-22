@@ -32,7 +32,6 @@ var DimensionActions = {
           dimension_type: 'community',
           dimension_details: dimension_details
         });
-
         if (dimension_details.codelist) {
           QBerDispatcher.dispatch({
             actionType: MessageConstants.INFO,
@@ -115,7 +114,7 @@ var DimensionActions = {
   buildDimension: function(values, datasetName){
     QBerDispatcher.dispatch({
       actionType: DimensionConstants.SDMX_DIMENSION_BUILD,
-      type: 'coded',
+      dimension_type: 'coded',
       values: values,
       datasetName: datasetName
     });
@@ -127,7 +126,7 @@ var DimensionActions = {
   buildIdentifier: function(values, datasetName){
     QBerDispatcher.dispatch({
       actionType: DimensionConstants.SDMX_DIMENSION_BUILD,
-      type: 'identifier',
+      dimension_type: 'identifier',
       values: values,
       datasetName: datasetName
     });
@@ -139,7 +138,7 @@ var DimensionActions = {
   buildMeasurement: function(values, datasetName){
     QBerDispatcher.dispatch({
       actionType: DimensionConstants.SDMX_DIMENSION_BUILD,
-      type: 'measurement',
+      dimension_type: 'measurement',
       values: values,
       datasetName: datasetName
     });
@@ -148,11 +147,11 @@ var DimensionActions = {
   /**
    * The user has specified that a value in the data matches a certain code
    */
-  addMapping: function(value, code){
+  addMapping: function(code_value, code_uri){
     QBerDispatcher.dispatch({
       actionType: DimensionConstants.SDMX_DIMENSION_MAP,
-      value: value,
-      code: code
+      value: code_value,
+      uri: code_uri
     });
   },
 
