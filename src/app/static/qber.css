@@ -1,5 +1,5 @@
-@import url(http://fonts.googleapis.com/css?family=Signika:400,300,600,700);
-
+/*@import url(http://fonts.googleapis.com/css?family=Signika:400,300,600,700);
+@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700,400italic,500italic,700italic,300italic,300);*/
 
 html, body {
     margin: 0;
@@ -9,6 +9,9 @@ html, body {
 body {
   padding-top: 50px;
   position: relative;
+	/*font-family: Ubuntu;
+  font-weight: 300;
+	color: #273142;*/
 }
 @media (max-width: 979px) {
   body {
@@ -92,5 +95,5 @@ nav {
 }
 
 h1, h2, h3, h4, h5, h6, nav {
-  font-family: Signika;
+  /*font-family: Signika;*/
 }
