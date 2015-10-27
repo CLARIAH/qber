@@ -55,7 +55,7 @@ var Pill = React.createClass({
 
 
     return (
-        <li role="presentation" style={this.props.style}>
+        <li role="presentation" key={link} style={this.props.style}>
           {anchor}
         </li>
     );
