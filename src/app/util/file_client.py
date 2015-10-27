@@ -70,7 +70,7 @@ def browse(parent_path, relative_path):
 
         relative_p = os.path.relpath(p, parent_path)
 
-        filelist.append({'name': fn, 'path': relative_p, 'mimetype': mimetype, 'type': filetype})
+        filelist.append({'label': fn, 'uri': relative_p, 'mimetype': mimetype, 'type': filetype})
 
     # Absolute parent is the absolute path of the parent of the current absolute path
     absolute_parent = os.path.abspath(os.path.join(absolute_path, os.pardir))
