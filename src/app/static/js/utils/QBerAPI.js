@@ -36,6 +36,20 @@ module.exports = {
     });
   },
 
+  retrieveFileList: function(settings) {
+    $.get('/browse', {'path': settings.path}, function(data){
+      console.log("QBerAPI retrieveFileList");
+      console.log(data);
+      if(data.response == 'error'){
+        settings.error(settings.path);
+      } else {
+        settings.success(data);
+      }
+    }).fail(function(){
+      settings.error(settings.path);
+    });
+  },
+
   retrieveIRI: function(settings) {
     $.get('/iri', {'iri': settings.iri}, function(data){
       console.log("QBerAPI retrieveIRI");
