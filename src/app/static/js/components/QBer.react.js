@@ -16,8 +16,12 @@ var React = require('react');
 var PillSelector = require('./PillSelector.react');
 var VariablePanel = require('./VariablePanel.react');
 var Sidebar = require('./Sidebar.react');
+var Browser = require('./Browser.react');
+
 var MessagePanel = require('./MessagePanel.react');
 var DatasetStore = require('../stores/DatasetStore');
+var DatasetActions = require('../actions/DatasetActions');
+var BrowserActions = require('../actions/BrowserActions');
 
 /**
  * Retrieve the current dataset from the DatasetStore
@@ -29,6 +33,7 @@ function getDatasetState() {
     variable: DatasetStore.getVariable()
   };
 }
+
 
 var QBer = React.createClass({
 
@@ -48,16 +53,23 @@ var QBer = React.createClass({
    * @return {object}
    */
   render: function() {
-  	return (
-      <div className="row">
-        <Sidebar
-          options={this.state.variable_names}
-        />
-        <VariablePanel
-          dataset={this.state.dataset} variable={this.state.variable}
-        />
-      </div>
-  	);
+    console.log("QBer.react");
+    if (this.state.dataset === undefined){
+      return (
+        <Browser/>
+      );
+    } else {
+    	return (
+        <div className="row">
+          <Sidebar
+            options={this.state.variable_names}
+          />
+          <VariablePanel
+            dataset={this.state.dataset} variable={this.state.variable}
+          />
+        </div>
+    	);
+    }
   },
 
   /**
@@ -65,6 +77,13 @@ var QBer = React.createClass({
    */
   _onChange: function() {
     this.setState(getDatasetState());
+  },
+
+  /**
+   * Event handler for the Browse button (to start selecting a dataset file)
+   */
+  _showBrowseModal: function(){
+    DatasetActions.retrieveDataset('derived/utrecht_1829_clean_01.csv');
   }
 
 });
