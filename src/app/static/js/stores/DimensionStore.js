@@ -206,7 +206,7 @@ var DimensionStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 QBerDispatcher.register(function(action) {
-  console.log('DatasetStore: received '+action.actionType);
+  console.log('DimensionStore: received '+action.actionType);
 
   switch(action.actionType) {
     // This is the INIT action for the dimensions
