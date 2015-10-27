@@ -1,0 +1,123 @@
+/**
+ * Copyright (c) 2014-2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+/**
+ * This component operates as a "Controller-View".  It listens for changes in
+ * the DatasetStore and passes the new data to its children.
+ */
+
+var React = require('react');
+var _ = require('lodash');
+
+var QBerModal = require('./QBerModal.react');
+
+var BrowserStore = require('../stores/BrowserStore');
+var BrowserActions = require('../actions/BrowserActions');
+var DatasetActions = require('../actions/DatasetActions');
+
+/**
+ * Retrieve the current dataset from the DatasetStore
+ */
+function getBrowserState() {
+  return {
+    files: BrowserStore.getFiles(),
+    path: BrowserStore.getPath(),
+    modal_visible: BrowserStore.getModalVisible()
+  };
+}
+
+var QBer = React.createClass({
+
+  getInitialState: function() {
+    return getBrowserState();
+  },
+
+  componentDidMount: function() {
+    BrowserStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function() {
+    BrowserStore.removeChangeListener(this._onChange);
+  },
+
+  /**
+   * @return {object}
+   */
+  render: function() {
+    console.log("Browser.react");
+    console.log(this.state);
+    // If we don't have a list of files, and the modal is not visible
+    if (this.state.files === undefined && !this.state.modal_visible){
+      BrowserActions.retrieveFileList('.');
+      BrowserActions.showBrowser();
+      return (<div>Loading...</div>)
+    } else {
+      var items = [];
+      for (var key in this.state.files) {
+        // The style attributes
+        items.push(
+          <li>
+            <a href="#"
+               key={this.state.files[key].uri}
+               value={this.state.files[key].uri} 
+               onClick={this._handleSelected}>{this.state.files[key].label}</a>
+          </li>
+        );
+
+
+      }
+
+    	return (
+        <ul>
+          {items}
+        </ul>
+    	);
+    }
+  },
+
+  /**
+   * Event handler for 'change' events coming from the DatasetStore
+   */
+  _onChange: function() {
+    this.setState(getBrowserState());
+  },
+
+  /**
+   * Event handler for the close Browser button
+   */
+  _handleHideBrowser: function(){
+    BrowserActions.closeBrowser();
+  },
+
+  /**
+   * Event handler when a file or path is selected
+   */
+  _handleSelected: function(event){
+    console.log("Selected...");
+
+    var selection = event.currentTarget.getAttribute('value');
+
+    console.log(selection);
+
+    var selected_file = _.find(this.state.files, 'uri', selection);
+    console.log(selected_file);
+    if(selected_file.type == 'file'){
+      console.log("Retrieving dataset");
+      DatasetActions.retrieveDataset(selected_file.uri);
+      BrowserActions.closeBrowser();
+    } else {
+      console.log("Retrieving filelist");
+      BrowserActions.retrieveFileList(selected_file.uri);
+    }
+  },
+
+
+});
+
+module.exports = QBer;
