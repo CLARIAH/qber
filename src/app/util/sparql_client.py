@@ -12,20 +12,22 @@ QUERY_HEADERS = {
 
 UPDATE_HEADERS = {
     'Content-Type': 'application/sparql-update',
-    'SD-Connection-String': 'reasoning={}'.format(config.REASONING_TYPE)
+    'SD-Connection-String': 'reasoning={}'.format(config.REASONING_TYPE),
+    'Accept': 'application/json'
 }
 
 def resolve(uri, depth=2, current_depth=0, visited = set()):
     """ Resolves the URI to the maximum depth specified by 'depth' """
-    print current_depth, uri
+    # print current_depth, uri
     if current_depth == depth:
-        print "reached max depth"
+        # print "reached max depth"
         return True, visited
 
     # If the URI is already present in our triple store, we won't follow...
     if uri in visited:
-        print uri, "already visited"
+        # print uri, "already visited"
         return True, visited
+
     print uri, "not visited yet"
 
     if ask_graph(URIRef(uri).defrag()):
@@ -35,11 +37,11 @@ def resolve(uri, depth=2, current_depth=0, visited = set()):
     else:
         print uri, "not yet known"
         g = Graph()
-        try :
+        try:
             print "Trying to parse", uri
             g.parse(uri)
-        except :
-            try :
+        except:
+            try:
                 print "Trying to parse", uri, "as turtle"
                 g.parse(uri, format='turtle')
             except Exception as e:
@@ -49,8 +51,9 @@ def resolve(uri, depth=2, current_depth=0, visited = set()):
                 return False, visited
 
         # Add the gleaned triples to the store
-        update_query = make_update(g, graph_uri=URIRef(uri).defrag())
-        sparql_update(update_query)
+        post_data(g.serialize(format='nt'), graph_uri=URIRef(uri).defrag())
+        # update_query = make_update(g, graph_uri=URIRef(uri).defrag())
+        # sparql_update(update_query)
         print uri, "added to triple store"
         visited.add(uri)
         # We'll visit every triple in the file we downloaded
@@ -94,21 +97,34 @@ def ask_graph(uri, endpoint_url = config.ENDPOINT_URL):
 
 def ask(uri, template = "ASK {{ <{}> ?p ?o }}", endpoint_url = config.ENDPOINT_URL):
     query = template.format(uri)
-    result = requests.get(endpoint_url, params={'query': query, 'reasoning': config.REASONING_TYPE}, headers={'Accept': 'text/boolean'})
 
-    if result.content == 'false' or result.content == 'False':
+    result = requests.get(endpoint_url, params={'query': query, 'reasoning': config.REASONING_TYPE}, headers={'Accept': 'application/json'})
+
+    json_result = json.loads(result.content)
+
+    if json_result['boolean'] is False:
         return False
-    elif result.content == 'true' or result.content == 'True':
+    elif json_result['boolean'] is True:
         return True
-    else :
-        return result.content
+    else:
+        return json_result
 
+
+def post_data(data, graph_uri, endpoint_url=config.CRUD_URL):
+    result = requests.post(endpoint_url, data=data, params={'graph-uri': graph_uri}, headers={'Content-Type': 'application/turtle'}, auth=config.CRUD_AUTH)
+
+    print "SPARQL CRUD status: ", result.status_code
+    print "SPARQL CRUD response:\n ", result.content[:200]
+
+    return result.content
 
 def sparql_update(query, endpoint_url = config.UPDATE_URL):
 
-    result = requests.post(endpoint_url,params={'reasoning': config.REASONING_TYPE}, data=query, headers=UPDATE_HEADERS)
+    # result = requests.post(endpoint_url,params={'reasoning': config.REASONING_TYPE}, data=query, headers=UPDATE_HEADERS)
+    result = requests.post(endpoint_url, data=query, headers=UPDATE_HEADERS)
 
-    print "SPARQL UPDATE response: ", result.content
+    print "SPARQL UPDATE status: ", result.status_code
+    print "SPARQL UPDATE response:\n ", result.content[:200]
 
     return result.content
 

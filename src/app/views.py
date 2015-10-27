@@ -152,12 +152,12 @@ def dimension():
     uri = request.args.get('uri', False)
 
     if uri:
-        exists = sc.sparql("""
+        exists = sc.ask(uri, template="""
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-            ASK {{<{}> rdfs:label ?l .}}""".format(uri))
+            ASK {{<{}> rdfs:label ?l .}}""")
 
-        if "true" not in exists:
+        if not exists:
             success, visited = sc.resolve(uri, depth=2)
             print "Resolved ", visited
         else:
@@ -204,6 +204,9 @@ def dimension():
             """.format(URI=uri)
 
             results = sc.sparql(query)
+
+            log.debug(results)
+            
             # Turn into something more manageable, and take only the first element.
             variable_definition = sc.dictize(results)[0]
 
