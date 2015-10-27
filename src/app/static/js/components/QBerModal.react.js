@@ -7,6 +7,7 @@ var QBerModal = React.createClass({
 
   // This React class only works if a list of 'variables' is passed through its properties.
   propTypes: {
+    // Options should have a label and a uri (or file:/// path)
     options: ReactPropTypes.object.isRequired,
     doSelect: ReactPropTypes.object.isRequired,
     doClose: ReactPropTypes.object.isRequired,
