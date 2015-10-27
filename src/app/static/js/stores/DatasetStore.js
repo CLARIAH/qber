@@ -5,7 +5,7 @@ var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
 
-var _dataset = {};
+var _dataset;
 var _variable;
 var _variable_search;
 var _just_selected_variable = false;
@@ -46,7 +46,7 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
    * @return {object}
    */
   getVariableNames: function() {
-    if (_dataset == {} || _dataset.codes === undefined){
+    if (_dataset === undefined || _dataset.codes === undefined){
       return []
     } else {
       return Object.keys(_dataset.codes);
