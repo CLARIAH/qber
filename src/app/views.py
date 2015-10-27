@@ -352,7 +352,7 @@ def browse():
     log.debug('Will browse absolute path: {}/{}'.format(config.base_path, path))
     filelist, parent = fc.browse(config.base_path, path)
 
-    return jsonify({'parent': parent, 'files': filelist})
+    return jsonify({'path': path, 'parent': parent, 'files': filelist})
 
 
 @app.route('/iri', methods=['GET'])
