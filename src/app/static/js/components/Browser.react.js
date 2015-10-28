@@ -58,26 +58,14 @@ var QBer = React.createClass({
       BrowserActions.showBrowser();
       return (<div>Loading...</div>)
     } else {
-      var items = [];
-      for (var key in this.state.files) {
-        // The style attributes
-        items.push(
-          <li>
-            <a href="#"
-               key={this.state.files[key].uri}
-               value={this.state.files[key].uri} 
-               onClick={this._handleSelected}>{this.state.files[key].label}</a>
-          </li>
-        );
 
-
-      }
-
-    	return (
-        <ul>
-          {items}
-        </ul>
-    	);
+      return ( <QBerModal  visible={this.state.modal_visible}
+                  title="Select a dataset to load"
+                  value={'.'}
+                  options={this.state.files}
+                  doSelect={this._handleSelected}
+                  doClose={this._handleHideBrowser} />
+              );
     }
   },
 
@@ -98,10 +86,10 @@ var QBer = React.createClass({
   /**
    * Event handler when a file or path is selected
    */
-  _handleSelected: function(event){
+  _handleSelected: function(selection){
     console.log("Selected...");
 
-    var selection = event.currentTarget.getAttribute('value');
+    // var selection = event.currentTarget.getAttribute('value');
 
     console.log(selection);
 
