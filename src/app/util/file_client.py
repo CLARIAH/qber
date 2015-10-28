@@ -46,10 +46,9 @@ log.setLevel(logging.DEBUG)
 
 def browse(parent_path, relative_path):
     import magic
-    absolute_path = os.path.join(parent_path,relative_path)
+    absolute_path = os.path.join(parent_path, relative_path)
     log.debug('Browsing {}'.format(absolute_path))
     files = glob("{}/*".format(absolute_path))
-
 
     filelist = []
     for p in files:
@@ -57,16 +56,15 @@ def browse(parent_path, relative_path):
 
         mimetype = magic.from_file(p, mime=True)
 
-        if mimetype == "text/plain" and (fn[-3:] == "ttl" or fn[-2:] == 'n3') :
+        if mimetype == "text/plain" and (fn[-3:] == "ttl" or fn[-2:] == 'n3'):
             mimetype = "text/turtle"
-        if mimetype == "text/plain" and (fn[-3:] == "owl" or fn[-2:] == 'rdf') :
+        if mimetype == "text/plain" and (fn[-3:] == "owl" or fn[-2:] == 'rdf'):
             mimetype = "application/rdf+xml"
 
-        if os.path.isdir(p) :
+        if os.path.isdir(p):
             filetype = 'dir'
-        else :
+        else:
             filetype = 'file'
-
 
         relative_p = os.path.relpath(p, parent_path)
 
@@ -75,14 +73,14 @@ def browse(parent_path, relative_path):
     # Absolute parent is the absolute path of the parent of the current absolute path
     absolute_parent = os.path.abspath(os.path.join(absolute_path, os.pardir))
     # The relative parent is the relative path of the parent
-    relative_parent = os.path.relpath(absolute_parent,parent_path)
+    relative_parent = os.path.relpath(absolute_parent, parent_path)
 
     log.debug("base path " + parent_path)
     log.debug("absolute parent " + absolute_parent)
-    log.debug("relative parent " +  relative_parent)
-    log.debug("constructed parent " + os.path.abspath(os.path.join(parent_path,'..')))
+    log.debug("relative parent " + relative_parent)
+    log.debug("constructed parent " + os.path.abspath(os.path.join(parent_path, '..')))
 
-    if absolute_parent == os.path.abspath(os.path.join(parent_path, '..')) or '..' in relative_parent :
+    if absolute_parent == os.path.abspath(os.path.join(parent_path, '..')) or '..' in relative_parent:
         print absolute_parent, relative_parent
         relative_parent = ''
 
