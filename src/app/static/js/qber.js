@@ -1,11 +1,17 @@
 var React = require('react');
+var Navbar = require('./components/Navbar.react');
 var QBer = require('./components/QBer.react');
 var MessagePanel = require('./components/MessagePanel.react');
-var DatasetActions = require('./actions/DatasetActions');
+
 
 
 // TODO: Integrate a browse modal using react-bootstrap
 // DatasetActions.retrieveDataset('derived/utrecht_1829_clean_01.csv');
+
+React.render(
+  <Navbar />,
+  document.getElementById('navbar')
+);
 
 React.render(
   <QBer />,
@@ -14,5 +20,5 @@ React.render(
 
 React.render(
   <MessagePanel />,
-  document.getElementById('status')
+  document.getElementById('message_panel')
 );
