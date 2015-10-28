@@ -82,7 +82,8 @@ def browse(parent_path, relative_path):
 
     if absolute_parent == os.path.abspath(os.path.join(parent_path, '..')) or '..' in relative_parent:
         print absolute_parent, relative_parent
-        relative_parent = ''
+        parent = None
+    else:
+        parent = {'label': '..', 'uri': relative_parent, 'mimetype': 'inode/directory', 'type': 'dir'}
 
-
-    return filelist, relative_parent
+    return filelist, parent
