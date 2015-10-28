@@ -2,6 +2,7 @@ var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var DatasetConstants = require('../constants/DatasetConstants');
 var MessageStore = require('./MessageStore');
+var BrowserStore = require('./BrowserStore');
 var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
