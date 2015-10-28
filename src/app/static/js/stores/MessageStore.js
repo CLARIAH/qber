@@ -1,6 +1,7 @@
 var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var MessageConstants = require('../constants/MessageConstants');
+var DatasetStore = require('./DatasetStore');
 var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
@@ -52,21 +53,26 @@ var MessageStore = assign({}, EventEmitter.prototype, {
 });
 
 // Register callback to handle all updates
-QBerDispatcher.register(function(action) {
+MessageStore.dispatchToken = QBerDispatcher.register(function(action) {
+  console.log("MessageStore retrieved "+action.actionType);
   switch(action.actionType) {
     case MessageConstants.ERROR:
+      QBerDispatcher.waitFor([DatasetStore.dispatchToken]);
       setMessage(action.message, 'error');
       MessageStore.emitChange();
       break;
     case MessageConstants.WARNING:
+      QBerDispatcher.waitFor([DatasetStore.dispatchToken]);
       setMessage(action.message, 'warning');
       MessageStore.emitChange();
       break;
     case MessageConstants.SUCCESS:
+      QBerDispatcher.waitFor([DatasetStore.dispatchToken]);
       setMessage(action.message, 'success');
       MessageStore.emitChange();
       break;
     case MessageConstants.INFO:
+      QBerDispatcher.waitFor([DatasetStore.dispatchToken]);
       setMessage(action.message, 'info');
       MessageStore.emitChange();
       break;

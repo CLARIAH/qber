@@ -205,7 +205,7 @@ var DimensionStore = assign({}, EventEmitter.prototype, {
 });
 
 // Register callback to handle all updates
-QBerDispatcher.register(function(action) {
+DimensionStore.dispatchToken = QBerDispatcher.register(function(action) {
   console.log('DimensionStore: received '+action.actionType);
 
   switch(action.actionType) {

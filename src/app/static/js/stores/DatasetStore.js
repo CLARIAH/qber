@@ -1,6 +1,7 @@
 var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var DatasetConstants = require('../constants/DatasetConstants');
+var MessageStore = require('./MessageStore');
 var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
@@ -99,7 +100,7 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
 });
 
 // Register callback to handle all updates
-QBerDispatcher.register(function(action) {
+DatasetStore.dispatchToken = QBerDispatcher.register(function(action) {
   var dataset;
   var variable;
 
@@ -115,14 +116,16 @@ QBerDispatcher.register(function(action) {
     // This is where we set the currently selected variable
     // This is the INIT action for the dataset
     case DatasetConstants.DATASET_INIT:
+      QBerDispatcher.waitFor([MessageStore.dispatchToken]);
       dataset = action.dataset;
-      if (dataset !== {}) {
+      if (dataset !== undefined) {
         initialize(dataset);
         DatasetStore.emitChange();
       }
       break;
     // This is where we set the currently selected variable
     case DatasetConstants.DATASET_CHOOSE_VARIABLE:
+      QBerDispatcher.waitFor([MessageStore.dispatchToken]);
       variable = action.variable;
       if (variable !== ""){
         setVariable(variable);
