@@ -56,7 +56,7 @@ var QBer = React.createClass({
     if (this.state.files === undefined && !this.state.modal_visible){
       BrowserActions.retrieveFileList('.');
       BrowserActions.showBrowser();
-      return (<div>Loading...</div>)
+      return (<div>Loading...</div>);
     } else {
 
       return ( <QBerModal  visible={this.state.modal_visible}
