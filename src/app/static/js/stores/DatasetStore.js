@@ -9,6 +9,7 @@ var _dataset;
 var _variable;
 var _variable_search;
 var _just_selected_variable = false;
+var _user;
 
 /**
  * Initialize the DATASET.
@@ -29,6 +30,14 @@ function setVariable(variable){
   _variable = variable;
 }
 
+
+/**
+ * Set the user.
+ * @param {object} user The user details
+ */
+function setUser(user){
+  _user = user;
+}
 
 
 var DatasetStore = assign({}, EventEmitter.prototype, {
@@ -62,6 +71,14 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
     return _variable;
   },
 
+  /**
+   * Get the user details.
+   * @return {object}
+   */
+  getUser: function(){
+    return _user;
+  },
+
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
@@ -87,6 +104,15 @@ QBerDispatcher.register(function(action) {
   var variable;
 
   switch(action.actionType) {
+    // Register the logged in user
+    case DatasetConstants.REGISTER_USER:
+      QBerDispatcher.waitFor([BrowserStore.dispatchToken]);
+      if (action.user !== {}) {
+        setUser(action.user);
+        DatasetStore.emitChange();
+      }
+      break;
+    // This is where we set the currently selected variable
     // This is the INIT action for the dataset
     case DatasetConstants.DATASET_INIT:
       dataset = action.dataset;
