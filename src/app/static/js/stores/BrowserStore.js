@@ -24,8 +24,15 @@ var BrowserStore = assign({}, EventEmitter.prototype, {
     return _files;
   },
 
-  setFiles: function(files) {
+  setFiles: function(files, parent) {
     _files = files;
+
+    console.log("Parent path:" + parent);
+    if (parent !== null){
+      _files.push(parent);
+    }
+
+
   },
 
   getPath: function() {
@@ -61,7 +68,7 @@ QBerDispatcher.register(function(action) {
 
   switch(action.actionType) {
     case BrowserConstants.UPDATE_FILES:
-      BrowserStore.setFiles(action.file_list.files);
+      BrowserStore.setFiles(action.file_list.files, action.file_list.parent);
       BrowserStore.setPath(action.file_list.path);
       BrowserStore.emitChange();
       break;
