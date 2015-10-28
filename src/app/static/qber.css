@@ -25,6 +25,10 @@ body {
   display: none;
 }
 
+span.pill-icon {
+  padding-right: 1em;
+}
+
 
 /*
  * Sidebar
