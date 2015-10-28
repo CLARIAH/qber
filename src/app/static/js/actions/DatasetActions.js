@@ -11,6 +11,23 @@ var MessageConstants = require('../constants/MessageConstants');
 var DatasetActions = {
 
   /**
+   * @param {object} user The user object returned by the Google SignIn
+   */
+  registerUser: function(user){
+    console.log('Registering user '+user.zt.Ei);
+
+    QBerDispatcher.dispatch({
+      actionType: MessageConstants.SUCCESS,
+      message: 'Logged in as '+user.zt.Ei
+    });
+
+    QBerDispatcher.dispatch({
+      actionType: DatasetConstants.REGISTER_USER,
+      user: user.zt
+    });
+  },
+
+  /**
    * @param {string} filename
    */
   retrieveDataset: function(filename){
