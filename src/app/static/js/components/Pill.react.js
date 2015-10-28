@@ -26,13 +26,36 @@ var Pill = React.createClass({
       return null;
     }
 
-    var value, text, link, badge;
+    var value, text, link, badge, icon;
 
     if (isString(this.props.option)){
+      // Regular text pills
       text = <span>{this.props.option}</span>;
       value = this.props.option;
-    } else {
+
+    } else if (this.props.option.type){
+      // File pills
+      // In case we are dealing with files, we have file types to consider
       text = <span>{this.props.option.label}</span>;
+
+      if (this.props.option.type == 'dir'){
+        icon = <span className='glyphicon glyphicon-folder-open pill-icon'></span>;
+      } else {
+        icon = <span className='glyphicon glyphicon-file pill-icon'></span>;
+      }
+
+      // We show the mimetype
+      link = <span className="small">&nbsp;&lt;{this.props.option.mimetype}&gt;</span>;
+      // The file URI is the value
+      value = this.props.option.uri;
+
+      if (this.props.option.refs){
+        badge = <span className="badge pull-right">{this.props.option.refs}</span>;
+      }
+    } else {
+      // Regular URI item pils
+      text = <span>{this.props.option.label}</span>;
+      icon = <span className='glyphicon glyphicon-globe pill-icon'></span>;
       if (this.props.option.uri){
         link = <span className="small">&nbsp;&lt;{this.props.option.uri}&gt;</span>;
         value = this.props.option.uri;
@@ -44,6 +67,7 @@ var Pill = React.createClass({
       }
     }
 
+
     var classes = cx({
       'active': this.props.isSelected
     });
@@ -51,11 +75,12 @@ var Pill = React.createClass({
     var anchor = <a href="#" value={value}
                              className={classes}
                              title={value}
-                             onClick={this.props.onClicked}>{text}{link}{badge}</a>;
+                             key={value}
+                             onClick={this.props.onClicked}>{icon}{text}{link}{badge}</a>;
 
 
     return (
-        <li role="presentation" key={link} style={this.props.style}>
+        <li role="presentation" style={this.props.style}>
           {anchor}
         </li>
     );
