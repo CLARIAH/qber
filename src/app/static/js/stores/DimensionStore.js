@@ -19,8 +19,9 @@ var _variable;
  * Initialize the list of dimensions.
  * @param  {array} dimensions The dimensions
  */
-function initialize(dimensions) {
+function initialize(dimensions, mappings) {
   _dimensions = dimensions;
+  _mappings = {};
 }
 
 /**
@@ -158,6 +159,15 @@ var DimensionStore = assign({}, EventEmitter.prototype, {
   },
 
   /**
+   * Get the list of dimensions.
+   * @return {object}
+   */
+  getMappings: function() {
+    return _mappings;
+  },
+
+
+  /**
    * Get the currently selected variable
    * @return {string}
    */
@@ -212,9 +222,9 @@ QBerDispatcher.register(function(action) {
     // This is the INIT action for the dimensions
     case DimensionConstants.SDMX_DIMENSION_INIT:
       var dimensions = action.dimensions;
-
+      var mappings = action.mappings;
       if (dimensions !== {}) {
-        initialize(dimensions);
+        initialize(dimensions, mappings);
         DimensionStore.emitChange();
       }
       break;

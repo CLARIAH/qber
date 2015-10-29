@@ -22,6 +22,7 @@ var Navbar = require('./Navbar.react');
 
 var MessagePanel = require('./MessagePanel.react');
 var DatasetStore = require('../stores/DatasetStore');
+var DimensionStore = require('../stores/DimensionStore');
 var DatasetActions = require('../actions/DatasetActions');
 var BrowserActions = require('../actions/BrowserActions');
 
@@ -106,8 +107,12 @@ var QBer = React.createClass({
   },
 
   _handleSave: function() {
+    var dataset = this.state.dataset;
+    var mappings = DimensionStore.getMappings();
+
+    dataset['mappings'] = mappings;
     console.log("Retrieved save signal...");
-    DatasetActions.saveDataset(this.state.dataset);
+    DatasetActions.saveDataset(dataset);
     console.log("Sent out saveDataset action to DatasetActions");
   },
 

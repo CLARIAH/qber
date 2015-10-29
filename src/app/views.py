@@ -91,7 +91,8 @@ def metadata():
             'metadata': adapter.get_metadata(),
             'codes': adapter.get_values(),
             'dimensions': get_dimensions(),
-            'schemes': get_schemes() + get_csdh_schemes()
+            'schemes': get_schemes() + get_csdh_schemes(),
+            'mappings': {}
         }
 
         return jsonify(data)

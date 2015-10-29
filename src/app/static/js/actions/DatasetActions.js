@@ -53,7 +53,8 @@ var DatasetActions = {
 
         QBerDispatcher.dispatch({
           actionType: DimensionConstants.SDMX_DIMENSION_INIT,
-          dimensions: dataset.dimensions
+          dimensions: dataset.dimensions,
+          mappings: dataset.mappings
         });
       },
       error: function(filename){
