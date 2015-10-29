@@ -8,6 +8,15 @@ module.exports = {
     });
   },
 
+  saveDataset: function(settings) {
+    $.post('/save',data=JSON.stringify({'dataset': settings.dataset}), function(response){
+      console.log(response);
+      settings.success(response);
+    }).fail(function(){
+      settings.error(response);
+    });
+  },
+
   retrieveDimension: function(settings) {
     $.get('/variable/resolve', {'uri': settings.dimension}, function(dimension_details){
       console.log("QBerAPI retrieveDimension");

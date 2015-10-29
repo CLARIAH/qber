@@ -60,7 +60,8 @@ var QBer = React.createClass({
     console.log("QBer.react render");
     console.log(this.state);
 
-    var navbar = <Navbar onSignIn={this._handleSignedIn}
+    var navbar = <Navbar doSignIn={this._handleSignedIn}
+                         doSave={this._handleSave}
                          user={this.state.user}
                          variable={this.state.variable}/>;
 
@@ -102,6 +103,12 @@ var QBer = React.createClass({
     user_profile = user.getBasicProfile();
     DatasetActions.registerUser(user_profile);
     console.log("Sent out registerUser action to DatasetActions");
+  },
+
+  _handleSave: function() {
+    console.log("Retrieved save signal...");
+    DatasetActions.saveDataset(this.state.dataset);
+    console.log("Sent out saveDataset action to DatasetActions");
   },
 
 });

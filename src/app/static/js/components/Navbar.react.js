@@ -9,7 +9,8 @@ var Navbar = React.createClass({
 
   // This React class only works if a 'visible' value is passed through its properties.
   propTypes: {
-    onSignIn: ReactPropTypes.func.isRequired,
+    doSignIn: ReactPropTypes.func.isRequired,
+    doSave: ReactPropTypes.func.isRequired,
     user: ReactPropTypes.object.isRequired,
     variable: ReactPropTypes.object.isRequired
   },
@@ -18,17 +19,18 @@ var Navbar = React.createClass({
    * @return {object}
    */
   render: function() {
-    var signin, userinfo;
+    var signin, userinfo, savebutton;
 
 
-    signin = <SignIn onSignIn={this.props.onSignIn}/>;
+    signin = <SignIn onSignIn={this.props.doSignIn}/>;
     if (this.props.user !== undefined) {
       console.log(this.props.user);
       var username = this.props.user.getName();
       var depiction = this.props.user.getImageUrl();
-      userinfo = <li><a><img className="user-depiction" src={depiction}/>{username}</a></li>;
+      userinfo = <li><a href="#"><img className="user-depiction" src={depiction}/>{username}</a></li>;
+      savebutton = <li><a href="#" onClick={this.props.doSave}>Save</a></li>;
     } else {
-      userinfo = <li><a>Not logged in...</a></li>;
+      userinfo = <li><a href="#">Not logged in...</a></li>;
     }
 
 
@@ -46,8 +48,9 @@ var Navbar = React.createClass({
           </div>
 
           <div className="collapse navbar-collapse" id="navbar">
-            <ul className="nav navbar-nav">
+            <ul className="nav navbar-nav nav-pills">
               {userinfo}
+              {savebutton}
             </ul>
             <ul className="nav navbar-nav navbar-right">
               <li><a style={{padding:'0px', paddingTop:'2px'}}>{signin}</a></li>

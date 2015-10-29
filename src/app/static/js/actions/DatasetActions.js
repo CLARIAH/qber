@@ -85,6 +85,32 @@ var DatasetActions = {
     });
   },
 
+  /**
+   * Save the dataset to cache
+   */
+  saveDataset: function(dataset) {
+    QBerDispatcher.dispatch({
+      actionType: MessageConstants.INFO,
+      message: 'Saving dataset to cache'
+    });
+    console.log(dataset);
+    // Call the QBerAPI with the dataset, and implement the success callback
+    QBerAPI.saveDataset({
+      dataset: dataset,
+      success: function(response){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.SUCCESS,
+          message: 'Successfully saved dataset to cache'
+        });
+      },
+      error: function(response){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.ERROR,
+          message: 'Error saving dataset to cache '+response.message
+        });
+      }
+    });
+  },
 
 
 
