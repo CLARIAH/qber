@@ -14,17 +14,18 @@ var DatasetActions = {
    * @param {object} user The user object returned by the Google SignIn
    */
   registerUser: function(user){
-    console.log('Registering user '+user.zt.Ei);
+    console.log('Registering user '+user.getName());
 
     QBerDispatcher.dispatch({
       actionType: MessageConstants.SUCCESS,
-      message: 'Logged in as '+user.zt.Ei
+      message: 'Logged in as '+user.getName()
     });
-
+    console.log('dispatching register_user');
     QBerDispatcher.dispatch({
       actionType: DatasetConstants.REGISTER_USER,
-      user: user.zt
+      user: user
     });
+    console.log('dispatched register_user');
   },
 
   /**
