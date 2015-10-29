@@ -41,13 +41,14 @@ var MessagePanel = React.createClass({
       'alert-danger': this.state.isError,
       'alert-warning': this.state.isWarning,
       'alert-success': this.state.isSuccess,
-      'alert-info': this.state.isInfo
+      'alert-info': this.state.isInfo,
+      'message': true
     });
 
     return (
-        <span className={ classes } id="message_panel">
+        <div className={ classes } id="message_panel">
           { message }
-        </span>
+        </div>
     );
   },
 

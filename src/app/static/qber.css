@@ -11,7 +11,7 @@ body {
   position: relative;
 	/*font-family: Ubuntu;
   font-weight: 300;
-	color: #273142;*/
+	color: #273142; */
 }
 @media (max-width: 979px) {
   body {
@@ -21,9 +21,24 @@ body {
   }
 }
 
+nav {
+  background-color: white;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 1000;
+  width: 100%;
+}
+
+.user-depiction {
+  height: 18px;
+  margin-right: 2px;
+}
+
 .hidden {
   display: none;
 }
+
 
 span.pill-icon {
   padding-right: 1em;
@@ -35,15 +50,22 @@ span.pill-icon {
 
 .message-panel {
   position: fixed;
-  top: 0px;
-  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
   z-index: 9999;
   display: block;
-  padding: 20px;
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
   /*background-color: #f5f5f5;
   border-right: 1px solid #eee;*/
+}
+
+.message {
+  width: 100%;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin: 0px;
 }
 
 /*
@@ -110,9 +132,7 @@ span.pill-icon {
     z-index: 9001; /* 1px higher than the overlay layer */
 }
 
-nav {
-  background-color: white;
-}
+
 
 h1, h2, h3, h4, h5, h6, nav {
   /*font-family: Signika;*/
