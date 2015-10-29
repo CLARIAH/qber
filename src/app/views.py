@@ -60,34 +60,41 @@ def metadata():
     dataset_path = os.path.join(config.base_path, dataset_file)
     log.debug('Dataset path: ' + dataset_path)
 
-    # Specify the dataset's details
-    # TODO: this is hardcoded, and needs to be gleaned from the dataset file metadata
-    dataset = {
-        'filename': dataset_path,
-        'format': 'CSV',
-        'header': True
-    }
+    cached_dataset = read_cache(dataset_path)
 
-    # Intialize a file a dapter for the dataset
-    adapter = loader.adapter.get_adapter(dataset)
+    if cached_dataset != {}:
+        log.info("Returning from cache")
+        return jsonify(cached_dataset)
+    else:
+        log.info("Building new dataset dictionary")
 
-    (head, dataset_local_name) = os.path.split(dataset_file)
-    (dataset_name, extension) = os.path.splitext(dataset_local_name)
+        # Specify the dataset's details
+        # TODO: this is hardcoded, and needs to be gleaned from the dataset file metadata
+        dataset = {
+            'filename': dataset_path,
+            'format': 'CSV',
+            'header': True
+        }
+
+        # Intialize a file a dapter for the dataset
+        adapter = loader.adapter.get_adapter(dataset)
+
+        (head, dataset_local_name) = os.path.split(dataset_file)
+        (dataset_name, extension) = os.path.splitext(dataset_local_name)
 
 
 
-    # Prepare the data dictionary
-    data = {
-        'name': dataset_name,
-        'path': dataset_path,
-        'metadata': adapter.get_metadata(),
-        'codes': adapter.get_values(),
-        'dimensions': get_dimensions(),
-        'schemes': get_schemes() + get_csdh_schemes(),
-        'cache': read_cache(dataset_path)
-    }
+        # Prepare the data dictionary
+        data = {
+            'name': dataset_name,
+            'path': dataset_path,
+            'metadata': adapter.get_metadata(),
+            'codes': adapter.get_values(),
+            'dimensions': get_dimensions(),
+            'schemes': get_schemes() + get_csdh_schemes()
+        }
 
-    return jsonify(data)
+        return jsonify(data)
 
 
 def read_cache(dataset_path):
@@ -206,7 +213,7 @@ def dimension():
             results = sc.sparql(query)
 
             log.debug(results)
-            
+
             # Turn into something more manageable, and take only the first element.
             variable_definition = sc.dictize(results)[0]
 
@@ -317,6 +324,21 @@ def codelist():
 
 @app.route('/save', methods=['POST'])
 def save():
+    """Saves the dataset to cache"""
+    req_json = request.get_json(force=True)
+
+    dataset = req_json['dataset']
+    dataset_path = dataset['path']
+
+    try :
+        write_cache(dataset_path, dataset)
+        return jsonify({'response': 'success'})
+    except Exception as e:
+        return jsonify({'response': 'error', 'message': str(e)})
+
+
+@app.route('/submit', methods=['POST'])
+def submit():
     """Uses the DataCube converter to convert the JSON representation of variables to RDF DataCube"""
 
     req_json = request.get_json(force=True)
@@ -338,8 +360,6 @@ def save():
 
     query = sc.make_update(dataset)
     result = sc.sparql_update(query)
-
-    write_cache(dataset_path, variables)
 
     return result
 
