@@ -18,6 +18,7 @@ var VariablePanel = require('./VariablePanel.react');
 var Sidebar = require('./Sidebar.react');
 var Browser = require('./Browser.react');
 var SignIn = require('./SignIn.react');
+var Navbar = require('./Navbar.react');
 
 var MessagePanel = require('./MessagePanel.react');
 var DatasetStore = require('../stores/DatasetStore');
@@ -57,26 +58,36 @@ var QBer = React.createClass({
    */
   render: function() {
     console.log("QBer.react render");
-    if (this.state.user === undefined ){
-      return (
-        <div>Sign in first...</div>
-      );
-    } else if (this.state.dataset === undefined){
-      return (
-        <Browser/>
-      );
+    console.log(this.state);
+
+    var navbar = <Navbar onSignIn={this._handleSignedIn}
+                         user={this.state.user}
+                         variable={this.state.variable}/>;
+
+    var body;
+    if (this.state.dataset === undefined){
+      console.log("Dataset undefined");
+      body = <Browser/>;
     } else {
-    	return (
-        <div className="row">
-          <Sidebar
-            options={this.state.variable_names}
-          />
-          <VariablePanel
-            dataset={this.state.dataset} variable={this.state.variable}
-          />
-        </div>
-    	);
+    	body =
+        <div className="container-fluid" id="qber_body">
+          <div className="row">
+            <Sidebar
+              options={this.state.variable_names}
+            />
+            <VariablePanel
+              dataset={this.state.dataset} variable={this.state.variable}
+            />
+          </div>
+        </div>;
     }
+
+    return (
+      <section id='qber_content'>
+        {navbar}
+        {body}
+      </section>
+    );
   },
 
   /**
@@ -84,7 +95,14 @@ var QBer = React.createClass({
    */
   _onChange: function() {
     this.setState(getDatasetState());
-  }
+  },
+
+  _handleSignedIn: function(user) {
+    console.log("Retrieved signin signal...");
+    user_profile = user.getBasicProfile();
+    DatasetActions.registerUser(user_profile);
+    console.log("Sent out registerUser action to DatasetActions");
+  },
 
 });
 

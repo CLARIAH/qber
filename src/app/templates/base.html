@@ -6,14 +6,16 @@
 {% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-fixed-top" id="navbar"></nav>
+<bla></bla>
 {% endblock %}
 
 {% block content %}
-<div class="message-panel" id="message_panel">
+
+
+<div id='qber'>
 
 </div>
-<div class="container-fluid" id='qber'>
+<div class="message-panel" id="message_panel">
 
 </div>
 
@@ -21,11 +23,7 @@
 
 {% block scripts %}
 {{super()}}
-<!-- <script src="{{ url_for('static', filename='bower_components/flux/dist/Flux.js') }}"></script>
-<script src="{{ url_for('static', filename='bower_components/react/react.js') }}"></script>
-<script src="{{ url_for('static', filename='bower_components/react/JSXTransformer.js') }}"></script>
 
-<script src="{{url_for('.static', filename='jquery.storageapi.min.js')}}"></script> -->
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <script src="{{url_for('.static', filename='dist/js/bundle.js')}}"></script>
 
@@ -34,10 +32,7 @@
 {% block styles %}
 {{ super() }}
 
-<!-- <link rel="stylesheet" href="{{url_for('.static', filename='react-select.css')}}" /> -->
 <link rel="stylesheet" href="{{url_for('.static', filename='bootstrap.min.css')}}" />
 <link rel="stylesheet" href="{{url_for('.static', filename='qber.css')}}" />
-
-
 
 {% endblock %}

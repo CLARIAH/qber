@@ -7,7 +7,7 @@ var SignIn = React.createClass({
 
   // This React class only works if a 'onSignIn' function is passed through its properties.
   propTypes: {
-    onSignIn: ReactPropTypes.object.isRequired
+    onSignIn: ReactPropTypes.func.isRequired
   },
 
   componentWillMount: function(){
