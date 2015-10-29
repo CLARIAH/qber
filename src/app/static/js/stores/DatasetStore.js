@@ -101,23 +101,24 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
 });
 
 // Register callback to handle all updates
-DatasetStore.dispatchToken = QBerDispatcher.register(function(action) {
+QBerDispatcher.register(function(action) {
   var dataset;
   var variable;
+  console.log('DatasetStore: received '+action.actionType);
 
   switch(action.actionType) {
     // Register the logged in user
     case DatasetConstants.REGISTER_USER:
-      QBerDispatcher.waitFor([BrowserStore.dispatchToken]);
-      if (action.user !== {}) {
+      if (action.user !== undefined) {
         setUser(action.user);
+        console.log('User set in store');
         DatasetStore.emitChange();
+        console.log('Emitted change for datasetstore after user set');
       }
       break;
     // This is where we set the currently selected variable
     // This is the INIT action for the dataset
     case DatasetConstants.DATASET_INIT:
-      QBerDispatcher.waitFor([MessageStore.dispatchToken]);
       dataset = action.dataset;
       if (dataset !== undefined) {
         initialize(dataset);
@@ -126,7 +127,6 @@ DatasetStore.dispatchToken = QBerDispatcher.register(function(action) {
       break;
     // This is where we set the currently selected variable
     case DatasetConstants.DATASET_CHOOSE_VARIABLE:
-      QBerDispatcher.waitFor([MessageStore.dispatchToken]);
       variable = action.variable;
       if (variable !== ""){
         setVariable(variable);

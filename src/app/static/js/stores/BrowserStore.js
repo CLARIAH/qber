@@ -64,23 +64,20 @@ var BrowserStore = assign({}, EventEmitter.prototype, {
 });
 
 // Register callback to handle all updates
-BrowserStore.dispatchToken = QBerDispatcher.register(function(action) {
+QBerDispatcher.register(function(action) {
   console.log('BrowserStore: received '+action.actionType);
 
   switch(action.actionType) {
     case BrowserConstants.UPDATE_FILES:
-      QBerDispatcher.waitFor([DatasetStore.dispatchToken]);
       BrowserStore.setFiles(action.file_list.files, action.file_list.parent);
       BrowserStore.setPath(action.file_list.path);
       BrowserStore.emitChange();
       break;
     case BrowserConstants.CLOSE_BROWSER:
-      QBerDispatcher.waitFor([DatasetStore.dispatchToken]);
       BrowserStore.setModalVisible(false);
       BrowserStore.emitChange();
       break;
     case BrowserConstants.SHOW_BROWSER:
-      QBerDispatcher.waitFor([DatasetStore.dispatchToken]);
       BrowserStore.setModalVisible(true);
       BrowserStore.emitChange();
       break;
