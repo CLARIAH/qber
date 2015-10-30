@@ -21,7 +21,7 @@ var _variable;
  */
 function initialize(dimensions, mappings) {
   _dimensions = dimensions;
-  _mappings = {};
+  _mappings = mappings;
 }
 
 /**
