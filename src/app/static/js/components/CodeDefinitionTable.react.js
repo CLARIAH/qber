@@ -45,7 +45,15 @@ var CodeDefinitionTable = React.createClass({
       var button_disabled = (this.props.dimension && this.props.dimension.codelist) ? false: true;
 
       for (var key in codes) {
-
+        var mapped_uri = this.props.dimension.codelist.mappings[codes[key].id];
+        var mapped_uri_icon;
+        if (mapped_uri){
+          mapped_uri_icon = <span className="glyphicon glyphicon-link"/>;
+        }
+        var browse_mapped_uri;
+        if (mapped_uri){
+          browse_mapped_uri = "http://data.clariah-sdh.eculture.labs.vu.nl/browse?uri="+encodeURIComponent(mapped_uri);
+        }
         codes_rows.push(<tr key={codes[key].id}>
                           <td>
                             { codes[key].id }
@@ -59,6 +67,12 @@ var CodeDefinitionTable = React.createClass({
                             </span>
                           </td>
                           <td width="100%">
+                            {mapped_uri_icon}
+                            <a className='small' target="_blank" href={browse_mapped_uri}>
+                              {mapped_uri}
+                            </a>
+                          </td>
+                          <td>
                             <span className='badge pull-right'> { codes[key].count }</span>
                           </td>
                         </tr>);
