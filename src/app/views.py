@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, request, jsonify
 from flask.ext.socketio import emit
+from flask_swagger import swagger
+from werkzeug.exceptions import HTTPException
+
 import logging
 import requests
 import json
@@ -29,6 +32,19 @@ log.setLevel(logging.DEBUG)
 def index():
     return render_template('base.html')
 
+@app.route('/specs')
+def specs():
+    swag = swagger(app)
+    swag['info']['version'] = "0.0.1"
+    swag['info']['title'] = "CSDH API"
+    swag['info']['description'] = "API for the CLARIAH Structured Data Hub"
+    swag['host'] = "localhost:5000"
+    swag['schemes'] = ['http']
+    swag['basePath'] = '/'
+    swag['swagger'] = '2.0'
+
+    return jsonify(swag)
+
 
 @app.route('/inspector')
 def inspector():
@@ -46,6 +62,19 @@ def inspect():
 def message(json):
     log.debug('SocketIO message:\n' + str(json))
 
+@app.errorhandler(Exception)
+def error_response(ex):
+    if 'code' in ex:
+        code = ex.code
+    elif 'errno' in ex:
+        code = ex.errno
+    else:
+        code = 42
+    response = jsonify(message=str(ex), code=code)
+    response.status_code = (code
+                            if isinstance(ex, HTTPException)
+                            else 500)
+    return response
 
 @app.route('/metadata')
 def metadata():
