@@ -179,7 +179,7 @@ def metadata():
 
     # Check whether a file has been provided
     if not dataset_file:
-        return jsonify({'result': 'Error: you should provide me with a relative path to the file you want to load'})
+        raise(Exception('You should provide me with a relative path to the file you want to load'))
 
 
     # Create an absolute path
