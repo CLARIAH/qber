@@ -53,6 +53,66 @@ def inspector():
 
 @app.route('/inspect')
 def inspect():
+    """
+    Inspect the graph of dimensions, datasets and authors
+    ---
+    tags:
+        - Graph
+    responses:
+        '200':
+            description: Graph generated
+            schema:
+                id: JSONGraph
+                type: object
+                properties:
+                    directed:
+                        type: boolean
+                        description: Whether the graph is directed or not
+                    multigraph:
+                        type: boolean
+                        description: Whether the graph is a multigraph or not
+                    graph:
+                        type: array
+                        description: The graph details
+                        items:
+                            type: string
+                    nodes:
+                        type: array
+                        description: The list of nodes in the graph
+                        items:
+                            description: A graph node
+                            schema:
+                                id: node
+                                type: object
+                                properties:
+                                    origin:
+                                        type: string
+                                    type:
+                                        type: string
+                                    id:
+                                        type: string
+                                    name:
+                                        type: string
+                    links:
+                        type: array
+                        description: The list of edges in the graph
+                        items:
+                            type: string
+                            schema:
+                                id: link
+                                type: object
+                                properties:
+                                    source:
+                                        type: integer
+                                        format: int32
+                                    target:
+                                        type: integer
+                                        format: int32
+        default:
+            description: Unexpected error
+            schema:
+              $ref: "#/definitions/Error"
+    """
     data = util.inspector.update()
     return jsonify(data)
 
@@ -78,12 +138,49 @@ def error_response(ex):
 
 @app.route('/metadata')
 def metadata():
-    """Loads the metadata for a dataset specified by the 'file' relative path argument"""
+    """
+    Get dataset metadata
+    Loads the metadata for a dataset specified by the 'file' relative path argument
+    ---
+      parameters:
+        - name: file
+          in: query
+          description: The path to the dataset file that is to be loaded
+          required: true
+          type: string
+      tags:
+        - Dataset
+      responses:
+        '200':
+          description: Dataset metadata retrieved
+          schema:
+            id: DatasetMetadata
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the dataset
+              path:
+                type: string
+                description: The location of the dataset on disk (server side)
+        default:
+          description: Unexpected error
+          schema:
+            id: Error
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+    """
     dataset_file = request.args.get('file', False)
 
     # Check whether a file has been provided
     if not dataset_file:
         return jsonify({'result': 'Error: you should provide me with a relative path to the file you want to load'})
+
 
     # Create an absolute path
     dataset_path = os.path.join(config.base_path, dataset_file)
