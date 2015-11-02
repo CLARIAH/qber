@@ -621,3 +621,17 @@ def get_schemes():
             f.write(schemes_json)
 
         return schemes
+
+
+@app.after_request
+def after_request(response):
+    """
+    Needed for Swagger UI
+    """
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', "Authorization, Content-Type")
+    response.headers.add('Access-Control-Expose-Headers', "Authorization")
+    response.headers.add('Access-Control-Allow-Methods', "GET, POST, PUT, DELETE, OPTIONS")
+    response.headers.add('Access-Control-Allow-Credentials', "true")
+    response.headers.add('Access-Control-Max-Age', 60 * 60 * 24 * 20)
+    return response
