@@ -1,12 +1,10 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}CLARIAH QBer{% endblock %}
+{% block title %}CLARIAH Inspector{% endblock %}
 
 {% block metas %}
-<meta name="google-signin-client_id" content="693352032871-11385rcadjcf688bojnp2hr998g0llpm.apps.googleusercontent.com">
 {% endblock %}
 
 {% block navbar %}
-<bla></bla>
 {% endblock %}
 
 {% block content %}
@@ -23,9 +21,6 @@
 
 {% block scripts %}
 {{super()}}
-
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-<script src="{{url_for('.static', filename='dist/js/bundle.js')}}"></script>
 
 {% endblock %}
 

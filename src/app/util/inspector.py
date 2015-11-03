@@ -2,7 +2,6 @@ from app.config import ENDPOINT_URL
 import networkx as nx
 import requests
 import json
-from sparql_client import dictize
 from networkx.readwrite import json_graph
 
 
@@ -173,3 +172,22 @@ def update(graph=None):
         json.dump(data, f)
 
     return data
+
+def dictize(sparql_results):
+    # If the results are a dict, just return the list of bindings
+    if isinstance(sparql_results, dict):
+        sparql_results = sparql_results['results']['bindings']
+
+    results = []
+
+    for r in sparql_results :
+        result = {}
+        for k,v in r.items():
+            try :
+                result[k] = v['value']
+            except :
+                print k, v
+
+        results.append(result)
+
+    return results
