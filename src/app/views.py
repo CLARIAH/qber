@@ -48,13 +48,28 @@ def specs():
 
 @app.route('/inspector')
 def inspector():
+    """
+    Returns the Inspector Homepage
+    ---
+    tags:
+        - Graph
+    produces:
+        - text/html
+    responses:
+        '200':
+            description: Inspector homepage returned
+        default:
+            description: Unexpected error
+            schema:
+              $ref: "#/definitions/Error"
+    """
     return render_template('inspector.html')
 
 
-@app.route('/inspect')
-def inspect():
+@app.route('/inspector/graph')
+def inspector_graph():
     """
-    Inspect the graph of dimensions, datasets and authors
+    Build a graph of dimensions, datasets and authors present in the CSDH
     ---
     tags:
         - Graph
@@ -122,8 +137,14 @@ def inspect():
 def message(json):
     log.debug('SocketIO message:\n' + str(json))
 
+
 @app.errorhandler(Exception)
 def error_response(ex):
+    """
+    Handles any errors raised in the execution of the backend
+    Builds a JSON representation of the error messages, to be handled by the client
+    Complies with the Swagger definnition of an error response
+    """
     if 'code' in ex:
         code = ex.code
     elif 'errno' in ex:
@@ -136,8 +157,8 @@ def error_response(ex):
                             else 500)
     return response
 
-@app.route('/metadata')
-def metadata():
+@app.route('/dataset/definition')
+def get_dataset_definition():
     """
     Get dataset metadata
     Loads the metadata for a dataset specified by the 'file' relative path argument
@@ -163,6 +184,13 @@ def metadata():
               path:
                 type: string
                 description: The location of the dataset on disk (server side)
+              mappings:
+                description: Any cached mappings for variables in the dataset
+                type: object
+            required:
+                - name
+                - path
+                - mappings
         default:
           description: Unexpected error
           schema:
@@ -211,18 +239,83 @@ def metadata():
 
 
         # Prepare the data dictionary
-        data = {
+        dataset_definition_response = {
             'name': dataset_name,
             'path': dataset_path,
             'metadata': adapter.get_metadata(),
-            'codes': adapter.get_values(),
-            'dimensions': get_dimensions(),
-            'schemes': get_schemes() + get_csdh_schemes(),
+            'values': adapter.get_values(),
             'mappings': {}
         }
 
-        return jsonify(data)
+        return jsonify(dataset_definition_response)
 
+
+@app.route('/community/dimensions')
+def get_community_dimensions():
+    """
+    Get a list of known community-defined dimensions
+    Retrieves the dimensions gathered through the LSD dimensions website
+    ---
+    tags:
+        - Community
+    responses:
+        '200':
+            description: Community dimensions retrieved
+            schema:
+                id: CommunityDimensionsResponse
+                type: object
+                properties:
+                    dimensions:
+                        description: A dictionary of specifications as provided by LSD
+                        type: object
+                required:
+                    - dimensions
+    default:
+        description: Unexpected error
+        schema:
+          $ref: "#/definitions/Error"
+    """
+    dimensions_response = {'dimensions': get_dimensions()}
+    return jsonify(dimensions_response)
+
+
+@app.route('/community/schemes')
+def get_community_schemes():
+    """
+    Get a list of known community-defined concept schemes
+    Retrieves concept schemes from the LOD Cloud and the CSDH
+    ---
+    tags:
+        - Community
+    responses:
+        '200':
+            description: Community concept schemes retrieved
+            schema:
+                id: CommunityConceptsResponse
+                type: object
+                properties:
+                    schemes:
+                        description: An array of concept scheme labels and URIs
+                        schema:
+                            id: SchemaDefinition
+                            type: array
+                            items:
+                                description: An object specifying the label and URI of a concept scheme
+                                type: object
+                                properties:
+                                    label:
+                                        type: string
+                                    uri:
+                                        type: string
+                required:
+                    - schemes
+        default:
+            description: Unexpected error
+            schema:
+              $ref: "#/definitions/Error"
+    """
+    schemes_response = {'schemes': get_schemes() + get_csdh_schemes()}
+    return jsonify(schemes_response)
 
 def read_cache(dataset_path):
 
