@@ -1,6 +1,10 @@
+
+var CSDH_API = "http://localhost:5000"
+
+
 module.exports = {
   retrieveDataset: function(settings) {
-    $.get('/metadata',{'file': settings.filename}, function(dataset){
+    $.get(CSDH_API + '/metadata',{'file': settings.filename}, function(dataset){
       console.log(dataset);
       settings.success(dataset);
     }).fail(function(){
@@ -9,7 +13,7 @@ module.exports = {
   },
 
   saveDataset: function(settings) {
-    $.post('/save',data=JSON.stringify({'dataset': settings.dataset}), function(response){
+    $.post(CSDH_API + '/save',data=JSON.stringify({'dataset': settings.dataset}), function(response){
       console.log(response);
       settings.success(response);
     }).fail(function(){
@@ -18,7 +22,7 @@ module.exports = {
   },
 
   retrieveDimension: function(settings) {
-    $.get('/variable/resolve', {'uri': settings.dimension}, function(dimension_details){
+    $.get(CSDH_API + '/variable/resolve', {'uri': settings.dimension}, function(dimension_details){
       console.log("QBerAPI retrieveDimension");
       console.log(dimension_details);
       if(dimension_details == 'error'){
@@ -32,7 +36,7 @@ module.exports = {
   },
 
   retrieveCodes: function(settings) {
-    $.get('/codelist/concepts', {'uri': settings.codelist_uri}, function(codes){
+    $.get(CSDH_API + '/codelist/concepts', {'uri': settings.codelist_uri}, function(codes){
       console.log("QBerAPI retrieveCodes");
       console.log(codes);
       if(codes.response && codes.response == 'error'){
@@ -46,7 +50,7 @@ module.exports = {
   },
 
   retrieveFileList: function(settings) {
-    $.get('/browse', {'path': settings.path}, function(data){
+    $.get(CSDH_API + '/browse', {'path': settings.path}, function(data){
       console.log("QBerAPI retrieveFileList");
       console.log(data);
       if(data.response == 'error'){
@@ -60,7 +64,7 @@ module.exports = {
   },
 
   retrieveIRI: function(settings) {
-    $.get('/iri', {'iri': settings.iri}, function(data){
+    $.get(CSDH_API + '/iri', {'iri': settings.iri}, function(data){
       console.log("QBerAPI retrieveIRI");
       console.log(data);
       if(data.response == 'error'){
