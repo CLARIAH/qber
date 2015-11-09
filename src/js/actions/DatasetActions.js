@@ -38,7 +38,7 @@ var DatasetActions = {
       message: 'Retrieving dataset from '+filename
     });
     // Call the QBerAPI with the filename, and implement the success callback
-    QBerAPI.retrieveDataset({
+    QBerAPI.retrieveDatasetDefinition({
       filename: filename,
       success: function(dataset){
         QBerDispatcher.dispatch({
@@ -51,16 +51,28 @@ var DatasetActions = {
           dataset: dataset
         });
 
-        QBerDispatcher.dispatch({
-          actionType: DimensionConstants.SDMX_DIMENSION_INIT,
-          dimensions: dataset.dimensions,
-          mappings: dataset.mappings
-        });
+        QBerAPI.retrieveCommunityDimensions({
+          success: function(response){
+            console.log(dataset);
+            QBerDispatcher.dispatch({
+              actionType: DimensionConstants.SDMX_DIMENSION_INIT,
+              dimensions: response.dimensions,
+              mappings: dataset.mappings
+            });
+          },
+          error: function(response){
+            QBerDispatcher.dispatch({
+              actionType: MessageConstants.ERROR,
+              message: response.message
+            });
+          }
+        })
+
       },
-      error: function(filename){
+      error: function(response){
         QBerDispatcher.dispatch({
           actionType: MessageConstants.ERROR,
-          message: 'Error retrieving dataset from '+filename
+          message: response.message
         });
       }
     });

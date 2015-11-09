@@ -3,17 +3,35 @@ var CSDH_API = "http://localhost:5000"
 
 
 module.exports = {
-  retrieveDataset: function(settings) {
-    $.get(CSDH_API + '/metadata',{'file': settings.filename}, function(dataset){
-      console.log(dataset);
-      settings.success(dataset);
+  retrieveDatasetDefinition: function(settings) {
+    $.get(CSDH_API + '/dataset/definition',{'file': settings.filename}, function(response){
+      console.log(response);
+      settings.success(response);
     }).fail(function(){
-      settings.error(settings.filename);
+      settings.error(response);
+    });
+  },
+
+  retrieveCommunityDimensions: function(settings) {
+    $.get(CSDH_API + '/community/dimensions', function(response){
+      console.log(response);
+      settings.success(response);
+    }).fail(function(){
+      settings.error(response);
+    });
+  },
+
+  retrieveCommunitySchemes: function(settings) {
+    $.get(CSDH_API + '/community/schemes', function(response){
+      console.log(response);
+      settings.success(response);
+    }).fail(function(){
+      settings.error(response);
     });
   },
 
   saveDataset: function(settings) {
-    $.post(CSDH_API + '/save',data=JSON.stringify({'dataset': settings.dataset}), function(response){
+    $.post(CSDH_API + '/dataset/save',data=JSON.stringify({'dataset': settings.dataset}), function(response){
       console.log(response);
       settings.success(response);
     }).fail(function(){
@@ -22,7 +40,7 @@ module.exports = {
   },
 
   retrieveDimension: function(settings) {
-    $.get(CSDH_API + '/variable/resolve', {'uri': settings.dimension}, function(dimension_details){
+    $.get(CSDH_API + '/community/definition', {'uri': settings.dimension}, function(dimension_details){
       console.log("QBerAPI retrieveDimension");
       console.log(dimension_details);
       if(dimension_details == 'error'){
@@ -36,7 +54,7 @@ module.exports = {
   },
 
   retrieveCodes: function(settings) {
-    $.get(CSDH_API + '/codelist/concepts', {'uri': settings.codelist_uri}, function(codes){
+    $.get(CSDH_API + '/community/concepts', {'uri': settings.codelist_uri}, function(codes){
       console.log("QBerAPI retrieveCodes");
       console.log(codes);
       if(codes.response && codes.response == 'error'){
