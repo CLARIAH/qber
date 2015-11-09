@@ -5,7 +5,7 @@ var DimensionStore = require('../stores/DimensionStore');
 var QBerModal = require('./QBerModal.react');
 var DimensionType = require('./Dimensiontype.react');
 var DimensionMetadata = require('./DimensionMetadata.react');
-var CodeDefinitionTable = require('./CodeDefinitionTable.react');
+var ValueDefinitionTable = require('./ValueDefinitionTable.react');
 
 
 
@@ -24,9 +24,9 @@ function getDimensionDefinitionPanelState() {
 
 var DimensionDefinitionPanel = React.createClass({
 
-  // This React class only works if a list of 'codes' and the name of the dataset is passed through its properties.
+  // This React class only works if a list of 'values' and the name of the dataset is passed through its properties.
   propTypes: {
-    codes: ReactPropTypes.object.isRequired,
+    values: ReactPropTypes.object.isRequired,
     datasetName: ReactPropTypes.string.isRequired
   },
 
@@ -37,7 +37,7 @@ var DimensionDefinitionPanel = React.createClass({
     // Check if there's already a dimension defined
     if (state.dimension === undefined) {
       // If not, build it as if it is a 'coded' dimension.
-      DimensionActions.buildDimension(this.props.codes, this.props.datasetName);
+      DimensionActions.buildDimension(this.props.values, this.props.datasetName);
       // Get the new state
       state = getDimensionDefinitionPanelState();
     }
@@ -66,7 +66,7 @@ var DimensionDefinitionPanel = React.createClass({
     // TODO: Want this to work the first time the variable is shown
     // TODO: Make this more elegant as this really should not occur in the render function.
     if (this.state.dimension === undefined) {
-      DimensionActions.buildDimension(this.props.codes, this.props.datasetName);
+      DimensionActions.buildDimension(this.props.values, this.props.datasetName);
     }
 
     return (
@@ -86,7 +86,7 @@ var DimensionDefinitionPanel = React.createClass({
                     options={this.state.dimensions}
                     doSelect={this._handleSelected}
                     doClose={this._handleHideDimensions} />
-        <CodeDefinitionTable codes={this.props.codes}
+        <ValueDefinitionTable values={this.props.values}
                     dimension={this.state.dimension}
                     doMapping={this._handleMapping} />
       </section>
@@ -104,21 +104,21 @@ var DimensionDefinitionPanel = React.createClass({
    * Event handler for the button that generates a Dimension definition
    */
   _handleBuildDimension: function(){
-    DimensionActions.buildDimension(this.props.codes, this.props.datasetName);
+    DimensionActions.buildDimension(this.props.values, this.props.datasetName);
   },
 
   /**
    * Event handler for the button that generates a Dimension definition
    */
   _handleBuildIdentifier: function(){
-    DimensionActions.buildIdentifier(this.props.codes, this.props.datasetName);
+    DimensionActions.buildIdentifier(this.props.values, this.props.datasetName);
   },
 
   /**
    * Event handler for the button that generates a Dimension definition
    */
   _handleBuildMeasurement: function(){
-    DimensionActions.buildMeasurement(this.props.codes, this.props.datasetName);
+    DimensionActions.buildMeasurement(this.props.values, this.props.datasetName);
   },
 
   /**

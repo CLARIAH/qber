@@ -58,13 +58,13 @@ var QBer = React.createClass({
    * @return {object}
    */
   render: function() {
-    console.log("QBer.react render");
+    console.log("QBer.react state:");
     console.log(this.state);
 
     var navbar = <Navbar doSignIn={this._handleSignedIn}
                          doSave={this._handleSave}
                          user={this.state.user}
-                         variable={this.state.variable}/>;
+                         variable={this.state.variable} />;
 
     var body;
     if (this.state.dataset === undefined){

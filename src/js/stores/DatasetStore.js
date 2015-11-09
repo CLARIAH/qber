@@ -57,10 +57,10 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
    * @return {object}
    */
   getVariableNames: function() {
-    if (_dataset === undefined || _dataset.codes === undefined){
+    if (_dataset === undefined || _dataset.values === undefined){
       return []
     } else {
-      return Object.keys(_dataset.codes);
+      return Object.keys(_dataset.values);
     }
   },
 

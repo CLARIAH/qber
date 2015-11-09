@@ -12,11 +12,11 @@ function findByURI(source, uri) {
 }
 
 
-var CodeDefinitionTable = React.createClass({
+var ValueDefinitionTable = React.createClass({
 
-  // This React class only works if a list of 'codes' is passed through its properties.
+  // This React class only works if a list of 'values' is passed through its properties.
   propTypes: {
-    codes: ReactPropTypes.array.isRequired
+    values: ReactPropTypes.array.isRequired
   },
 
   getInitialState: function() {
@@ -32,20 +32,25 @@ var CodeDefinitionTable = React.createClass({
    * @return {object}
    */
   render: function() {
+    console.log("ValueDefinitionTable props:");
+    console.log(this.props);
+
     // This section should be hidden by default
     // and shown when we do have variables in our dataset
-    if (this.props.codes === undefined || this.props.codes.length < 1) {
+    if (this.props.values === undefined || this.props.values.length < 1) {
       return null;
     }
 
+
+
     var table;
     if (this.state.visible) {
-      var codes = this.props.codes;
-      var codes_rows = [];
+      var values = this.props.values;
+      var values_rows = [];
       var button_disabled = (this.props.dimension && this.props.dimension.codelist) ? false: true;
 
-      for (var key in codes) {
-        var mapped_uri = this.props.dimension.codelist.mappings[codes[key].id];
+      for (var key in values) {
+        var mapped_uri = this.props.dimension.codelist.mappings[values[key].id];
         var mapped_uri_icon;
         if (mapped_uri){
           mapped_uri_icon = <span className="glyphicon glyphicon-link"/>;
@@ -54,13 +59,13 @@ var CodeDefinitionTable = React.createClass({
         if (mapped_uri){
           browse_mapped_uri = "http://data.clariah-sdh.eculture.labs.vu.nl/browse?uri="+encodeURIComponent(mapped_uri);
         }
-        codes_rows.push(<tr key={codes[key].id}>
+        values_rows.push(<tr key={values[key].id}>
                           <td>
-                            { codes[key].id }
+                            { values[key].id }
                           </td>
                           <td>
                             <span className='btn btn-default btn-xs'
-                                  value={codes[key].id}
+                                  value={values[key].id}
                                   onClick={this._handleToggleModal}
                                   disabled={button_disabled}>
                                   <span className="glyphicon glyphicon-random"/>
@@ -73,7 +78,7 @@ var CodeDefinitionTable = React.createClass({
                             </a>
                           </td>
                           <td>
-                            <span className='badge pull-right'> { codes[key].count }</span>
+                            <span className='badge pull-right'> { values[key].count }</span>
                           </td>
                         </tr>);
       }
@@ -83,13 +88,13 @@ var CodeDefinitionTable = React.createClass({
         console.log(this.props.dimension.codelist);
         var title = <span>Select corresponding code for <strong>{this.state.selected_code_value}</strong></span>;
 
-        var sorted_codes = _.sortBy(this.props.dimension.codelist.codes,'label');
+        var sorted_values = _.sortBy(this.props.dimension.codelist.values,'label');
         // Codelist present
         modal = <QBerModal visible={this.state.modal_visible}
                    title={title}
                    value={this.state.selected_code_value}
                    selection={(this.state.selected_code_value !== undefined && this.props.dimension.codelist.mappings !== undefined) ? this.props.dimension.codelist.mappings[this.state.selected_code_value] : undefined}
-                   options={sorted_codes}
+                   options={sorted_values}
                    doSelect={this._handleSelected}
                    doClose={this._handleToggleModal} />;
       }
@@ -97,7 +102,7 @@ var CodeDefinitionTable = React.createClass({
       table = <div style={{overflow: 'scroll', maxHeight: '300px'}}>
                 <table className="table table-striped">
                   <tbody>
-                    {codes_rows}
+                    {values_rows}
                   </tbody>
                 </table>
                 {modal}
@@ -107,7 +112,7 @@ var CodeDefinitionTable = React.createClass({
 
 
     return (
-      <section id="codes_table">
+      <section id="values_table">
         <div className="panel panel-default">
           <div className="panel-heading">
             <h5 className="panel-title" onClick={this._onToggle} aria-expanded={this.state.visible}>
@@ -130,27 +135,27 @@ var CodeDefinitionTable = React.createClass({
   _handleSelected: function(code_uri){
     // The code uri is the selected uri in the QBerModal PillSelector.
     console.log(code_uri);
-    // Codes is the list of code values for this variable
-    var codes = this.props.codes;
+    // values is the list of code values for this variable
+    var values = this.props.values;
     // The selected code value, is the currently visible code value
     var selected_code_value = this.state.selected_code_value;
 
     // Get the index of the selected code value, and increment it by 1 (the next code value)
-    var next_index = _.findIndex(codes, 'id', this.state.selected_code_value) + 1;
+    var next_index = _.findIndex(values, 'id', this.state.selected_code_value) + 1;
 
-    // Set index to 0 if the resulting index is outside the codes array (looping)
-    if (next_index == codes.length){
+    // Set index to 0 if the resulting index is outside the values array (looping)
+    if (next_index == values.length){
       next_index = 0;
     }
 
     // Copy the current state
     var new_state = this.state;
-    // Set the selected code value to the next id in the codes array (i.e. the code at the next index)
-    new_state.selected_code_value = codes[next_index].id;
+    // Set the selected code value to the next id in the values array (i.e. the code at the next index)
+    new_state.selected_code_value = values[next_index].id;
     // Update the state
     this.setState(new_state);
 
-    // Call the externally defined function that handles the mappings between (external) values and the source codes.
+    // Call the externally defined function that handles the mappings between (external) values and the source values.
     this.props.doMapping(selected_code_value, code_uri);
   },
 
@@ -172,4 +177,4 @@ var CodeDefinitionTable = React.createClass({
   },
 });
 
-module.exports = CodeDefinitionTable;
+module.exports = ValueDefinitionTable;
