@@ -72,11 +72,13 @@ var DimensionDefinitionPanel = React.createClass({
     return (
       <section id="sdmx_dimension_panel">
         <DimensionType type={this.state.dimension === undefined ? "coded" : this.state.dimension.type}
+                       key={"dt"+ this.state.variable}
                        doSelectDimension={this._handleShowDimensions}
                        doBuildDimension={this._handleBuildDimension}
                        doBuildIdentifier={this._handleBuildIdentifier}
                        doBuildMeasurement={this._handleBuildMeasurement}/>
         <DimensionMetadata variable={this.state.variable}
+                           key={"dm"+ this.state.variable}
                            dimension={this.state.dimension}
                            doUpdate={this._handleUpdate}/>
         <QBerModal  visible={this.state.modal_visible}
@@ -87,6 +89,7 @@ var DimensionDefinitionPanel = React.createClass({
                     doSelect={this._handleSelected}
                     doClose={this._handleHideDimensions} />
         <ValueDefinitionTable values={this.props.values}
+                    key={"vdt"+ this.state.variable}
                     dimension={this.state.dimension}
                     doMapping={this._handleMapping} />
       </section>
