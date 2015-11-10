@@ -8,6 +8,8 @@ var assign = require('object-assign');
 var CHANGE_EVENT = 'change';
 
 var _dataset;
+var _schemes;
+var _dimensions;
 var _variable;
 var _variable_search;
 var _just_selected_variable = false;
@@ -21,6 +23,31 @@ function initialize(dataset) {
   console.log("Initializing DatasetStore");
   console.log(dataset);
   _dataset = dataset;
+}
+
+
+/**
+ * Set the selected VARIABLE .
+ * @param {string} variable The to be selected VARIABLE
+ */
+function setVariable(variable){
+  _variable = variable;
+}
+
+/**
+ * Set the list of dimensions.
+ * @param {array} dimensions The list of community dimensions
+ */
+function setDimensions(dimensions){
+  _dimensions = dimensions;
+}
+
+/**
+ * Set the list of concept schemes.
+ * @param {array} schemes The list of community schemes
+ */
+function setSchemes(schemes){
+  _schemes = schemes;
 }
 
 
@@ -57,10 +84,10 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
    * @return {object}
    */
   getVariableNames: function() {
-    if (_dataset === undefined || _dataset.values === undefined){
-      return []
+    if (_dataset === undefined || _dataset.variables === undefined){
+      return [];
     } else {
-      return Object.keys(_dataset.values);
+      return Object.keys(_dataset.variables);
     }
   },
 
@@ -71,6 +98,22 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
    */
   getVariable: function() {
     return _variable;
+  },
+
+  /**
+   * Get the dimensions.
+   * @return {array}
+   */
+  getDimensions: function() {
+    return _dimensions;
+  },
+
+  /**
+   * Get the schemes.
+   * @return {array}
+   */
+  getSchemes: function() {
+    return _schemes;
   },
 
   /**
@@ -116,7 +159,22 @@ QBerDispatcher.register(function(action) {
         console.log('Emitted change for datasetstore after user set');
       }
       break;
-    // This is where we set the currently selected variable
+    // We have retrieved a list of dimensions from the CSDH
+    case DatasetConstants.DIMENSIONS_INIT:
+      dimensions = action.dimensions;
+      if (dimensions !== undefined) {
+        setDimensions(dimensions);
+        DatasetStore.emitChange();
+      }
+      break;
+    // We have retrieved a list of concept schemes from the CSDH
+    case DatasetConstants.SCHEMES_INIT:
+      schemes = action.schemes;
+      if (schemes !== undefined) {
+        setSchemes(schemes);
+        DatasetStore.emitChange();
+      }
+      break;
     // This is the INIT action for the dataset
     case DatasetConstants.DATASET_INIT:
       dataset = action.dataset;

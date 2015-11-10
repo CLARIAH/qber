@@ -34,6 +34,8 @@ function getDatasetState() {
     dataset: DatasetStore.get(),
     variable_names: DatasetStore.getVariableNames(),
     variable: DatasetStore.getVariable(),
+    dimensions: DatasetStore.getDimensions(),
+    schemes: DatasetStore.getSchemes(),
     user: DatasetStore.getUser()
   };
 }
@@ -78,7 +80,10 @@ var QBer = React.createClass({
               options={this.state.variable_names}
             />
             <VariablePanel
-              dataset={this.state.dataset} variable={this.state.variable}
+              dataset={this.state.dataset}
+              variable={this.state.variable}
+              schemes={this.state.schemes}
+              dimensions={this.state.dimensions}
             />
           </div>
         </div>;

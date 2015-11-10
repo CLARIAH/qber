@@ -10,6 +10,49 @@ var MessageConstants = require('../constants/MessageConstants');
  */
 var DatasetActions = {
 
+  initializeStore: function(){
+    console.log("Initializing store...");
+    QBerDispatcher.dispatch({
+      actionType: MessageConstants.INFO,
+      message: "Initializing store..."
+    });
+
+    QBerAPI.retrieveCommunityDimensions({
+      success: function(response){
+        console.log(dataset);
+        QBerDispatcher.dispatch({
+          actionType: DataetConstants.DIMENSIONS_INIT,
+          dimensions: response.dimensions
+        });
+      },
+      error: function(response){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.ERROR,
+          message: response.message
+        });
+      }
+    });
+
+    QBerAPI.retrieveCommunitySchemes({
+      success: function(response){
+        console.log(response);
+        QBerDispatcher.dispatch({
+          actionType: DatasetConstants.SCHEMES_INIT,
+          schemes: response.schemes
+        });
+      },
+      error: function(response){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.ERROR,
+          message: response.message
+        });
+      }
+    });
+
+
+
+  },
+
   /**
    * @param {object} user The user object returned by the Google SignIn
    */
