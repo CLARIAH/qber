@@ -59,13 +59,13 @@ var ValueDefinitionTable = React.createClass({
         if (mapped_uri){
           browse_mapped_uri = "http://data.clariah-sdh.eculture.labs.vu.nl/browse?uri="+encodeURIComponent(mapped_uri);
         }
-        values_rows.push(<tr key={values[key].id}>
+        values_rows.push(<tr key={values[key].label}>
                           <td>
-                            { values[key].id }
+                            { values[key].label }
                           </td>
                           <td>
                             <span className='btn btn-default btn-xs'
-                                  value={values[key].id}
+                                  value={values[key].label}
                                   onClick={this._handleToggleModal}
                                   disabled={button_disabled}>
                                   <span className="glyphicon glyphicon-random"/>
@@ -151,7 +151,7 @@ var ValueDefinitionTable = React.createClass({
     // Copy the current state
     var new_state = this.state;
     // Set the selected code value to the next id in the values array (i.e. the code at the next index)
-    new_state.selected_code_value = values[next_index].id;
+    new_state.selected_code_value = values[next_index].label;
     // Update the state
     this.setState(new_state);
 
