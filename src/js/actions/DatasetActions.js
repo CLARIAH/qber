@@ -94,23 +94,10 @@ var DatasetActions = {
           dataset: dataset
         });
 
-        QBerAPI.retrieveCommunityDimensions({
-          success: function(response){
-            console.log(dataset);
-            QBerDispatcher.dispatch({
-              actionType: DimensionConstants.SDMX_DIMENSION_INIT,
-              dimensions: response.dimensions,
-              mappings: dataset.mappings
-            });
-          },
-          error: function(response){
-            QBerDispatcher.dispatch({
-              actionType: MessageConstants.ERROR,
-              message: response.message
-            });
-          }
+        QBerDispatcher.dispatch({
+          actionType: DimensionConstants.SDMX_DIMENSION_INIT,
+          variables: dataset.variables
         })
-
       },
       error: function(response){
         QBerDispatcher.dispatch({

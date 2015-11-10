@@ -50,7 +50,7 @@ var ValueDefinitionTable = React.createClass({
       var button_disabled = (this.props.dimension && this.props.dimension.codelist) ? false: true;
 
       for (var key in values) {
-        var mapped_uri = this.props.dimension.codelist.mappings[values[key].id];
+        var mapped_uri = values[key].uri;
         var mapped_uri_icon;
         if (mapped_uri){
           mapped_uri_icon = <span className="glyphicon glyphicon-link"/>;

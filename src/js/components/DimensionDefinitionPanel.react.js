@@ -14,7 +14,7 @@ var ValueDefinitionTable = require('./ValueDefinitionTable.react');
  */
 function getDimensionDefinitionPanelState() {
   return {
-    'dimensions': DimensionStore.getDimensions(),
+    'dimensions': DimensionStore.getVariables(),
     'variable': DimensionStore.getVariable(),
     'dimension': DimensionStore.getDimension(),
     'modal_visible': DimensionStore.getModalVisible(),

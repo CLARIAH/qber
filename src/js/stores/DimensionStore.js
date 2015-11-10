@@ -6,22 +6,19 @@ var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
 
-// The list of dimensions obtained from the LOD cloud + CSDH
-var _dimensions = [];
+// The list of variables in the dataset
+var _variables = [];
 // The visibility status of the SDMX Dimension Modal
 var _modal_visible = false;
-// The accumulated mappings between variables in the dataset and selected dimensions
-var _mappings = {};
 // The selected variable
 var _variable;
 
 /**
- * Initialize the list of dimensions.
- * @param  {array} dimensions The dimensions
+ * Initialize the list of variables.
+ * @param  {array} variables The variables
  */
-function initialize(dimensions, mappings) {
-  _dimensions = dimensions;
-  _mappings = mappings;
+function initialize(variables) {
+  _variables = variables;
 }
 
 /**
@@ -151,15 +148,15 @@ function assignMapping(value, uri) {
 var DimensionStore = assign({}, EventEmitter.prototype, {
 
   /**
-   * Get the list of dimensions.
+   * Get the list of variables.
    * @return {object}
    */
-  getDimensions: function() {
-    return _dimensions;
+  getVariables: function() {
+    return _variables;
   },
 
   /**
-   * Get the list of dimensions.
+   * Get the list of variables.
    * @return {object}
    */
   getMappings: function() {
@@ -180,8 +177,8 @@ var DimensionStore = assign({}, EventEmitter.prototype, {
    * @return {object} The dimension details
    */
   getDimension: function() {
-    if (_mappings[_variable] !== undefined){
-      return _mappings[_variable].dimension;
+    if (_variables[_variable] !== undefined){
+      return _variables[_variable];
     } else {
       return undefined;
     }
@@ -219,12 +216,11 @@ QBerDispatcher.register(function(action) {
   console.log('DimensionStore: received '+action.actionType);
 
   switch(action.actionType) {
-    // This is the INIT action for the dimensions
+    // This is the INIT action for the variables
     case DimensionConstants.SDMX_DIMENSION_INIT:
-      var dimensions = action.dimensions;
-      var mappings = action.mappings;
-      if (dimensions !== {}) {
-        initialize(dimensions, mappings);
+      var variables = action.variables;
+      if (variables !== {}) {
+        initialize(variables);
         DimensionStore.emitChange();
       }
       break;
