@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
+var QBerModal = require('./QBerModal.react');
 var Caret = require('./Caret.react');
 
 var DimensionMetadata = React.createClass({
@@ -13,7 +14,8 @@ var DimensionMetadata = React.createClass({
 
   getInitialState: function() {
     return {
-      'visible': true
+      'visible': true,
+      'modal_visible': false
     };
   },
 
@@ -48,14 +50,22 @@ var DimensionMetadata = React.createClass({
       if (this.props.dimension && this.props.dimension.codelist){
         codelist_row =  <div className="form-group">
                           <label for="inputCodelist" className="col-sm-2 control-label">Code list</label>
-                          <div className="col-sm-10">
+                          <div className="col-sm-8">
                             <input type="text"
                                    className="form-control"
                                    key={"codelist"+this.props.variable}
                                    id="inputCodelist"
                                    placeholder="Codelist"
                                    value={this.props.dimension.codelist.uri}
-                                   readOnly></input>
+                                   readOnly>
+                              </input>
+                          </div>
+                          <div className="col-sm-2">
+                            <input type="button"
+                                   className="form-control btn btn-default"
+                                   id="inputCommunityCodeList"
+                                   value="Community"
+                                   onClick={this._onShowCodeLists}></input>
                           </div>
                         </div>;
       }
@@ -115,6 +125,13 @@ var DimensionMetadata = React.createClass({
               {form}
           </div>
         </div>
+        <QBerModal  visible={this.state.modal_visible}
+                    title="Select a community provided codelist"
+                    value={this.props.variable}
+                    selection={this.state.dimension !== undefined ? this.state.dimension.uri: undefined}
+                    options={this.props.codelists}
+                    doSelect={this._handleSelected}
+                    doClose={this._handleHideDimensions} />
       </section>
     );
   },
@@ -142,6 +159,12 @@ var DimensionMetadata = React.createClass({
     new_dimension.description = value;
     // Propagate the new dimension details upward
     this.props.doUpdate(new_dimension);
+  },
+
+  _onShowCodeLists: function(e){
+    var new_state = this.state;
+    new_state.modal_visible = true;
+    this.setState(new_state);
   }
 
 });
