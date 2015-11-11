@@ -9,7 +9,6 @@ var MessageConstants = require('../constants/MessageConstants');
  *  Note that the QBerAPI also dispatches actions to stores!
  */
 var DatasetActions = {
-
   initializeStore: function(){
     console.log("Initializing store...");
     QBerDispatcher.dispatch({
@@ -19,9 +18,8 @@ var DatasetActions = {
 
     QBerAPI.retrieveCommunityDimensions({
       success: function(response){
-        console.log(dataset);
         QBerDispatcher.dispatch({
-          actionType: DataetConstants.DIMENSIONS_INIT,
+          actionType: DatasetConstants.DIMENSIONS_INIT,
           dimensions: response.dimensions
         });
       },
@@ -48,9 +46,44 @@ var DatasetActions = {
         });
       }
     });
+  },
 
+  updateScheme: function(scheme){
+    QBerDispatcher.dispatch({
+      actionType: MessageConstants.INFO,
+      message: "Adding "+ scheme.uri +" to schemes, if needed..."
+    });
 
+    QBerDispatcher.dispatch({
+      actionType: DatasetConstants.SCHEME_UPDATE,
+      scheme: scheme
+    });
+  },
 
+  updateConcepts: function(scheme_uri){
+    console.log("Retrieving list of concepts for "+ scheme_uri);
+    QBerDispatcher.dispatch({
+      actionType: MessageConstants.INFO,
+      message: "Retrieving concepts for "+ scheme_uri
+    });
+
+    QBerAPI.retrieveConcepts({
+      scheme_uri: scheme_uri,
+      success: function(response){
+        console.log(response);
+        QBerDispatcher.dispatch({
+          actionType: DatasetConstants.CONCEPTS_UPDATE,
+          uri: scheme_uri,
+          concepts: response.concepts
+        });
+      },
+      error: function(response){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.ERROR,
+          message: response.message
+        });
+      }
+    });
   },
 
   /**

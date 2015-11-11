@@ -3,6 +3,7 @@ var QBerAPI = require('../utils/QBerAPI');
 var DimensionConstants = require('../constants/DimensionConstants');
 var DatasetConstants = require('../constants/DatasetConstants');
 var MessageConstants = require('../constants/MessageConstants');
+var DatasetActions = require('../actions/DatasetActions');
 
 
 var DimensionActions = {
@@ -22,56 +23,30 @@ var DimensionActions = {
 
     QBerAPI.retrieveDimension({
       dimension: dimension,
-      success: function(dimension_details){
+      success: function(response){
         QBerDispatcher.dispatch({
           actionType: MessageConstants.SUCCESS,
           message: "Successfully retrieved dimension "+ dimension
         });
+
+        var definition = response.definition;
+        // Make sure that the retrieved dimension is of category 'community'
+        definition.category = "community";
+
         QBerDispatcher.dispatch({
           actionType: DimensionConstants.SDMX_DIMENSION_ASSIGN,
-          dimension_type: 'community',
-          dimension_details: dimension_details
+          definition: definition
         });
-        if (dimension_details.codelist) {
-          QBerDispatcher.dispatch({
-            actionType: MessageConstants.INFO,
-            message: "Retrieving codes for "+ dimension_details.codelist.uri
-          });
-
-          QBerAPI.retrieveCodes({
-            codelist_uri: dimension_details.codelist.uri,
-            success: function(codes){
-              QBerDispatcher.dispatch({
-                actionType: MessageConstants.SUCCESS,
-                message: "Retrieved codes for "+ dimension_details.codelist.uri
-              });
-              QBerDispatcher.dispatch({
-                actionType: DimensionConstants.SDMX_CODES_ASSIGN,
-                codes: codes
-              });
-            },
-            error: function(codelist_uri){
-              QBerDispatcher.dispatch({
-                actionType: MessageConstants.ERROR,
-                message: "Could not retrieve codes for "+ dimension_details.codelist.uri
-              });
-            }
-          });
-
+        if (definition.codelist) {
+          DatasetActions.updateScheme(definition.codelist);
+          DatasetActions.updateConcepts(definition.codelist.uri);
         }
 
       },
-      error: function(dimension){
+      error: function(response){
         QBerDispatcher.dispatch({
           actionType: MessageConstants.ERROR,
-          message: "Could not retrieve dimension "+ dimension
-        });
-
-        // Dispatch an 'empty' dimension_details object
-        var dimension_details = {'uri': dimension};
-        QBerDispatcher.dispatch({
-          actionType: DimensionConstants.SDMX_DIMENSION_ASSIGN,
-          dimension_details: dimension_details
+          message: response.message
         });
       }
     });

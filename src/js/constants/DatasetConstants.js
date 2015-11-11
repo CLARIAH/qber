@@ -7,5 +7,7 @@ module.exports = keyMirror({
   DATASET_DIMENSION_RETRIEVED: null,
   DIMENSIONS_INIT: null,
   SCHEMES_INIT: null,
+  SCHEME_UPDATE: null,
+  CONCEPTS_UPDATE: null,
   REGISTER_USER: null,
 });
