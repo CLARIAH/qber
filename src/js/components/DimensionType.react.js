@@ -11,7 +11,7 @@ var DimensionType = React.createClass({
     doBuildDimension: ReactPropTypes.object.isRequired,
     doBuildIdentifier: ReactPropTypes.object.isRequired,
     doBuildMeasurement: ReactPropTypes.object.isRequired,
-    type: ReactPropTypes.string.isRequired
+    category: ReactPropTypes.string.isRequired
   },
 
   getInitialState: function() {
@@ -28,27 +28,27 @@ var DimensionType = React.createClass({
 
     var options;
     if (this.state.visible) {
-      console.log(this.props.type);
-      var community_active = (this.props.type == 'community') ? 'active': '';
+      console.log(this.props.category);
+      var community_active = (this.props.category == 'community') ? 'active': '';
       var community = <li role="presentation"
                           className={community_active}>
                         <a href="#" onClick={this.props.doSelectDimension}>Community</a>
                       </li>;
 
-      var coded_active = (this.props.type == 'coded') ? 'active': '';
+      var coded_active = (this.props.category == 'coded') ? 'active': '';
       console.log(coded_active);
       var coded = <li role="presentation"
                       className={coded_active}>
                     <a href="#" onClick={this.props.doBuildDimension}>Coded</a>
                   </li>;
 
-      var identifier_active = (this.props.type == 'identifier') ? 'active': '';
+      var identifier_active = (this.props.category == 'identifier') ? 'active': '';
       var identifier = <li role="presentation"
                            className={identifier_active}>
                           <a href="#" onClick={this.props.doBuildIdentifier}>Identifier</a>
                         </li>;
 
-      var other_active = (this.props.type == 'other') ? 'active': '';
+      var other_active = (this.props.category == 'other') ? 'active': '';
       var other = <li role="presentation"
                       className={other_active}>
                     <a href="#" onClick={this.props.doBuildOther}>Other</a>
@@ -68,7 +68,7 @@ var DimensionType = React.createClass({
         <div className="panel panel-default">
           <div className="panel-heading">
             <h5 className="panel-title" onClick={this._onToggle} aria-expanded={this.state.visible}>
-              Variable Type
+              Variable Category
               <Caret visible={this.state.visible}/>
             </h5>
           </div>

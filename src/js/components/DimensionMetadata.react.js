@@ -7,7 +7,6 @@ var DimensionMetadata = React.createClass({
 
   // This React class only works if a list of 'dimensions' is passed through its properties.
   propTypes: {
-    dimension: ReactPropTypes.object.isRequired,
     variable: ReactPropTypes.string.isRequired,
     doUpdate: ReactPropTypes.object.isRequired
   },
@@ -25,38 +24,40 @@ var DimensionMetadata = React.createClass({
   render: function() {
     // This section should be shown by default
     // and shown when we do have variables in our dataset
-    // if (this.props.dimension === undefined) {
+    // if (this.props.variable === undefined) {
     //   return null;
     // }
 
     var form;
+    console.log("Metadata");
+    console.log(this.props.variable);
     if (this.state.visible) {
       var label;
       var description;
       var uri;
       var codelist_uri
-      if (this.props.dimension !== undefined){
-        label = this.props.dimension.label ? this.props.dimension.label : '';
-        description = this.props.dimension.description ? this.props.dimension.description : '';
-        uri = this.props.dimension.uri;
+      if (this.props.variable.label !== undefined){
+        label = this.props.variable.label ? this.props.variable.label : '';
+        description = this.props.variable.description ? this.props.variable.description : '';
+        uri = this.props.variable.uri;
       } else {
-        label = this.props.variable;
+        label = this.props.variable.label;
         description = '';
         uri = '';
       }
 
       // The variable that will hold the JSX for the codelist, if present.
       var codelist_row;
-      if (this.props.dimension && this.props.dimension.codelist){
+      if (this.props.variable && this.props.variable.codelist){
         codelist_row =  <div className="form-group">
                           <label for="inputCodelist" className="col-sm-2 control-label">Code list</label>
                           <div className="col-sm-8">
                             <input type="text"
                                    className="form-control"
-                                   key={"codelist"+this.props.variable}
+                                   key={"codelist"+this.props.variable.label}
                                    id="inputCodelist"
                                    placeholder="Codelist"
-                                   value={this.props.dimension.codelist.uri}
+                                   value={this.props.variable.codelist.uri}
                                    readOnly>
                               </input>
                           </div>
@@ -90,7 +91,7 @@ var DimensionMetadata = React.createClass({
                   <div className="col-sm-10">
                     <input type="text"
                            className="form-control"
-                           key={"name"+this.props.variable}
+                           key={"name"+this.props.variable.label}
                            id="inputName"
                            placeholder="Name"
                            value={label}
@@ -102,7 +103,7 @@ var DimensionMetadata = React.createClass({
                   <div className="col-sm-10">
                     <textarea type="text"
                               className="form-control"
-                              key={"desc"+this.props.variable}
+                              key={"desc"+this.props.variable.label}
                               id="inputDescription"
                               placeholder="Description"
                               value={description}
@@ -127,7 +128,7 @@ var DimensionMetadata = React.createClass({
         </div>
         <QBerModal  visible={this.state.modal_visible}
                     title="Select a community provided codelist"
-                    value={this.props.variable}
+                    value={this.props.variable.label}
                     selection={this.state.dimension !== undefined ? this.state.dimension.uri: undefined}
                     options={this.props.codelists}
                     doSelect={this._handleSelected}
@@ -147,7 +148,7 @@ var DimensionMetadata = React.createClass({
 
   _onLabelChange: function(e){
     var value = e.target.value;
-    var new_dimension = this.props.dimension;
+    var new_dimension = this.props.variable;
     new_dimension.label = value;
     // Propagate the new dimension details upward
     this.props.doUpdate(new_dimension);
@@ -155,7 +156,7 @@ var DimensionMetadata = React.createClass({
 
   _onDescriptionChange: function(e){
     var value = e.target.value;
-    var new_dimension = this.props.dimension;
+    var new_dimension = this.props.variable;
     new_dimension.description = value;
     // Propagate the new dimension details upward
     this.props.doUpdate(new_dimension);

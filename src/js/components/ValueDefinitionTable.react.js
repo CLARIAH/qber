@@ -16,7 +16,7 @@ var ValueDefinitionTable = React.createClass({
 
   // This React class only works if a list of 'values' is passed through its properties.
   propTypes: {
-    values: ReactPropTypes.array.isRequired
+    variable: ReactPropTypes.object.isRequired
   },
 
   getInitialState: function() {
@@ -37,7 +37,7 @@ var ValueDefinitionTable = React.createClass({
 
     // This section should be hidden by default
     // and shown when we do have variables in our dataset
-    if (this.props.values === undefined || this.props.values.length < 1) {
+    if (this.props.variable.values === undefined || this.props.variable.values.length < 1) {
       return null;
     }
 
@@ -45,9 +45,9 @@ var ValueDefinitionTable = React.createClass({
 
     var table;
     if (this.state.visible) {
-      var values = this.props.values;
+      var values = this.props.variable.values;
       var values_rows = [];
-      var button_disabled = (this.props.dimension && this.props.dimension.codelist) ? false: true;
+      var button_disabled = (this.props.variable && this.props.variable.codelist) ? false: true;
 
       for (var key in values) {
         var mapped_uri = values[key].uri;
@@ -84,16 +84,16 @@ var ValueDefinitionTable = React.createClass({
       }
 
       var modal;
-      if (this.props.dimension && this.props.dimension.codelist){
-        console.log(this.props.dimension.codelist);
+      if (this.props.variable && this.props.variable.codelist){
+        console.log(this.props.variable.codelist);
         var title = <span>Select corresponding code for <strong>{this.state.selected_code_value}</strong></span>;
 
-        var sorted_values = _.sortBy(this.props.dimension.codelist.values,'label');
+        var sorted_values = _.sortBy(this.props.variable.codelist.values,'label');
         // Codelist present
         modal = <QBerModal visible={this.state.modal_visible}
                    title={title}
                    value={this.state.selected_code_value}
-                   selection={(this.state.selected_code_value !== undefined && this.props.dimension.codelist.mappings !== undefined) ? this.props.dimension.codelist.mappings[this.state.selected_code_value] : undefined}
+                   selection={(this.state.selected_code_value !== undefined && this.props.variable.codelist.mappings !== undefined) ? this.props.variable.codelist.mappings[this.state.selected_code_value] : undefined}
                    options={sorted_values}
                    doSelect={this._handleSelected}
                    doClose={this._handleToggleModal} />;

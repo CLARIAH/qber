@@ -14,9 +14,7 @@ var ValueDefinitionTable = require('./ValueDefinitionTable.react');
  */
 function getDimensionDefinitionPanelState() {
   return {
-    'dimensions': DimensionStore.getVariables(),
     'variable': DimensionStore.getVariable(),
-    'dimension': DimensionStore.getDimension(),
     'modal_visible': DimensionStore.getModalVisible(),
   };
 }
@@ -26,23 +24,14 @@ var DimensionDefinitionPanel = React.createClass({
 
   // This React class only works if a list of 'values' and the name of the dataset is passed through its properties.
   propTypes: {
-    values: ReactPropTypes.object.isRequired,
-    datasetName: ReactPropTypes.string.isRequired
+    datasetName: ReactPropTypes.string.isRequired,
+    schemes: ReactPropTypes.object.isRequired,
+    dimensions: ReactPropTypes.object.isRequired
   },
 
   getInitialState: function() {
     // Get the state from the store
-    var state = getDimensionDefinitionPanelState();
-
-    // Check if there's already a dimension defined
-    if (state.dimension === undefined) {
-      // If not, build it as if it is a 'coded' dimension.
-      DimensionActions.buildDimension(this.props.values, this.props.datasetName);
-      // Get the new state
-      state = getDimensionDefinitionPanelState();
-    }
-    // Return the initial state
-    return state;
+    return getDimensionDefinitionPanelState();
   },
 
   componentDidMount: function() {
@@ -65,32 +54,30 @@ var DimensionDefinitionPanel = React.createClass({
 
     // TODO: Want this to work the first time the variable is shown
     // TODO: Make this more elegant as this really should not occur in the render function.
-    if (this.state.dimension === undefined) {
-      DimensionActions.buildDimension(this.props.values, this.props.datasetName);
-    }
+    // if (this.state.dimension === undefined) {
+    //   DimensionActions.buildDimension(this.props.values, this.props.datasetName);
+    // }
 
     return (
       <section id="sdmx_dimension_panel">
-        <DimensionType type={this.state.dimension === undefined ? "coded" : this.state.dimension.type}
-                       key={"dt"+ this.state.variable}
+        <DimensionType category={this.state.variable.category}
+                       key={"dt"+ this.state.variable.label}
                        doSelectDimension={this._handleShowDimensions}
                        doBuildDimension={this._handleBuildDimension}
                        doBuildIdentifier={this._handleBuildIdentifier}
                        doBuildMeasurement={this._handleBuildMeasurement}/>
         <DimensionMetadata variable={this.state.variable}
-                           key={"dm"+ this.state.variable}
-                           dimension={this.state.dimension}
+                           key={"dm"+ this.state.variable.label}
                            doUpdate={this._handleUpdate}/>
         <QBerModal  visible={this.state.modal_visible}
                     title="Select a community provided variable name"
-                    value={this.state.variable}
-                    selection={this.state.dimension !== undefined ? this.state.dimension.uri: undefined}
-                    options={this.state.dimensions}
+                    value={this.state.variable.label}
+                    selection={this.state.variable.uri}
+                    options={this.props.dimensions}
                     doSelect={this._handleSelected}
                     doClose={this._handleHideDimensions} />
-        <ValueDefinitionTable values={this.props.values}
-                    key={"vdt"+ this.state.variable}
-                    dimension={this.state.dimension}
+        <ValueDefinitionTable variable={this.state.variable}
+                    key={"vdt"+ this.state.variable.label}
                     doMapping={this._handleMapping} />
       </section>
     );
