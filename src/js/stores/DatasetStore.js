@@ -4,6 +4,7 @@ var DatasetConstants = require('../constants/DatasetConstants');
 var MessageStore = require('./MessageStore');
 var BrowserStore = require('./BrowserStore');
 var assign = require('object-assign');
+var _ = require('lodash');
 
 var CHANGE_EVENT = 'change';
 
@@ -20,7 +21,7 @@ var _user;
  * @param  {object} dataset The content of the DATASET
  */
 function initialize(dataset) {
-  console.log("Initializing DatasetStore");
+  console.log("Initializing DatasetStore with dataset");
   console.log(dataset);
   _dataset = dataset;
 }
@@ -48,6 +49,40 @@ function setDimensions(dimensions){
  */
 function setSchemes(schemes){
   _schemes = schemes;
+}
+
+/**
+ * Add a potentially new concept scheme
+ * @param {object} scheme The URI and label of the concept scheme
+ */
+function updateScheme(scheme){
+  var index = _.indexOf(_schemes, _.find(_schemes, {uri: scheme.uri}));
+
+  if (index > -1){
+    _schemes.push(scheme);
+  } else {
+    console.log("Scheme "+uri+" is already known!");
+  }
+}
+
+
+/**
+ * Assign a list of concepts to a concept scheme.
+ * @param {string} uri The uri of the concept scheme
+ * @param {array} concepts The list of concepts
+ */
+function assignConcepts(uri, concepts){
+  var index = _.indexOf(_schemes, _.find(_schemes, {'uri': uri}));
+
+  if (index > -1){
+    var updated_scheme = _schemes[index];
+
+    updated_scheme.concepts = concepts;
+    _schemes.splice(index, 1, updated_scheme);
+    console.log(updated_scheme);
+  } else {
+    console.log("Scheme "+uri+" is unknown!");
+  }
 }
 
 
@@ -96,12 +131,12 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
    * Get the selected VARIABLE.
    * @return {string}
    */
-  getVariable: function() {
+  getSelectedVariable: function() {
     return _variable;
   },
 
   /**
-   * Get the dimensions.
+   * Get the community defined dimensions.
    * @return {array}
    */
   getDimensions: function() {
@@ -161,6 +196,7 @@ QBerDispatcher.register(function(action) {
       break;
     // We have retrieved a list of dimensions from the CSDH
     case DatasetConstants.DIMENSIONS_INIT:
+      console.log(action.dimensions);
       dimensions = action.dimensions;
       if (dimensions !== undefined) {
         setDimensions(dimensions);
@@ -169,9 +205,29 @@ QBerDispatcher.register(function(action) {
       break;
     // We have retrieved a list of concept schemes from the CSDH
     case DatasetConstants.SCHEMES_INIT:
+      console.log(action.schemes);
       schemes = action.schemes;
       if (schemes !== undefined) {
         setSchemes(schemes);
+        DatasetStore.emitChange();
+      }
+      break;
+    // We have retrieved a new concept scheme
+    case DatasetConstants.SCHEME_UPDATE:
+      console.log(action.scheme);
+      scheme = action.scheme;
+      if (scheme !== undefined) {
+        updateScheme(scheme);
+        DatasetStore.emitChange();
+      }
+      break;
+    // We have retrieved a list of concepts for a scheme
+    case DatasetConstants.CONCEPTS_UPDATE:
+      console.log(action.concepts);
+      uri = action.uri;
+      concepts = action.concepts;
+      if (concepts !== undefined && uri !== undefined) {
+        assignConcepts(uri, concepts);
         DatasetStore.emitChange();
       }
       break;
