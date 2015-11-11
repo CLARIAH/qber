@@ -3,6 +3,7 @@ var EventEmitter = require('events').EventEmitter;
 var DatasetConstants = require('../constants/DatasetConstants');
 var DimensionConstants = require('../constants/DimensionConstants');
 var assign = require('object-assign');
+var _ = require('lodash');
 
 var CHANGE_EVENT = 'change';
 
@@ -48,101 +49,39 @@ function initialize(variables) {
  * Assign the selected dimension to the currently selected variable
  * @param  {object} dimension The selected dimension details
  */
- function assignDimension(type, dimension) {
-   console.log('Assigning dimension');
-   console.log(dimension);
+ function assignDimension(definition) {
+   console.log('Assigning dimension ' + definition.uri);
+   console.log(definition);
+
+   // Retrieve the current variable definition
+   var variable_definition = _variables[_variable];
+
+   console.log(variable_definition);
+
+   _variables[_variable] = _.assign(variable_definition, definition);
    // First we clear out any existing information about this variable
    // (e.g. previously added mappings)
-   _mappings[_variable] = {};
-   // Assign the dimension to the variable.
-   _mappings[_variable].dimension = dimension;
-   _mappings[_variable].dimension.type = type;
+  //  _mappings[_variable] = {};
+  //  // Assign the dimension to the variable.
+  //  _mappings[_variable].dimension = dimension;
+  //  _mappings[_variable].dimension.type = type;
 }
-/**
- * Generate a dimension from the variable, its codes, and the name of the datasset
- * @param  {type} string The type for this variable (one of coded, identifier, )
- * @param  {object} values The codes for this variable
- * @param  {string} datasetName The name of the current dataset
- */
-function buildDimension(type, values, datasetName){
-  var URI_BASE = "http://data.socialhistory.org/resource/";
 
-  // A simple URI based on the variable name (probably not valid)
-  var uri = URI_BASE + datasetName + '/dimension/' + _variable;
-  var label = _variable;
-  var description = "The dimension '" +_variable + "' as taken from the '" + datasetName + "' dataset";
-  // var type = "http://purl.org/linked-data/cube#DimensionProperty";
 
-  var codelist_uri = URI_BASE + datasetName + '/codelist/' + _variable;
-  var codelist_label = 'Code list for ' + _variable;
-  var codelist = [];
-
-  for (var key in values){
-   var code_label = values[key].id;
-   var code_uri = URI_BASE + datasetName + '/code/' + values[key].id;
-
-   codelist.push({
-     uri: code_uri,
-     label: code_label
-   });
-  }
-
-  var dimension = {
-    uri: uri,
-    label: label,
-    description: description,
-    codelist: {
-      uri: codelist_uri,
-      label: codelist_label,
-      codes: codelist,
-      mappings: {}
-    }
-  };
-
-  assignDimension(type, dimension);
-
- }
-
-/**
- * Assign the retrieved codes to the currently selected dimension
- * @param  {object} codes The retrieved codes
- */
-function assignCodes(codes) {
-    console.log('Assigning codes');
-    console.log(codes);
-    // First we clear out any existing information about this codelist
-    // (e.g. previously added mappings)
-    _mappings[_variable].dimension.codelist.codes = [];
-    // Assign the codes to the codelist.
-    _mappings[_variable].dimension.codelist.codes = codes;
-    // Make sure that the mappings dictionary is initialized (not the case with community codes)
-    if(_mappings[_variable].dimension.codelist.mappings === undefined) {
-      _mappings[_variable].dimension.codelist.mappings = {};
-    }
- }
 
 /**
 * Assign the retrieved codes to the currently selected dimension
 * @param  {object} codes The retrieved codes
 */
-function assignMapping(value, uri) {
+function assignMapping(value, code_uri) {
    console.log('Assigning code uri to code value');
-   console.log(value + " > " + uri);
+   console.log(value + " > " + code_uri);
 
-   // Assign the code to the value.
-   _mappings[_variable].dimension.codelist.mappings[value] = uri;
+   // Assign the selected concept uri to the value.
+   _variables[_variable].values[value].uri = code_uri;
 }
 
 
-
-/**
- * Build a dimension from the current variable name and codes
- * @param  {string} iri The new IRI
- */
- function setIRI(iri) {
-   console.log('IRI set to '+ iri);
-   _mappings[_variable].dimension.uri = iri;
-}
 
 
 var DimensionStore = assign({}, EventEmitter.prototype, {
@@ -155,28 +94,12 @@ var DimensionStore = assign({}, EventEmitter.prototype, {
     return _variables;
   },
 
-  /**
-   * Get the list of variables.
-   * @return {object}
-   */
-  getMappings: function() {
-    return _mappings;
-  },
-
 
   /**
-   * Get the currently selected variable
-   * @return {string}
+   * Get the definition of the currently selected variable
+   * @return {object} The variable definition
    */
   getVariable: function() {
-    return _variable;
-  },
-
-  /**
-   * Get the dimension assigned to the currently selected variable
-   * @return {object} The dimension details
-   */
-  getDimension: function() {
     if (_variables[_variable] !== undefined){
       return _variables[_variable];
     } else {
@@ -232,9 +155,9 @@ QBerDispatcher.register(function(action) {
       break;
     // Once a dimension has been selected in the modal, or a value has changed in the dimension metadata panel
     case DimensionConstants.SDMX_DIMENSION_ASSIGN:
-      var dimension = action.dimension_details;
-      var assign_dimension_type = action.dimension_type;
-      assignDimension(assign_dimension_type, dimension);
+      console.log(action);
+      var definition = action.definition;
+      assignDimension(definition);
       DimensionStore.emitChange();
       break;
     // We've obtained a safe IRI based on the dataset and variable name
