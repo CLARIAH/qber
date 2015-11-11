@@ -33,7 +33,7 @@ function getDatasetState() {
   return {
     dataset: DatasetStore.get(),
     variable_names: DatasetStore.getVariableNames(),
-    variable: DatasetStore.getVariable(),
+    variable: DatasetStore.getSelectedVariable(),
     dimensions: DatasetStore.getDimensions(),
     schemes: DatasetStore.getSchemes(),
     user: DatasetStore.getUser()
