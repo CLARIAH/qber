@@ -111,6 +111,14 @@ var PillSelector = React.createClass({
     }
 
 
+    // If we don't have any items to show, then we should show something else
+    var body;
+    if (this.visibleItems.length > 0){
+      body = <ul className="nav nav-pills nav-stacked" role="tablist">
+               {items}
+             </ul>;
+    } else {
+      body = <div className="alert alert-warning" role="alert"><strong>Warning:</strong> no matching items for {search}</div>;
     }
 
     var input = <input className="form-control"
@@ -125,9 +133,7 @@ var PillSelector = React.createClass({
     return (
         <section>
           { input }
-          <ul className="nav nav-pills nav-stacked" role="tablist">
-            {items}
-          </ul>
+          { body }
         </section>
     );
   },
