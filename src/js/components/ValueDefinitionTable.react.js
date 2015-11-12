@@ -16,7 +16,8 @@ var ValueDefinitionTable = React.createClass({
 
   // This React class only works if a list of 'values' is passed through its properties.
   propTypes: {
-    variable: ReactPropTypes.object.isRequired
+    variable: ReactPropTypes.object.isRequired,
+    schemes: ReactPropTypes.object.isRequired
   },
 
   getInitialState: function() {
@@ -41,13 +42,13 @@ var ValueDefinitionTable = React.createClass({
       return null;
     }
 
-
-
     var table;
     if (this.state.visible) {
       var values = this.props.variable.values;
       var values_rows = [];
-      var button_disabled = (this.props.variable && this.props.variable.codelist) ? false: true;
+
+      // The button is enabled if there's a variable, and the variable is of category community or coded
+      var button_disabled = (this.props.variable && (this.props.variable.category == 'community' || this.props.variable.category == 'coded' )) ? false: true;
 
       for (var key in values) {
         var mapped_uri = values[key].uri;
@@ -84,11 +85,22 @@ var ValueDefinitionTable = React.createClass({
       }
 
       var modal;
-      if (this.props.variable && this.props.variable.codelist){
-        console.log(this.props.variable.codelist);
+      // We only prepare the modal if we have a community or coded variable
+      if (this.props.variable && (this.props.variable.category == 'community' || this.props.variable.category == 'coded' )){
         var title = <span>Select corresponding code for <strong>{this.state.selected_code_value}</strong></span>;
 
-        var sorted_values = _.sortBy(this.props.variable.codelist.values,'label');
+        var scheme = _.find(this.props.schemes, {'uri': this.props.variable.codelist.uri});
+
+        var sorted_values;
+        // If we have a stored scheme, sort the concepts by label
+        if(scheme !== undefined) {
+          console.log(scheme);
+          sorted_values = _.sortBy(scheme.concepts,'label');
+        } else {
+          // Otherwise, we simply sort the values of the variable (i.e. the defaults)
+          sorted_values = _.sortBy(this.props.variable.values,'label');
+        }
+
         // Codelist present
         modal = <QBerModal visible={this.state.modal_visible}
                    title={title}
@@ -97,6 +109,7 @@ var ValueDefinitionTable = React.createClass({
                    options={sorted_values}
                    doSelect={this._handleSelected}
                    doClose={this._handleToggleModal} />;
+
       }
 
       table = <div style={{overflow: 'scroll', maxHeight: '300px'}}>
@@ -134,14 +147,15 @@ var ValueDefinitionTable = React.createClass({
 
   _handleSelected: function(code_uri){
     // The code uri is the selected uri in the QBerModal PillSelector.
+    console.log("Selected new code:");
     console.log(code_uri);
     // values is the list of code values for this variable
-    var values = this.props.values;
+    var values = this.props.variable.values;
     // The selected code value, is the currently visible code value
     var selected_code_value = this.state.selected_code_value;
 
     // Get the index of the selected code value, and increment it by 1 (the next code value)
-    var next_index = _.findIndex(values, 'id', this.state.selected_code_value) + 1;
+    var next_index = _.findIndex(values, 'label', this.state.selected_code_value) + 1;
 
     // Set index to 0 if the resulting index is outside the values array (looping)
     if (next_index == values.length){

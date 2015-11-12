@@ -62,7 +62,7 @@ var DimensionDefinitionPanel = React.createClass({
       <section id="sdmx_dimension_panel">
         <DimensionType category={this.state.variable.category}
                        key={"dt"+ this.state.variable.label}
-                       doSelectDimension={this._handleShowDimensions}
+                       doSelectDimension={this._handleSelectDimension}
                        doBuildDimension={this._handleBuildDimension}
                        doBuildIdentifier={this._handleBuildIdentifier}
                        doBuildMeasurement={this._handleBuildMeasurement}/>
@@ -77,8 +77,9 @@ var DimensionDefinitionPanel = React.createClass({
                     doSelect={this._handleSelected}
                     doClose={this._handleHideDimensions} />
         <ValueDefinitionTable variable={this.state.variable}
-                    key={"vdt"+ this.state.variable.label}
-                    doMapping={this._handleMapping} />
+                              schemes={this.props.schemes}
+                              key={"vdt"+ this.state.variable.label}
+                              doMapping={this._handleMapping} />
       </section>
     );
   },
@@ -86,7 +87,7 @@ var DimensionDefinitionPanel = React.createClass({
   /**
    * Event handler for the button that shows the Dimensions modal for community-provided dimension definitions
    */
-  _handleShowDimensions: function(){
+  _handleSelectDimension: function(){
     DimensionActions.showDimensions();
   },
 

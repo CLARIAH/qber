@@ -12,7 +12,7 @@ var _variables = [];
 // The visibility status of the SDMX Dimension Modal
 var _modal_visible = false;
 // The selected variable
-var _variable;
+var _variable_name;
 
 /**
  * Initialize the list of variables.
@@ -40,9 +40,9 @@ function initialize(variables) {
  * Set the currently selected variable (for mappings).
  * @param  {string} variable The selected variable
  */
- function setVariable(variable) {
-   console.log('Variable set to '+ variable);
-   _variable = variable;
+ function setVariable(variable_name) {
+   console.log('Variable set to '+ variable_name);
+   _variable_name = variable_name;
 }
 
 /**
@@ -54,17 +54,17 @@ function initialize(variables) {
    console.log(definition);
 
    // Retrieve the current variable definition
-   var variable_definition = _variables[_variable];
+   var variable_definition = _variables[_variable_name];
 
    console.log(variable_definition);
 
-   _variables[_variable] = _.assign(variable_definition, definition);
+   _variables[_variable_name] = _.assign(variable_definition, definition);
    // First we clear out any existing information about this variable
    // (e.g. previously added mappings)
-  //  _mappings[_variable] = {};
+  //  _mappings[_variable_name] = {};
   //  // Assign the dimension to the variable.
-  //  _mappings[_variable].dimension = dimension;
-  //  _mappings[_variable].dimension.type = type;
+  //  _mappings[_variable_name].dimension = dimension;
+  //  _mappings[_variable_name].dimension.type = type;
 }
 
 
@@ -76,9 +76,12 @@ function initialize(variables) {
 function assignMapping(value, code_uri) {
    console.log('Assigning code uri to code value');
    console.log(value + " > " + code_uri);
-
+   console.log(_variables[_variable_name].values);
+   var values = _variables[_variable_name].values;
+   var index = _.indexOf(values, _.find(values,{label: value}));
+   console.log(index);
    // Assign the selected concept uri to the value.
-   _variables[_variable].values[value].uri = code_uri;
+   _variables[_variable_name].values[index].uri = code_uri;
 }
 
 
@@ -100,8 +103,8 @@ var DimensionStore = assign({}, EventEmitter.prototype, {
    * @return {object} The variable definition
    */
   getVariable: function() {
-    if (_variables[_variable] !== undefined){
-      return _variables[_variable];
+    if (_variables[_variable_name] !== undefined){
+      return _variables[_variable_name];
     } else {
       return undefined;
     }

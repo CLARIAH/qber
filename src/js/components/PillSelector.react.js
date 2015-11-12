@@ -98,13 +98,17 @@ var PillSelector = React.createClass({
         if (visible !== 'none'){
           this.visibleItems.push(options[key]);
         }
+      } else {
+        this.visibleItems.push(options[key]);
       }
+
       items.push(
         <Pill key={key} style={style}
                         option={options[key]}
                         isSelected={options[key] == selected}
                         onClicked={this._handleClick}/>
       );
+    }
 
 
     }
