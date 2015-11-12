@@ -67,8 +67,10 @@ var DimensionDefinitionPanel = React.createClass({
                        doBuildIdentifier={this._handleBuildIdentifier}
                        doBuildMeasurement={this._handleBuildMeasurement}/>
         <DimensionMetadata variable={this.state.variable}
+                           schemes={this.props.schemes}
                            key={"dm"+ this.state.variable.label}
-                           doUpdate={this._handleUpdate}/>
+                           doUpdate={this._handleMetadataUpdate}
+                           doSchemeUpdate={this._handleSchemeUpdate}/>
         <QBerModal  visible={this.state.modal_visible}
                     title="Select a community provided variable name"
                     value={this.state.variable.label}
@@ -126,8 +128,12 @@ var DimensionDefinitionPanel = React.createClass({
     DimensionActions.chooseDimension(dimension_uri);
   },
 
-  _handleUpdate: function(dimension) {
+  _handleMetadataUpdate: function(dimension) {
     DimensionActions.updateDimension(dimension);
+  },
+
+  _handleSchemeUpdate: function(scheme) {
+    DimensionActions.chooseScheme(scheme);
   },
 
   _handleMapping: function(code_value, code_uri) {

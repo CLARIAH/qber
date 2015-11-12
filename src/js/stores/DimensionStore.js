@@ -59,12 +59,24 @@ function initialize(variables) {
    console.log(variable_definition);
 
    _variables[_variable_name] = _.assign(variable_definition, definition);
-   // First we clear out any existing information about this variable
-   // (e.g. previously added mappings)
-  //  _mappings[_variable_name] = {};
-  //  // Assign the dimension to the variable.
-  //  _mappings[_variable_name].dimension = dimension;
-  //  _mappings[_variable_name].dimension.type = type;
+}
+
+/**
+ * Assign the selected scheme to the currently selected variable
+ * @param  {object} scheme The selected scheme details
+ */
+ function assignScheme(scheme) {
+   console.log('Assigning scheme ' + scheme.uri);
+   console.log(scheme);
+
+   // Get the scheme metadata (excluding any existing codes)
+   var basic_scheme = _.pick(scheme, 'uri', 'label');
+   console.log(basic_scheme);
+   // Retrieve the current variable definition
+   var variable_scheme = _variables[_variable_name].codelist;
+   console.log(variable_scheme);
+   _variables[_variable_name].codelist = _.assign(variable_scheme, basic_scheme);
+   console.log(_variables[_variable_name].codelist);
 }
 
 
@@ -172,9 +184,9 @@ QBerDispatcher.register(function(action) {
       DimensionStore.emitChange();
       break;
     // The dimension details have been updated (codes)
-    case DimensionConstants.SDMX_CODES_ASSIGN:
-      var codes = action.codes;
-      assignCodes(codes);
+    case DimensionConstants.SDMX_SCHEME_ASSIGN:
+      var scheme = action.scheme;
+      assignScheme(scheme);
       DimensionStore.emitChange();
       break;
     // The dimension panel should be made visible

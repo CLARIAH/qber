@@ -130,6 +130,20 @@ var DimensionActions = {
     });
   },
 
+
+  /**
+   * The user has specified that this variable should use a specific coding scheme
+   */
+  chooseScheme: function(scheme){
+    // Retrieve the list of concepts belonging to this scheme
+    DatasetActions.updateConcepts(scheme.uri);
+
+    QBerDispatcher.dispatch({
+      actionType: DimensionConstants.SDMX_SCHEME_ASSIGN,
+      scheme: scheme
+    });
+  },
+
   /**
    * @param {string} unsafe_iri
    */

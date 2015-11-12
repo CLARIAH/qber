@@ -2,13 +2,16 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var QBerModal = require('./QBerModal.react');
 var Caret = require('./Caret.react');
+var _ = require('lodash');
 
 var DimensionMetadata = React.createClass({
 
   // This React class only works if a list of 'dimensions' is passed through its properties.
   propTypes: {
-    variable: ReactPropTypes.string.isRequired,
-    doUpdate: ReactPropTypes.object.isRequired
+    variable: ReactPropTypes.object.isRequired,
+    schemes: ReactPropTypes.array.isRequired,
+    doUpdate: ReactPropTypes.func.isRequired,
+    doSchemeUpdate: ReactPropTypes.func.isRequired
   },
 
   getInitialState: function() {
@@ -66,7 +69,7 @@ var DimensionMetadata = React.createClass({
                                    className="form-control btn btn-default"
                                    id="inputCommunityCodeList"
                                    value="Community"
-                                   onClick={this._onShowCodeLists}></input>
+                                   onClick={this._handleShowSchemes}></input>
                           </div>
                         </div>;
       }
@@ -129,10 +132,10 @@ var DimensionMetadata = React.createClass({
         <QBerModal  visible={this.state.modal_visible}
                     title="Select a community provided codelist"
                     value={this.props.variable.label}
-                    selection={this.state.dimension !== undefined ? this.state.dimension.uri: undefined}
-                    options={this.props.codelists}
-                    doSelect={this._handleSelected}
-                    doClose={this._handleHideDimensions} />
+                    selection={this.props.variable.codelist.uri}
+                    options={this.props.schemes}
+                    doSelect={this._handleSelectScheme}
+                    doClose={this._handleHideSchemes} />
       </section>
     );
   },
@@ -162,10 +165,26 @@ var DimensionMetadata = React.createClass({
     this.props.doUpdate(new_dimension);
   },
 
-  _onShowCodeLists: function(e){
+  _handleShowSchemes: function(e){
     var new_state = this.state;
     new_state.modal_visible = true;
     this.setState(new_state);
+  },
+
+  _handleHideSchemes: function(e){
+    var new_state = this.state;
+    new_state.modal_visible = false;
+    this.setState(new_state);
+  },
+
+  _handleSelectScheme: function(scheme_uri){
+    this._handleHideSchemes();
+    console.log("_handleSelectScheme");
+    console.log(scheme_uri);
+
+    var scheme = _.find(this.props.schemes, 'uri', scheme_uri);
+    console.log(scheme);
+    this.props.doSchemeUpdate(scheme);
   }
 
 });
