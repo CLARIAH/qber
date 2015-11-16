@@ -19,6 +19,7 @@ var DimensionActions = {
       message: 'Retrieving details for '+dimension
     });
 
+    // Hide the modal dialog
     this.hideDimensions();
 
     QBerAPI.retrieveDimension({
@@ -30,13 +31,11 @@ var DimensionActions = {
         });
 
         var definition = response.definition;
-        // Make sure that the retrieved dimension is of category 'community'
-        definition.category = "community";
-
         QBerDispatcher.dispatch({
           actionType: DimensionConstants.SDMX_DIMENSION_ASSIGN,
           definition: definition
         });
+        
         if (definition.codelist) {
           DatasetActions.updateScheme(definition.codelist);
           DatasetActions.updateConcepts(definition.codelist.uri);
