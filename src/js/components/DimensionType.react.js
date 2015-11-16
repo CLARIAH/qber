@@ -7,10 +7,10 @@ var DimensionType = React.createClass({
 
   // This React class only works if a list of 'dimensions' is passed through its properties.
   propTypes: {
-    doSelectDimension: ReactPropTypes.object.isRequired,
-    doBuildCodedVariable: ReactPropTypes.object.isRequired,
-    doBuildIdentifier: ReactPropTypes.object.isRequired,
-    doBuildOther: ReactPropTypes.object.isRequired,
+    doSelectDimension: ReactPropTypes.func.isRequired,
+    doBuildCodedVariable: ReactPropTypes.func.isRequired,
+    doBuildIdentifier: ReactPropTypes.func.isRequired,
+    doBuildOther: ReactPropTypes.func.isRequired,
     category: ReactPropTypes.string.isRequired
   },
 

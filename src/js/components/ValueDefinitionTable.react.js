@@ -17,7 +17,7 @@ var ValueDefinitionTable = React.createClass({
   // This React class only works if a list of 'values' is passed through its properties.
   propTypes: {
     variable: ReactPropTypes.object.isRequired,
-    schemes: ReactPropTypes.object.isRequired
+    schemes: ReactPropTypes.array.isRequired
   },
 
   getInitialState: function() {

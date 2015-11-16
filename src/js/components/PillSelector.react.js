@@ -12,7 +12,9 @@ var PillSelector = React.createClass({
   // This React class only works if a list of 'options' is passed through its properties.
   propTypes: {
     options: ReactPropTypes.array.isRequired,
-    doSelect: ReactPropTypes.object.isRequired
+    doSelect: ReactPropTypes.object.isRequired,
+    value: ReactPropTypes.string.isRequired,
+    selected: ReactPropTypes.string.isRequired
   },
 
   visibleItems: [],

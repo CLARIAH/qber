@@ -9,8 +9,8 @@ var QBerModal = React.createClass({
   propTypes: {
     // Options should have a label and a uri (or file:/// path)
     options: ReactPropTypes.object.isRequired,
-    doSelect: ReactPropTypes.object.isRequired,
-    doClose: ReactPropTypes.object.isRequired,
+    doSelect: ReactPropTypes.func.isRequired,
+    doClose: ReactPropTypes.func.isRequired,
     visible: ReactPropTypes.bool.isRequired,
     value: ReactPropTypes.string.isRequired,
     selection: ReactPropTypes.string.isRequired

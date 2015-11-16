@@ -5,7 +5,7 @@ var Caret = React.createClass({
 
   // This React class only works if a 'visible' value is passed through its properties.
   propTypes: {
-    visible: ReactPropTypes.object.isRequired
+    visible: ReactPropTypes.bool.isRequired
   },
 
   /**
