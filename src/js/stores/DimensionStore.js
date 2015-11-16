@@ -49,7 +49,7 @@ function initialize(variables) {
  * Assign the selected dimension to the currently selected variable
  * @param  {object} dimension The selected dimension details
  */
- function assignDimension(definition) {
+function assignDimension(definition) {
    console.log('Assigning dimension ' + definition.uri);
    console.log(definition);
 
@@ -96,7 +96,77 @@ function initialize(variables) {
    console.log(_variables[_variable_name].codelist);
 }
 
+/**
+ * Turn the selected variable into an 'identifier'
+ */
+ function buildIdentifier() {
+   console.log('Building identifier ' + _variable_name);
 
+   // Setting category to 'identifier'
+   _variables[_variable_name].category = 'identifier';
+   _variables[_variable_name].type = 'http://purl.org/linked-data/cube#DimensionProperty';
+
+   resetToDefaults();
+}
+
+
+/**
+ * Turn the selected variable into a 'coded' variable
+ */
+ function buildCodedVariable() {
+   console.log('Building coded variable ' + _variable_name);
+
+   // Setting category to 'identifier'
+   _variables[_variable_name].category = 'coded';
+   _variables[_variable_name].type = 'http://purl.org/linked-data/cube#DimensionProperty';
+
+   resetToDefaults();
+}
+
+/**
+ * Turn the selected variable into a 'coded' variable
+ */
+ function buildOther() {
+   console.log('Building other (literal) variable ' + _variable_name);
+
+   // Setting category to 'other'
+   _variables[_variable_name].category = 'other';
+   _variables[_variable_name].type = 'http://purl.org/linked-data/cube#MeasureProperty';
+
+   resetToDefaults();
+}
+
+
+/**
+ * Reset all values for 'uri' to their defaults
+ */
+function resetToDefaults(){
+  // Replace all 'uri' attributes with the value for 'default'
+  // Replace all 'literal' attributes with the value for 'label'
+  for (var key in _variables[_variable_name].values){
+    _variables[_variable_name].values[key].uri = _variables[_variable_name].values[key].default;
+    _variables[_variable_name].values[key].literal = _variables[_variable_name].values[key].label;
+  }
+
+  // Reset the codelist uri and label to its default
+  // TODO: Check whether we should take this from the props.codelists array
+  _variables[_variable_name].codelist.uri = _variables[_variable_name].codelist.default;
+  _variables[_variable_name].codelist.label = "Code list for `" + _variable_name + "`";
+}
+
+
+/**
+ * Run a transformation function on the values
+ */
+function applyTransformFunction(func_body){
+  // Replace all 'literal' attributes with the value returned by the function, applied to 'label'
+
+  var f = new Function('v', func_body);
+
+  for (var key in _variables[_variable_name].values){
+    _variables[_variable_name].values[key].literal = f(_variables[_variable_name].values[key].label);
+  }
+}
 
 /**
 * Assign the retrieved codes to the currently selected dimension
@@ -192,12 +262,25 @@ QBerDispatcher.register(function(action) {
       assignDimension(definition);
       DimensionStore.emitChange();
       break;
-    // We've obtained a safe IRI based on the dataset and variable name
-    case DimensionConstants.SDMX_DIMENSION_BUILD:
-      var build_dimension_type = action.dimension_type;
-      var values = action.values;
-      var datasetName = action.datasetName;
-      buildDimension(build_dimension_type, values, datasetName);
+    // Revert the uri attributes in the values array to the default
+    case DimensionConstants.SDMX_BUILD_IDENTIFIER:
+      buildIdentifier();
+      DimensionStore.emitChange();
+      break;
+    // Set the dimension type to 'coded'
+    case DimensionConstants.SDMX_BUILD_CODED_VARIABLE:
+      buildCodedVariable();
+      DimensionStore.emitChange();
+      break;
+    // Set the dimension type to 'other'
+    case DimensionConstants.SDMX_BUILD_OTHER:
+      buildOther();
+      DimensionStore.emitChange();
+      break;
+    // Apply a transformation function to the values
+    case DimensionConstants.SDMX_APPLY_TRANSFORM:
+      var func = action.func;
+      applyTransformFunction(func);
       DimensionStore.emitChange();
       break;
     // The dimension details have been updated (codes)

@@ -8,9 +8,9 @@ var DimensionType = React.createClass({
   // This React class only works if a list of 'dimensions' is passed through its properties.
   propTypes: {
     doSelectDimension: ReactPropTypes.object.isRequired,
-    doBuildDimension: ReactPropTypes.object.isRequired,
+    doBuildCodedVariable: ReactPropTypes.object.isRequired,
     doBuildIdentifier: ReactPropTypes.object.isRequired,
-    doBuildMeasurement: ReactPropTypes.object.isRequired,
+    doBuildOther: ReactPropTypes.object.isRequired,
     category: ReactPropTypes.string.isRequired
   },
 
@@ -39,7 +39,7 @@ var DimensionType = React.createClass({
       coded_active += " btn btn-primary form-control";
       var coded = <a role="button"
                       className={coded_active}
-                      href="#" onClick={this.props.doBuildDimension}>Coded</a>;
+                      href="#" onClick={this.props.doBuildCodedVariable}>Coded</a>;
 
       var identifier_active = (this.props.category == 'identifier') ? 'active': '';
       identifier_active += " btn btn-primary form-control";

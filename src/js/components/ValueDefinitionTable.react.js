@@ -51,15 +51,34 @@ var ValueDefinitionTable = React.createClass({
       var button_disabled = (this.props.variable && (this.props.variable.category == 'community' || this.props.variable.category == 'coded' )) ? false: true;
 
       for (var key in values) {
-        var mapped_uri = values[key].uri;
-        var mapped_uri_icon;
-        if (mapped_uri){
-          mapped_uri_icon = <span className="glyphicon glyphicon-link"/>;
+
+        var mapping;
+        if(this.props.variable.category !== 'other'){
+          // If we're dealing with a coded or identity variable, we need to show the URI
+          var mapped_uri = values[key].uri;
+          var mapped_uri_icon;
+          if (mapped_uri){
+            mapped_uri_icon = <span className="glyphicon glyphicon-link"/>;
+          }
+          var browse_mapped_uri;
+          if (mapped_uri){
+            browse_mapped_uri = "http://data.clariah-sdh.eculture.labs.vu.nl/browse?uri="+encodeURIComponent(mapped_uri);
+          }
+
+          mapping = <div>
+                          {mapped_uri_icon}
+                          <a className='small' target="_blank" href={browse_mapped_uri}>
+                            {mapped_uri}
+                          </a>
+                        </div>;
+        } else {
+          // Otherwise, we show the 'literal' value for the variable
+          mapping = <div>
+                      <code>{values[key].literal}</code>
+                    </div>;
         }
-        var browse_mapped_uri;
-        if (mapped_uri){
-          browse_mapped_uri = "http://data.clariah-sdh.eculture.labs.vu.nl/browse?uri="+encodeURIComponent(mapped_uri);
-        }
+
+
         values_rows.push(<tr key={values[key].label}>
                           <td>
                             { values[key].label }
@@ -73,10 +92,7 @@ var ValueDefinitionTable = React.createClass({
                             </span>
                           </td>
                           <td width="100%">
-                            {mapped_uri_icon}
-                            <a className='small' target="_blank" href={browse_mapped_uri}>
-                              {mapped_uri}
-                            </a>
+                            { mapping }
                           </td>
                           <td>
                             <span className='badge pull-right'> { values[key].count }</span>

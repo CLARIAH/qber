@@ -63,14 +63,15 @@ var DimensionDefinitionPanel = React.createClass({
         <DimensionType category={this.state.variable.category}
                        key={"dt"+ this.state.variable.label}
                        doSelectDimension={this._handleSelectDimension}
-                       doBuildDimension={this._handleBuildDimension}
+                       doBuildCodedVariable={this._handleBuildCodedVariable}
                        doBuildIdentifier={this._handleBuildIdentifier}
-                       doBuildMeasurement={this._handleBuildMeasurement}/>
+                       doBuildOther={this._handleBuildOther}/>
         <DimensionMetadata variable={this.state.variable}
                            schemes={this.props.schemes}
                            key={"dm"+ this.state.variable.label}
                            doUpdate={this._handleMetadataUpdate}
-                           doSchemeUpdate={this._handleSchemeUpdate}/>
+                           doSchemeUpdate={this._handleSchemeUpdate}
+                           doApplyTransform={this._handleApplyTransformFunction}/>
         <QBerModal  visible={this.state.modal_visible}
                     title="Select a community provided variable name"
                     value={this.state.variable.label}
@@ -96,22 +97,23 @@ var DimensionDefinitionPanel = React.createClass({
   /**
    * Event handler for the button that generates a Dimension definition
    */
-  _handleBuildDimension: function(){
-    DimensionActions.buildDimension(this.props.values, this.props.datasetName);
+  _handleBuildCodedVariable: function(){
+    DimensionActions.buildCodedVariable();
   },
 
   /**
-   * Event handler for the button that generates a Dimension definition
+   * Event handler for the button that marks the variable as a non-coded dimension ('identifier')
    */
   _handleBuildIdentifier: function(){
-    DimensionActions.buildIdentifier(this.props.values, this.props.datasetName);
+    // Revert all uri attributes in the values array to their defaults.
+    DimensionActions.buildIdentifier();
   },
 
   /**
-   * Event handler for the button that generates a Dimension definition
+   * Event handler for the button that marks the variable as a 'measurement' (other)
    */
-  _handleBuildMeasurement: function(){
-    DimensionActions.buildMeasurement(this.props.values, this.props.datasetName);
+  _handleBuildOther: function(){
+    DimensionActions.buildOther();
   },
 
   /**
@@ -122,7 +124,7 @@ var DimensionDefinitionPanel = React.createClass({
   },
 
   /**
-   * Event handler for a selection in the Dimension modal
+   * Event handler for a selection in the Community Dimensions modal
    */
   _handleSelected: function(dimension_uri) {
     DimensionActions.chooseDimension(dimension_uri);
@@ -134,6 +136,10 @@ var DimensionDefinitionPanel = React.createClass({
 
   _handleSchemeUpdate: function(scheme) {
     DimensionActions.chooseScheme(scheme);
+  },
+
+  _handleApplyTransformFunction: function(func) {
+    DimensionActions.applyTransformFunction(func);
   },
 
   _handleMapping: function(code_value, code_uri) {

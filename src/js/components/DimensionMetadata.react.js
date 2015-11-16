@@ -11,13 +11,15 @@ var DimensionMetadata = React.createClass({
     variable: ReactPropTypes.object.isRequired,
     schemes: ReactPropTypes.array.isRequired,
     doUpdate: ReactPropTypes.func.isRequired,
-    doSchemeUpdate: ReactPropTypes.func.isRequired
+    doSchemeUpdate: ReactPropTypes.func.isRequired,
+    doApplyTransform: ReactPropTypes.func.isRequired
   },
 
   getInitialState: function() {
     return {
       'visible': true,
-      'modal_visible': false
+      'modal_visible': false,
+      'transform_function': 'return v ;'
     };
   },
 
@@ -51,7 +53,9 @@ var DimensionMetadata = React.createClass({
 
       // The variable that will hold the JSX for the codelist, if present.
       var codelist_row;
-      if (this.props.variable && this.props.variable.codelist){
+      // The variable that will hold the transformation function, if present.
+      var transform_row;
+      if (this.props.variable.category == 'coded'){
         codelist_row =  <div className="form-group">
                           <label for="inputCodelist" className="col-sm-2 control-label">Code list</label>
                           <div className="col-sm-8">
@@ -72,6 +76,33 @@ var DimensionMetadata = React.createClass({
                                    onClick={this._handleShowSchemes}></input>
                           </div>
                         </div>;
+      } else if(this.props.variable.category == 'other'){
+
+        var prefix = "function transform(v){";
+        var postfix = "}";
+        transform_row = <div className="form-group">
+                          <label for="inputTransform" className="col-sm-2 control-label">Transform</label>
+                          <div className="col-sm-8">
+                            {prefix}
+                            <input type="text"
+                                   className="form-control"
+                                   key={"transform"+this.props.variable.label}
+                                   id="inputTransform"
+                                   placeholder="Transform function"
+                                   value={this.state.transform_function}
+                                   onChange={this._handleTransformUpdate}>
+                              </input>
+                              {postfix}
+                          </div>
+                          <div className="col-sm-2">
+                            <input type="button"
+                                   className="form-control btn btn-default"
+                                   id="inputTransformButton"
+                                   value="Apply"
+                                   onClick={this._handleApplyTransformFunction}></input>
+                          </div>
+                        </div>;
+
       }
 
 
@@ -113,6 +144,7 @@ var DimensionMetadata = React.createClass({
                               onChange={this._onDescriptionChange}></textarea>
                   </div>
                 </div>
+                {transform_row}
               </form>;
     }
 
@@ -163,6 +195,18 @@ var DimensionMetadata = React.createClass({
     new_dimension.description = value;
     // Propagate the new dimension details upward
     this.props.doUpdate(new_dimension);
+  },
+
+  _handleTransformUpdate: function(e){
+    var func = e.target.value;
+    var new_state = this.state;
+    new_state.transform_function = func;
+    this.setState(new_state);
+  },
+
+  _handleApplyTransformFunction: function(e){
+    var func = this.state.transform_function;
+    this.props.doApplyTransform(func);
   },
 
   _handleShowSchemes: function(e){

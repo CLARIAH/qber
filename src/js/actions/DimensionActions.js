@@ -35,7 +35,7 @@ var DimensionActions = {
           actionType: DimensionConstants.SDMX_DIMENSION_ASSIGN,
           definition: definition
         });
-        
+
         if (definition.codelist) {
           DatasetActions.updateScheme(definition.codelist);
           DatasetActions.updateConcepts(definition.codelist.uri);
@@ -85,36 +85,27 @@ var DimensionActions = {
    * The user has specified to prefer to use a generated dimension definition
    * rather than a pre-existing one
    */
-  buildDimension: function(values, datasetName){
+  buildCodedVariable: function(){
     QBerDispatcher.dispatch({
-      actionType: DimensionConstants.SDMX_DIMENSION_BUILD,
-      dimension_type: 'coded',
-      values: values,
-      datasetName: datasetName
+      actionType: DimensionConstants.SDMX_BUILD_CODED_VARIABLE
     });
   },
 
   /**
    * The user has specified that the selected variable values are identifiers (not codes)
    */
-  buildIdentifier: function(values, datasetName){
+  buildIdentifier: function(){
     QBerDispatcher.dispatch({
-      actionType: DimensionConstants.SDMX_DIMENSION_BUILD,
-      dimension_type: 'identifier',
-      values: values,
-      datasetName: datasetName
+      actionType: DimensionConstants.SDMX_BUILD_IDENTIFIER
     });
   },
 
   /**
    * The user has specified that this variable is in fact a measurement (i.e. a literal)
    */
-  buildMeasurement: function(values, datasetName){
+  buildOther: function(){
     QBerDispatcher.dispatch({
-      actionType: DimensionConstants.SDMX_DIMENSION_BUILD,
-      dimension_type: 'measurement',
-      values: values,
-      datasetName: datasetName
+      actionType: DimensionConstants.SDMX_BUILD_OTHER,
     });
   },
 
@@ -140,6 +131,16 @@ var DimensionActions = {
     QBerDispatcher.dispatch({
       actionType: DimensionConstants.SDMX_SCHEME_ASSIGN,
       scheme: scheme
+    });
+  },
+
+  /**
+   * The user wants to apply a JavaScript function to the values of the variable
+   */
+  applyTransformFunction: function(func){
+    QBerDispatcher.dispatch({
+      actionType: DimensionConstants.SDMX_APPLY_TRANSFORM,
+      func: func
     });
   },
 
