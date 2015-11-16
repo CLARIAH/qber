@@ -13,7 +13,7 @@ var DimensionActions = {
    * @param {string} dimension
    */
   chooseDimension: function(dimension) {
-    console.log("You chose dimension: "+dimension);
+    
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
       message: 'Retrieving details for '+dimension
@@ -148,7 +148,7 @@ var DimensionActions = {
    * @param {string} unsafe_iri
    */
   retrieveIRI: function(unsafe_iri){
-    console.log('Retrieving safe IRI based on '+unsafe_iri);
+    
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
       message: 'Retrieving safe IRI based on '+unsafe_iri

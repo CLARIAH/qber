@@ -33,8 +33,8 @@ var ValueDefinitionTable = React.createClass({
    * @return {object}
    */
   render: function() {
-    console.log("ValueDefinitionTable props:");
-    console.log(this.props);
+    
+    
 
     // This section should be hidden by default
     // and shown when we do have variables in our dataset
@@ -110,7 +110,7 @@ var ValueDefinitionTable = React.createClass({
         var sorted_values;
         // If we have a stored scheme, sort the concepts by label
         if(scheme !== undefined) {
-          console.log(scheme);
+          
           sorted_values = _.sortBy(scheme.concepts,'label');
         } else {
           // Otherwise, we simply sort the values of the variable (i.e. the defaults)
@@ -163,8 +163,8 @@ var ValueDefinitionTable = React.createClass({
 
   _handleSelected: function(code_uri){
     // The code uri is the selected uri in the QBerModal PillSelector.
-    console.log("Selected new code:");
-    console.log(code_uri);
+    
+    
     // values is the list of code values for this variable
     var values = this.props.variable.values;
     // The selected code value, is the currently visible code value
@@ -203,8 +203,8 @@ var ValueDefinitionTable = React.createClass({
   _handleToggleModal: function(){
     var new_state = this.state;
     new_state.modal_visible = !this.state.modal_visible;
-    console.log("Toggle modal: new state: ");
-    console.log(new_state);
+    
+    
     this.setState(new_state);
   },
 

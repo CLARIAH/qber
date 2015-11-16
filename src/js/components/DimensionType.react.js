@@ -28,7 +28,7 @@ var DimensionType = React.createClass({
 
     var options;
     if (this.state.visible) {
-      console.log(this.props.category);
+      
       var community_active = " btn btn-default form-control";
       var community = <a role="button"
                           className={community_active}
@@ -70,7 +70,7 @@ var DimensionType = React.createClass({
                 </form>;
     }
 
-    console.log("Now returning code, including Caret");
+    
     return (
       <section id="dimension_type_menu">
         <div className="panel panel-default">

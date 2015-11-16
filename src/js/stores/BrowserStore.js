@@ -28,7 +28,7 @@ var BrowserStore = assign({}, EventEmitter.prototype, {
   setFiles: function(files, parent) {
     _files = files;
 
-    console.log("Parent path:" + parent);
+    
     if (parent !== null){
       _files.push(parent);
     }
@@ -65,7 +65,7 @@ var BrowserStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 QBerDispatcher.register(function(action) {
-  console.log('BrowserStore: received '+action.actionType);
+  
 
   switch(action.actionType) {
     case BrowserConstants.UPDATE_FILES:
@@ -82,7 +82,7 @@ QBerDispatcher.register(function(action) {
       BrowserStore.emitChange();
       break;
     default:
-      console.log('BrowserStore: No matching action');
+      
       // no op
   }
 });

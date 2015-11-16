@@ -60,8 +60,8 @@ var QBer = React.createClass({
    * @return {object}
    */
   render: function() {
-    console.log("QBer.react state:");
-    console.log(this.state);
+    
+    
 
     var navbar = <Navbar doSignIn={this._handleSignedIn}
                          doSave={this._handleSave}
@@ -70,7 +70,7 @@ var QBer = React.createClass({
 
     var body;
     if (this.state.dataset === undefined){
-      console.log("Dataset undefined");
+      
       body = <Browser/>;
     } else {
     	body =
@@ -105,10 +105,10 @@ var QBer = React.createClass({
   },
 
   _handleSignedIn: function(user) {
-    console.log("Retrieved signin signal...");
+    
     user_profile = user.getBasicProfile();
     DatasetActions.registerUser(user_profile);
-    console.log("Sent out registerUser action to DatasetActions");
+    
   },
 
   _handleSave: function() {
@@ -116,9 +116,9 @@ var QBer = React.createClass({
     var mappings = DimensionStore.getMappings();
 
     dataset['mappings'] = mappings;
-    console.log("Retrieved save signal...");
+    
     DatasetActions.saveDataset(dataset);
-    console.log("Sent out saveDataset action to DatasetActions");
+    
   },
 
 });

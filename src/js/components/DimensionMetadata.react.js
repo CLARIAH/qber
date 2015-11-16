@@ -34,8 +34,8 @@ var DimensionMetadata = React.createClass({
     // }
 
     var form;
-    console.log("Metadata");
-    console.log(this.props.variable);
+
+
     if (this.state.visible) {
       var label;
       var description;
@@ -223,11 +223,11 @@ var DimensionMetadata = React.createClass({
 
   _handleSelectScheme: function(scheme_uri){
     this._handleHideSchemes();
-    console.log("_handleSelectScheme");
-    console.log(scheme_uri);
+
+
 
     var scheme = _.find(this.props.schemes, 'uri', scheme_uri);
-    console.log(scheme);
+
     this.props.doSchemeUpdate(scheme);
   }
 

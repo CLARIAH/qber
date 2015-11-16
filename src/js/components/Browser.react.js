@@ -50,8 +50,8 @@ var QBer = React.createClass({
    * @return {object}
    */
   render: function() {
-    console.log("Browser.react");
-    console.log(this.state);
+    
+    
     // If we don't have a list of files, and the modal is not visible
     if (this.state.files === undefined && !this.state.modal_visible){
       BrowserActions.retrieveFileList('.');
@@ -87,20 +87,20 @@ var QBer = React.createClass({
    * Event handler when a file or path is selected
    */
   _handleSelected: function(selection){
-    console.log("Selected...");
+    
 
     // var selection = event.currentTarget.getAttribute('value');
 
-    console.log(selection);
+    
 
     var selected_file = _.find(this.state.files, 'uri', selection);
-    console.log(selected_file);
+    
     if(selected_file.type == 'file'){
-      console.log("Retrieving dataset");
+      
       DatasetActions.retrieveDataset(selected_file.uri);
       BrowserActions.closeBrowser();
     } else {
-      console.log("Retrieving filelist");
+      
       BrowserActions.retrieveFileList(selected_file.uri);
     }
   },

@@ -150,7 +150,7 @@ var DimensionDefinitionPanel = React.createClass({
    * Event handler for 'change' events coming from the DatasetStore
    */
   _onChange: function() {
-    console.log('Something changed for DimensionDefinitionPanel');
+    
     this.setState(getDimensionDefinitionPanelState());
   }
 

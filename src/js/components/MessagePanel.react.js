@@ -29,7 +29,7 @@ var MessagePanel = React.createClass({
    * @return {object}
    */
   render: function() {
-    console.log("In MessagePanel render");
+    
     var message = this.state.message;
 
     if (message === undefined || message === ''){

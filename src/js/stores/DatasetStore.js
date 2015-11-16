@@ -21,8 +21,8 @@ var _user;
  * @param  {object} dataset The content of the DATASET
  */
 function initialize(dataset) {
-  console.log("Initializing DatasetStore with dataset");
-  console.log(dataset);
+  
+  
   _dataset = dataset;
 }
 
@@ -61,7 +61,7 @@ function updateScheme(scheme){
   if (index > -1){
     _schemes.push(scheme);
   } else {
-    console.log("Scheme "+uri+" is already known!");
+    
   }
 }
 
@@ -79,9 +79,9 @@ function assignConcepts(uri, concepts){
 
     updated_scheme.concepts = concepts;
     _schemes.splice(index, 1, updated_scheme);
-    console.log(updated_scheme);
+    
   } else {
-    console.log("Scheme "+uri+" is unknown!");
+    
   }
 }
 
@@ -182,21 +182,21 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
 QBerDispatcher.register(function(action) {
   var dataset;
   var variable;
-  console.log('DatasetStore: received '+action.actionType);
+  
 
   switch(action.actionType) {
     // Register the logged in user
     case DatasetConstants.REGISTER_USER:
       if (action.user !== undefined) {
         setUser(action.user);
-        console.log('User set in store');
+        
         DatasetStore.emitChange();
-        console.log('Emitted change for datasetstore after user set');
+        
       }
       break;
     // We have retrieved a list of dimensions from the CSDH
     case DatasetConstants.DIMENSIONS_INIT:
-      console.log(action.dimensions);
+      
       dimensions = action.dimensions;
       if (dimensions !== undefined) {
         setDimensions(dimensions);
@@ -205,7 +205,7 @@ QBerDispatcher.register(function(action) {
       break;
     // We have retrieved a list of concept schemes from the CSDH
     case DatasetConstants.SCHEMES_INIT:
-      console.log(action.schemes);
+      
       schemes = action.schemes;
       if (schemes !== undefined) {
         setSchemes(schemes);
@@ -214,7 +214,7 @@ QBerDispatcher.register(function(action) {
       break;
     // We have retrieved a new concept scheme
     case DatasetConstants.SCHEME_UPDATE:
-      console.log(action.scheme);
+      
       scheme = action.scheme;
       if (scheme !== undefined) {
         updateScheme(scheme);
@@ -223,7 +223,7 @@ QBerDispatcher.register(function(action) {
       break;
     // We have retrieved a list of concepts for a scheme
     case DatasetConstants.CONCEPTS_UPDATE:
-      console.log(action.concepts);
+      
       uri = action.uri;
       concepts = action.concepts;
       if (concepts !== undefined && uri !== undefined) {
@@ -249,7 +249,7 @@ QBerDispatcher.register(function(action) {
       break;
 
     default:
-      console.log('DatasetStore: No matching action');
+      
       // no op
   }
 });

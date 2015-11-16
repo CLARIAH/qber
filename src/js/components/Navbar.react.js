@@ -24,7 +24,7 @@ var Navbar = React.createClass({
 
     signin = <SignIn onSignIn={this.props.doSignIn}/>;
     if (this.props.user !== undefined) {
-      console.log(this.props.user);
+      
       var username = this.props.user.getName();
       var depiction = this.props.user.getImageUrl();
       userinfo = <li><a href="#"><img className="user-depiction" src={depiction}/>{username}</a></li>;

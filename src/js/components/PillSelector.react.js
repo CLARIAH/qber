@@ -65,9 +65,9 @@ var PillSelector = React.createClass({
     // The selected item
     var selected = this.state.selected;
 
-    console.log("The selected value: " + selected);
-    console.log("The selection: ");
-    console.log(this.props.selection);
+    
+    
+    
     // If search turns out to be undefined, we will use the value provided through the props..
     if (this.props.selection && search === undefined ) {
       search = this.props.selection;
@@ -104,9 +104,9 @@ var PillSelector = React.createClass({
       } else {
         this.visibleItems.push(options[key]);
       }
-      console.log("is selected?");
-      console.log(options[key].uri);
-      console.log(selected);
+      
+      
+      
 
       items.push(
         <Pill key={key} style={style}
@@ -178,13 +178,13 @@ var PillSelector = React.createClass({
     //   'search': undefined,
     //   'selected': value
     // };
-    // console.log('selected set to '+value );
+    // 
     // this.setState(new_state);
     this.props.doSelect(value);
   },
 
   _handleKeyUp: function(e){
-    console.log(e.which);
+    
     // If the return/enter key is pressed, and the list of visible items is of length 1, select that option.
     if (e.which == 13 && this.visibleItems.length == 1){
       var value = this.visibleItems[0];

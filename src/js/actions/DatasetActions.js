@@ -10,7 +10,7 @@ var MessageConstants = require('../constants/MessageConstants');
  */
 var DatasetActions = {
   initializeStore: function(){
-    console.log("Initializing store...");
+    
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
       message: "Initializing store..."
@@ -33,7 +33,7 @@ var DatasetActions = {
 
     QBerAPI.retrieveCommunitySchemes({
       success: function(response){
-        console.log(response);
+        
         QBerDispatcher.dispatch({
           actionType: DatasetConstants.SCHEMES_INIT,
           schemes: response.schemes
@@ -61,7 +61,7 @@ var DatasetActions = {
   },
 
   updateConcepts: function(scheme_uri){
-    console.log("Retrieving list of concepts for "+ scheme_uri);
+    
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
       message: "Retrieving concepts for "+ scheme_uri
@@ -70,7 +70,7 @@ var DatasetActions = {
     QBerAPI.retrieveConcepts({
       scheme_uri: scheme_uri,
       success: function(response){
-        console.log(response);
+        
         QBerDispatcher.dispatch({
           actionType: DatasetConstants.CONCEPTS_UPDATE,
           uri: scheme_uri,
@@ -94,25 +94,25 @@ var DatasetActions = {
    * @param {object} user The user object returned by the Google SignIn
    */
   registerUser: function(user){
-    console.log('Registering user '+user.getName());
+    
 
     QBerDispatcher.dispatch({
       actionType: MessageConstants.SUCCESS,
       message: 'Logged in as '+user.getName()
     });
-    console.log('dispatching register_user');
+    
     QBerDispatcher.dispatch({
       actionType: DatasetConstants.REGISTER_USER,
       user: user
     });
-    console.log('dispatched register_user');
+    
   },
 
   /**
    * @param {string} filename
    */
   retrieveDataset: function(filename){
-    console.log('Retrieving dataset from '+filename);
+    
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
       message: 'Retrieving dataset from '+filename
@@ -173,7 +173,7 @@ var DatasetActions = {
       actionType: MessageConstants.INFO,
       message: 'Saving dataset to cache'
     });
-    console.log(dataset);
+    
     // Call the QBerAPI with the dataset, and implement the success callback
     QBerAPI.saveDataset({
       dataset: dataset,

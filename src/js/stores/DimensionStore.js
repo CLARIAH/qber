@@ -41,7 +41,7 @@ function initialize(variables) {
  * @param  {string} variable The selected variable
  */
  function setVariable(variable_name) {
-   console.log('Variable set to '+ variable_name);
+
    _variable_name = variable_name;
 }
 
@@ -50,28 +50,26 @@ function initialize(variables) {
  * @param  {object} dimension The selected dimension details
  */
 function assignDimension(definition) {
-   console.log('Assigning dimension ' + definition.uri);
-   console.log(definition);
+
+
 
    // Retrieve the current variable definition
    var variable_definition = _variables[_variable_name];
-
-   console.log(variable_definition);
 
    // Determine category
    if((definition.type == "http://purl.org/linked-data/cube#DimensionProperty" &&
        definition.codelist !== undefined) ||
        definition.type == "http://purl.org/linked-data/cube#CodedProperty"){
-     console.log("This is a coded dimension");
+
      definition.category = "coded";
    } else if (definition.type == "http://purl.org/linked-data/cube#DimensionProperty") {
-     console.log("This is an identifier dimension");
+
      definition.category = "identifier";
    } else if (definition.type == "http://purl.org/linked-data/cube#MeasureProperty") {
-     console.log("This is a measure property");
+     
      definition.category = "other";
    } else {
-     console.log("This is another type of property");
+
      definition.category = "other";
    }
 
@@ -83,24 +81,22 @@ function assignDimension(definition) {
  * @param  {object} scheme The selected scheme details
  */
  function assignScheme(scheme) {
-   console.log('Assigning scheme ' + scheme.uri);
-   console.log(scheme);
+
+
 
    // Get the scheme metadata (excluding any existing codes)
    var basic_scheme = _.pick(scheme, 'uri', 'label');
-   console.log(basic_scheme);
+
    // Retrieve the current variable definition
    var variable_scheme = _variables[_variable_name].codelist;
-   console.log(variable_scheme);
    _variables[_variable_name].codelist = _.assign(variable_scheme, basic_scheme);
-   console.log(_variables[_variable_name].codelist);
 }
 
 /**
  * Turn the selected variable into an 'identifier'
  */
  function buildIdentifier() {
-   console.log('Building identifier ' + _variable_name);
+
 
    // Setting category to 'identifier'
    _variables[_variable_name].category = 'identifier';
@@ -114,7 +110,7 @@ function assignDimension(definition) {
  * Turn the selected variable into a 'coded' variable
  */
  function buildCodedVariable() {
-   console.log('Building coded variable ' + _variable_name);
+
 
    // Setting category to 'identifier'
    _variables[_variable_name].category = 'coded';
@@ -127,7 +123,7 @@ function assignDimension(definition) {
  * Turn the selected variable into a 'coded' variable
  */
  function buildOther() {
-   console.log('Building other (literal) variable ' + _variable_name);
+
 
    // Setting category to 'other'
    _variables[_variable_name].category = 'other';
@@ -173,12 +169,12 @@ function applyTransformFunction(func_body){
 * @param  {object} codes The retrieved codes
 */
 function assignMapping(value_uri, code_uri) {
-   console.log('Assigning code uri to code value');
-   console.log(value_uri + " > " + code_uri);
-   console.log(_variables[_variable_name].values);
+
+
+
    var values = _variables[_variable_name].values;
    var index = _.indexOf(values, _.find(values,{uri: value_uri}));
-   console.log(index);
+
    // Assign the selected concept uri to the value.
    _variables[_variable_name].values[index].uri = code_uri;
 }
@@ -238,7 +234,7 @@ var DimensionStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 QBerDispatcher.register(function(action) {
-  console.log('DimensionStore: received '+action.actionType);
+
 
   switch(action.actionType) {
     // This is the INIT action for the variables
@@ -257,7 +253,7 @@ QBerDispatcher.register(function(action) {
       break;
     // Once a dimension has been selected in the modal, or a value has changed in the dimension metadata panel
     case DimensionConstants.SDMX_DIMENSION_ASSIGN:
-      console.log(action);
+
       var definition = action.definition;
       assignDimension(definition);
       DimensionStore.emitChange();
@@ -307,7 +303,7 @@ QBerDispatcher.register(function(action) {
       DimensionStore.emitChange();
       break;
     default:
-      console.log('DimensionStore: No matching action');
+
       // no op
   }
 });
