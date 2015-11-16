@@ -65,6 +65,9 @@ var PillSelector = React.createClass({
     // The selected item
     var selected = this.state.selected;
 
+    console.log("The selected value: " + selected);
+    console.log("The selection: ");
+    console.log(this.props.selection);
     // If search turns out to be undefined, we will use the value provided through the props..
     if (this.props.selection && search === undefined ) {
       search = this.props.selection;
@@ -101,11 +104,14 @@ var PillSelector = React.createClass({
       } else {
         this.visibleItems.push(options[key]);
       }
+      console.log("is selected?");
+      console.log(options[key].uri);
+      console.log(selected);
 
       items.push(
         <Pill key={key} style={style}
                         option={options[key]}
-                        isSelected={options[key] == selected}
+                        isSelected={options[key].uri == selected}
                         onClicked={this._handleClick}/>
       );
     }
@@ -168,12 +174,12 @@ var PillSelector = React.createClass({
    */
   _handleSelect: function(value) {
     // We update the state with the selected value.
-    var new_state = {
-      'search': undefined,
-      'selected': value
-    };
-
-    this.setState(new_state);
+    // var new_state = {
+    //   'search': undefined,
+    //   'selected': value
+    // };
+    // console.log('selected set to '+value );
+    // this.setState(new_state);
     this.props.doSelect(value);
   },
 

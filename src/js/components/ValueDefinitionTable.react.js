@@ -165,7 +165,7 @@ var ValueDefinitionTable = React.createClass({
     // Copy the current state
     var new_state = this.state;
     // Set the selected code value to the next id in the values array (i.e. the code at the next index)
-    new_state.selected_code_value = values[next_index].label;
+    new_state.selected_code_value = values[next_index].uri;
     // Update the state
     this.setState(new_state);
 
