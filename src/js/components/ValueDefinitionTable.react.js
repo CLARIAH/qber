@@ -24,8 +24,8 @@ var ValueDefinitionTable = React.createClass({
     return {
       'visible': true,
       'modal_visible': false,
-      'selected_code_value': undefined,
-      'selected_code_uri': undefined
+      'selected_value_uri': undefined,
+      'selected_value_label': undefined
     };
   },
 
@@ -66,8 +66,8 @@ var ValueDefinitionTable = React.createClass({
                           </td>
                           <td>
                             <span className='btn btn-default btn-xs'
-                                  value={values[key].label}
-                                  onClick={this._handleToggleModal}
+                                  label={values[key].label}
+                                  onClick={this._handleSelectValue}
                                   disabled={button_disabled}>
                                   <span className="glyphicon glyphicon-random"/>
                             </span>
@@ -87,7 +87,7 @@ var ValueDefinitionTable = React.createClass({
       var modal;
       // We only prepare the modal if we have a community or coded variable
       if (this.props.variable && (this.props.variable.category == 'community' || this.props.variable.category == 'coded' )){
-        var title = <span>Select corresponding code for <strong>{this.state.selected_code_value}</strong></span>;
+        var title = <span>Select corresponding code for <strong>{this.state.selected_value_label}</strong></span>;
 
         var scheme = _.find(this.props.schemes, {'uri': this.props.variable.codelist.uri});
 
@@ -104,8 +104,8 @@ var ValueDefinitionTable = React.createClass({
         // Codelist present
         modal = <QBerModal visible={this.state.modal_visible}
                    title={title}
-                   value={this.state.selected_code_value}
-                   selection={this.state.selected_code_value}
+                   value={this.state.selected_value_label}
+                   selection={this.state.selected_value_uri}
                    options={sorted_values}
                    doSelect={this._handleSelected}
                    doClose={this._handleToggleModal} />;
@@ -152,10 +152,10 @@ var ValueDefinitionTable = React.createClass({
     // values is the list of code values for this variable
     var values = this.props.variable.values;
     // The selected code value, is the currently visible code value
-    var selected_code_value = this.state.selected_code_value;
+    var selected_value_uri = this.state.selected_value_uri;
 
     // Get the index of the selected code value, and increment it by 1 (the next code value)
-    var next_index = _.findIndex(values, 'label', this.state.selected_code_value) + 1;
+    var next_index = _.findIndex(values, 'uri', this.state.selected_value_uri) + 1;
 
     // Set index to 0 if the resulting index is outside the values array (looping)
     if (next_index == values.length){
@@ -165,19 +165,30 @@ var ValueDefinitionTable = React.createClass({
     // Copy the current state
     var new_state = this.state;
     // Set the selected code value to the next id in the values array (i.e. the code at the next index)
-    new_state.selected_code_value = values[next_index].uri;
+    new_state.selected_value_uri = values[next_index].uri;
+    new_state.selected_value_label = values[next_index].label;
     // Update the state
     this.setState(new_state);
 
     // Call the externally defined function that handles the mappings between (external) values and the source values.
-    this.props.doMapping(selected_code_value, code_uri);
+    this.props.doMapping(selected_value_uri, code_uri);
   },
 
-
-  _handleToggleModal: function(e){
+  _handleSelectValue: function(e){
     var new_state = this.state;
-    new_state.selected_code_value = e.currentTarget.getAttribute('value');
+
+    new_state.selected_value_label = e.currentTarget.getAttribute('label');
+    new_state.selected_value_uri = _.find(this.props.variable.values, 'label', new_state.selected_value_label).uri;
+
+    this.setState(new_state);
+    this._handleToggleModal()
+  },
+
+  _handleToggleModal: function(){
+    var new_state = this.state;
     new_state.modal_visible = !this.state.modal_visible;
+    console.log("Toggle modal: new state: ");
+    console.log(new_state);
     this.setState(new_state);
   },
 

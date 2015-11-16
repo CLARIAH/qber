@@ -102,12 +102,12 @@ function initialize(variables) {
 * Assign the retrieved codes to the currently selected dimension
 * @param  {object} codes The retrieved codes
 */
-function assignMapping(value, code_uri) {
+function assignMapping(value_uri, code_uri) {
    console.log('Assigning code uri to code value');
-   console.log(value + " > " + code_uri);
+   console.log(value_uri + " > " + code_uri);
    console.log(_variables[_variable_name].values);
    var values = _variables[_variable_name].values;
-   var index = _.indexOf(values, _.find(values,{label: value}));
+   var index = _.indexOf(values, _.find(values,{uri: value_uri}));
    console.log(index);
    // Assign the selected concept uri to the value.
    _variables[_variable_name].values[index].uri = code_uri;
