@@ -32,10 +32,19 @@ module.exports = {
   },
 
   saveDataset: function(settings) {
-    console.log("Saving dataset to cache");
-    console.log(settings.dataset);
     $.post(CSDH_API + '/dataset/save',data=JSON.stringify({'dataset': settings.dataset}), function(response){
 
+      settings.success(response);
+    }).fail(function(response){
+      settings.error(response);
+    });
+  },
+
+  submitDataset: function(settings) {
+    console.log("Submitting dataset to CSDH");
+    console.log(settings.dataset);
+    console.log(settings.user);
+    $.post(CSDH_API + '/dataset/submit',data=JSON.stringify({'dataset': settings.dataset, 'user': settings.user}), function(response){
       settings.success(response);
     }).fail(function(response){
       settings.error(response);

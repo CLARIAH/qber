@@ -60,17 +60,18 @@ var QBer = React.createClass({
    * @return {object}
    */
   render: function() {
-    
-    
+
+
 
     var navbar = <Navbar doSignIn={this._handleSignedIn}
                          doSave={this._handleSave}
+                         doSubmit={this._handleSubmit}
                          user={this.state.user}
                          variable={this.state.variable} />;
 
     var body;
     if (this.state.dataset === undefined){
-      
+
       body = <Browser/>;
     } else {
     	body =
@@ -105,10 +106,9 @@ var QBer = React.createClass({
   },
 
   _handleSignedIn: function(user) {
-    
+
     user_profile = user.getBasicProfile();
     DatasetActions.registerUser(user_profile);
-    
   },
 
   _handleSave: function() {
@@ -120,7 +120,16 @@ var QBer = React.createClass({
     user_id = user.getId();
 
     DatasetActions.saveDataset(dataset);
-    
+  },
+
+  _handleSubmit: function() {
+    var variables = DimensionStore.getVariables();
+    var dataset = DatasetStore.get();
+    var user = DatasetStore.getUser();
+
+    dataset.variables = variables;
+
+    DatasetActions.submitDataset(user, dataset);
   },
 
 });

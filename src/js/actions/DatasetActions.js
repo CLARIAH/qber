@@ -10,7 +10,7 @@ var MessageConstants = require('../constants/MessageConstants');
  */
 var DatasetActions = {
   initializeStore: function(){
-    
+
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
       message: "Initializing store..."
@@ -33,7 +33,7 @@ var DatasetActions = {
 
     QBerAPI.retrieveCommunitySchemes({
       success: function(response){
-        
+
         QBerDispatcher.dispatch({
           actionType: DatasetConstants.SCHEMES_INIT,
           schemes: response.schemes
@@ -61,7 +61,7 @@ var DatasetActions = {
   },
 
   updateConcepts: function(scheme_uri){
-    
+
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
       message: "Retrieving concepts for "+ scheme_uri
@@ -70,7 +70,7 @@ var DatasetActions = {
     QBerAPI.retrieveConcepts({
       scheme_uri: scheme_uri,
       success: function(response){
-        
+
         QBerDispatcher.dispatch({
           actionType: DatasetConstants.CONCEPTS_UPDATE,
           uri: scheme_uri,
@@ -94,25 +94,25 @@ var DatasetActions = {
    * @param {object} user The user object returned by the Google SignIn
    */
   registerUser: function(user){
-    
+
 
     QBerDispatcher.dispatch({
       actionType: MessageConstants.SUCCESS,
       message: 'Logged in as '+user.getName()
     });
-    
+
     QBerDispatcher.dispatch({
       actionType: DatasetConstants.REGISTER_USER,
       user: user
     });
-    
+
   },
 
   /**
    * @param {string} filename
    */
   retrieveDataset: function(filename){
-    
+
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
       message: 'Retrieving dataset from '+filename
@@ -208,18 +208,46 @@ var DatasetActions = {
       success: function(response){
         QBerDispatcher.dispatch({
           actionType: MessageConstants.SUCCESS,
-          message: 'Successfully saved dataset to cache'
+          message: response.message
         });
       },
       error: function(response){
         QBerDispatcher.dispatch({
           actionType: MessageConstants.ERROR,
-          message: 'Error saving dataset to cache '+response.message
+          message: response.message
         });
       }
     });
   },
 
+
+  /**
+   * Submit the dataset to CSDH
+   */
+  submitDataset: function(user, dataset) {
+    QBerDispatcher.dispatch({
+      actionType: MessageConstants.INFO,
+      message: 'Submitting dataset to CSDH'
+    });
+
+    // Call the QBerAPI with the dataset, and implement the success callback
+    QBerAPI.submitDataset({
+      dataset: dataset,
+      user: user,
+      success: function(response){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.SUCCESS,
+          message: response.message
+        });
+      },
+      error: function(response){
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.ERROR,
+          message: response.message
+        });
+      }
+    });
+  },
 
 
 

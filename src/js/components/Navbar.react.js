@@ -19,16 +19,17 @@ var Navbar = React.createClass({
    * @return {object}
    */
   render: function() {
-    var signin, userinfo, savebutton;
+    var signin, userinfo, savebutton, submitbutton;
 
 
     signin = <SignIn onSignIn={this.props.doSignIn}/>;
     if (this.props.user !== undefined) {
-      
+
       var username = this.props.user.getName();
       var depiction = this.props.user.getImageUrl();
       userinfo = <li><a href="#"><img className="user-depiction" src={depiction}/>{username}</a></li>;
       savebutton = <li><a href="#" onClick={this.props.doSave}>Save</a></li>;
+      submitbutton = <li><a href="#" onClick={this.props.doSubmit}>Submit</a></li>;
     } else {
       userinfo = <li><a href="#">Not logged in...</a></li>;
     }
@@ -51,6 +52,7 @@ var Navbar = React.createClass({
             <ul className="nav navbar-nav nav-pills">
               {userinfo}
               {savebutton}
+              {submitbutton}
             </ul>
             <ul className="nav navbar-nav navbar-right">
               <li><a style={{padding:'0px', paddingTop:'2px'}}>{signin}</a></li>
