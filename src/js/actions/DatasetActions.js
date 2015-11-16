@@ -76,6 +76,10 @@ var DatasetActions = {
           uri: scheme_uri,
           concepts: response.concepts
         });
+        QBerDispatcher.dispatch({
+          actionType: MessageConstants.INFO,
+          message: "Succesfully received concepts for "+ scheme_uri
+        });
       },
       error: function(response){
         QBerDispatcher.dispatch({
