@@ -73,7 +73,8 @@ function assignDimension(definition) {
      definition.category = "other";
    }
 
-   _variables[_variable_name] = _.assign(variable_definition, definition);
+   _variables[_variable_name] = _.merge(variable_definition, definition);
+
 }
 
 /**
@@ -89,7 +90,9 @@ function assignDimension(definition) {
 
    // Retrieve the current variable definition
    var variable_scheme = _variables[_variable_name].codelist;
-   _variables[_variable_name].codelist = _.assign(variable_scheme, basic_scheme);
+
+   _variables[_variable_name].codelist = _.merge(variable_scheme, basic_scheme);
+
 }
 
 /**
