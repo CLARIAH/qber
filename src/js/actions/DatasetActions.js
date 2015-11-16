@@ -117,32 +117,58 @@ var DatasetActions = {
       actionType: MessageConstants.INFO,
       message: 'Retrieving dataset from '+filename
     });
-    // Call the QBerAPI with the filename, and implement the success callback
-    QBerAPI.retrieveDatasetDefinition({
-      filename: filename,
-      success: function(dataset){
-        QBerDispatcher.dispatch({
-          actionType: MessageConstants.SUCCESS,
-          message: 'Successfully loaded dataset '+dataset.name
-        });
 
-        QBerDispatcher.dispatch({
-          actionType: DatasetConstants.DATASET_INIT,
-          dataset: dataset
-        });
+    console.log(filename);
+    // Retrieve the dataset from local storage
+    dataset = JSON.parse(localStorage.getItem(filename));
+    console.log(dataset);
 
-        QBerDispatcher.dispatch({
-          actionType: DimensionConstants.SDMX_DIMENSION_INIT,
-          variables: dataset.variables
-        })
-      },
-      error: function(response){
-        QBerDispatcher.dispatch({
-          actionType: MessageConstants.ERROR,
-          message: response.message
-        });
-      }
-    });
+    if(dataset !== null){
+      // Retrieved dataset from cache
+      QBerDispatcher.dispatch({
+        actionType: MessageConstants.SUCCESS,
+        message: 'Successfully loaded dataset '+dataset.name
+      });
+
+      QBerDispatcher.dispatch({
+        actionType: DatasetConstants.DATASET_INIT,
+        dataset: dataset
+      });
+
+      QBerDispatcher.dispatch({
+        actionType: DimensionConstants.SDMX_DIMENSION_INIT,
+        variables: dataset.variables
+      });
+    } else {
+      // Nothing in cache, call the QBerAPI with the filename, and implement the success callback
+      QBerAPI.retrieveDatasetDefinition({
+        filename: filename,
+        success: function(dataset){
+          QBerDispatcher.dispatch({
+            actionType: MessageConstants.SUCCESS,
+            message: 'Successfully loaded dataset '+dataset.name
+          });
+
+          QBerDispatcher.dispatch({
+            actionType: DatasetConstants.DATASET_INIT,
+            dataset: dataset
+          });
+
+          QBerDispatcher.dispatch({
+            actionType: DimensionConstants.SDMX_DIMENSION_INIT,
+            variables: dataset.variables
+          });
+        },
+        error: function(response){
+          QBerDispatcher.dispatch({
+            actionType: MessageConstants.ERROR,
+            message: response.message
+          });
+        }
+      });
+    }
+
+
   },
 
   /**
@@ -173,7 +199,9 @@ var DatasetActions = {
       actionType: MessageConstants.INFO,
       message: 'Saving dataset to cache'
     });
-    
+
+    localStorage.setItem(dataset.file, JSON.stringify(dataset));
+
     // Call the QBerAPI with the dataset, and implement the success callback
     QBerAPI.saveDataset({
       dataset: dataset,

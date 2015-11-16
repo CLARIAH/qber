@@ -112,11 +112,13 @@ var QBer = React.createClass({
   },
 
   _handleSave: function() {
-    var dataset = this.state.dataset;
-    var mappings = DimensionStore.getMappings();
+    var variables = DimensionStore.getVariables();
+    var dataset = DatasetStore.get();
+    var user = DatasetStore.getUser();
 
-    dataset['mappings'] = mappings;
-    
+    dataset.variables = variables;
+    user_id = user.getId();
+
     DatasetActions.saveDataset(dataset);
     
   },

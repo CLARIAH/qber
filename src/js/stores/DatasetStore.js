@@ -21,8 +21,6 @@ var _user;
  * @param  {object} dataset The content of the DATASET
  */
 function initialize(dataset) {
-  
-  
   _dataset = dataset;
 }
 
