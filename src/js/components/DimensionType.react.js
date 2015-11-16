@@ -28,7 +28,7 @@ var DimensionType = React.createClass({
 
     var options;
     if (this.state.visible) {
-      
+
       var community_active = " btn btn-default form-control";
       var community = <a role="button"
                           className={community_active}
@@ -70,7 +70,7 @@ var DimensionType = React.createClass({
                 </form>;
     }
 
-    
+
     return (
       <section id="dimension_type_menu">
         <div className="panel panel-default">

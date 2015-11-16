@@ -5,7 +5,8 @@ var CSDH_API = "http://localhost:5000"
 module.exports = {
   retrieveDatasetDefinition: function(settings) {
     $.get(CSDH_API + '/dataset/definition',{'file': settings.filename}, function(response){
-      
+      console.log("Retrieved dataset definition");
+      console.log(response);
       settings.success(response);
     }).fail(function(){
       settings.error(response);
@@ -14,7 +15,7 @@ module.exports = {
 
   retrieveCommunityDimensions: function(settings) {
     $.get(CSDH_API + '/community/dimensions', function(response){
-      
+
       settings.success(response);
     }).fail(function(){
       settings.error(response);
@@ -23,7 +24,7 @@ module.exports = {
 
   retrieveCommunitySchemes: function(settings) {
     $.get(CSDH_API + '/community/schemes', function(response){
-      
+
       settings.success(response);
     }).fail(function(){
       settings.error(response);
@@ -31,8 +32,10 @@ module.exports = {
   },
 
   saveDataset: function(settings) {
+    console.log("Saving dataset to cache");
+    console.log(settings.dataset);
     $.post(CSDH_API + '/dataset/save',data=JSON.stringify({'dataset': settings.dataset}), function(response){
-      
+
       settings.success(response);
     }).fail(function(response){
       settings.error(response);
@@ -41,8 +44,8 @@ module.exports = {
 
   retrieveDimension: function(settings) {
     $.get(CSDH_API + '/community/definition', {'uri': settings.dimension}, function(response){
-      
-      
+
+
       settings.success(response);
     }).fail(function(response){
       settings.error(response);
@@ -51,7 +54,7 @@ module.exports = {
 
   retrieveConcepts: function(settings) {
     $.get(CSDH_API + '/community/concepts', {'uri': settings.scheme_uri}, function(response){
-      
+
       settings.success(response);
     }).fail(function(response){
       settings.error(response);
@@ -60,8 +63,8 @@ module.exports = {
 
   retrieveFileList: function(settings) {
     $.get(CSDH_API + '/browse', {'path': settings.path}, function(response){
-      
-      
+
+
       settings.success(response);
     }).fail(function(response){
       settings.error(response);
@@ -70,8 +73,8 @@ module.exports = {
 
   retrieveIRI: function(settings) {
     $.get(CSDH_API + '/iri', {'iri': settings.iri}, function(response){
-      
-      
+
+
       settings.success(response);
     }).fail(function(response){
       settings.error(response);

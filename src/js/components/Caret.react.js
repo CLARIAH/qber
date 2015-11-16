@@ -20,7 +20,7 @@ var Caret = React.createClass({
     } else {
       icon = "small glyphicon glyphicon-chevron-right pull-right";
     }
-    
+
     return (
       <span className={icon}></span>
     );

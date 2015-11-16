@@ -59,7 +59,7 @@ function updateScheme(scheme){
   if (index > -1){
     _schemes.push(scheme);
   } else {
-    
+
   }
 }
 
@@ -77,9 +77,9 @@ function assignConcepts(uri, concepts){
 
     updated_scheme.concepts = concepts;
     _schemes.splice(index, 1, updated_scheme);
-    
+
   } else {
-    
+
   }
 }
 
@@ -180,21 +180,21 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
 QBerDispatcher.register(function(action) {
   var dataset;
   var variable;
-  
+
 
   switch(action.actionType) {
     // Register the logged in user
     case DatasetConstants.REGISTER_USER:
       if (action.user !== undefined) {
         setUser(action.user);
-        
+
         DatasetStore.emitChange();
-        
+
       }
       break;
     // We have retrieved a list of dimensions from the CSDH
     case DatasetConstants.DIMENSIONS_INIT:
-      
+
       dimensions = action.dimensions;
       if (dimensions !== undefined) {
         setDimensions(dimensions);
@@ -203,7 +203,7 @@ QBerDispatcher.register(function(action) {
       break;
     // We have retrieved a list of concept schemes from the CSDH
     case DatasetConstants.SCHEMES_INIT:
-      
+
       schemes = action.schemes;
       if (schemes !== undefined) {
         setSchemes(schemes);
@@ -212,7 +212,7 @@ QBerDispatcher.register(function(action) {
       break;
     // We have retrieved a new concept scheme
     case DatasetConstants.SCHEME_UPDATE:
-      
+
       scheme = action.scheme;
       if (scheme !== undefined) {
         updateScheme(scheme);
@@ -221,7 +221,7 @@ QBerDispatcher.register(function(action) {
       break;
     // We have retrieved a list of concepts for a scheme
     case DatasetConstants.CONCEPTS_UPDATE:
-      
+
       uri = action.uri;
       concepts = action.concepts;
       if (concepts !== undefined && uri !== undefined) {
@@ -247,7 +247,7 @@ QBerDispatcher.register(function(action) {
       break;
 
     default:
-      
+
       // no op
   }
 });
