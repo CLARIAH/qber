@@ -29,7 +29,7 @@ var MessagePanel = React.createClass({
    * @return {object}
    */
   render: function() {
-    
+
     var message = this.state.message;
 
     if (message === undefined || message === ''){
@@ -48,6 +48,7 @@ var MessagePanel = React.createClass({
     return (
         <div className={ classes } id="message_panel">
           { message }
+          <div className="pull-right" onClick={this._handleResetLocalStorage}><span className="glyphicon glyphicon-fire pull-right"></span></div>
         </div>
     );
   },
@@ -72,6 +73,14 @@ var MessagePanel = React.createClass({
    */
   _onChange: function() {
     this.setState(getMessage());
+  },
+
+  /**
+   * Clear the local storage
+   */
+  _handleResetLocalStorage: function() {
+    for (var key in localStorage) { localStorage.removeItem(key); }
+    console.log("localStorage cleared");
   }
 
 });
