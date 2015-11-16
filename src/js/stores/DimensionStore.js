@@ -58,6 +58,23 @@ function initialize(variables) {
 
    console.log(variable_definition);
 
+   // Determine category
+   if((definition.type == "http://purl.org/linked-data/cube#DimensionProperty" &&
+       definition.codelist !== undefined) ||
+       definition.type == "http://purl.org/linked-data/cube#CodedProperty"){
+     console.log("This is a coded dimension");
+     definition.category = "coded";
+   } else if (definition.type == "http://purl.org/linked-data/cube#DimensionProperty") {
+     console.log("This is an identifier dimension");
+     definition.category = "identifier";
+   } else if (definition.type == "http://purl.org/linked-data/cube#MeasureProperty") {
+     console.log("This is a measure property");
+     definition.category = "other";
+   } else {
+     console.log("This is another type of property");
+     definition.category = "other";
+   }
+
    _variables[_variable_name] = _.assign(variable_definition, definition);
 }
 
