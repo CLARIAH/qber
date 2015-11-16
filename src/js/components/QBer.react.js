@@ -125,9 +125,17 @@ var QBer = React.createClass({
   _handleSubmit: function() {
     var variables = DimensionStore.getVariables();
     var dataset = DatasetStore.get();
-    var user = DatasetStore.getUser();
+    var profile = DatasetStore.getUser();
+
+    var user = {};
+
+    user.name = profile.getName();
+    user.id = profile.getId();
+    user.image = profile.getImageUrl();
+    user.email = profile.getEmail();
 
     dataset.variables = variables;
+
 
     DatasetActions.submitDataset(user, dataset);
   },
