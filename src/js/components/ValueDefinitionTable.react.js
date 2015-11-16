@@ -105,7 +105,7 @@ var ValueDefinitionTable = React.createClass({
         modal = <QBerModal visible={this.state.modal_visible}
                    title={title}
                    value={this.state.selected_code_value}
-                   selection={(this.state.selected_code_value !== undefined && this.props.variable.codelist.mappings !== undefined) ? this.props.variable.codelist.mappings[this.state.selected_code_value] : undefined}
+                   selection={this.state.selected_code_value}
                    options={sorted_values}
                    doSelect={this._handleSelected}
                    doClose={this._handleToggleModal} />;
