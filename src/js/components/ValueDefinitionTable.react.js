@@ -74,7 +74,7 @@ var ValueDefinitionTable = React.createClass({
         } else {
           // Otherwise, we show the 'literal' value for the variable
           mapping = <div>
-                      <code>{values[key].literal}</code>
+                      <code>{values[key].label}</code>
                     </div>;
         }
 

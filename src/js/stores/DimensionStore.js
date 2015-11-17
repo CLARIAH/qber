@@ -66,7 +66,7 @@ function assignDimension(definition) {
 
      definition.category = "identifier";
    } else if (definition.type == "http://purl.org/linked-data/cube#MeasureProperty") {
-     
+
      definition.category = "other";
    } else {
 
@@ -143,14 +143,14 @@ function resetToDefaults(){
   // Replace all 'uri' attributes with the value for 'default'
   // Replace all 'literal' attributes with the value for 'label'
   for (var key in _variables[_variable_name].values){
-    _variables[_variable_name].values[key].uri = _variables[_variable_name].values[key].default;
-    _variables[_variable_name].values[key].literal = _variables[_variable_name].values[key].label;
+    _variables[_variable_name].values[key].uri = _variables[_variable_name].values[key].original.uri;
+    _variables[_variable_name].values[key].label = _variables[_variable_name].values[key].original.label;
   }
 
   // Reset the codelist uri and label to its default
   // TODO: Check whether we should take this from the props.codelists array
-  _variables[_variable_name].codelist.uri = _variables[_variable_name].codelist.default;
-  _variables[_variable_name].codelist.label = "Code list for `" + _variable_name + "`";
+  _variables[_variable_name].codelist.uri = _variables[_variable_name].codelist.original.uri;
+  _variables[_variable_name].codelist.label = _variables[_variable_name].codelist.original.label;
 }
 
 
@@ -163,7 +163,7 @@ function applyTransformFunction(func_body){
   var f = new Function('v', func_body);
 
   for (var key in _variables[_variable_name].values){
-    _variables[_variable_name].values[key].literal = f(_variables[_variable_name].values[key].label);
+    _variables[_variable_name].values[key].label = f(_variables[_variable_name].values[key].label);
   }
 }
 
