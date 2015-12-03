@@ -17,6 +17,7 @@ var PillSelector = require('./PillSelector.react');
 var VariablePanel = require('./VariablePanel.react');
 var Sidebar = require('./Sidebar.react');
 var Browser = require('./Browser.react');
+var Welcome = require('./Welcome.react');
 var SignIn = require('./SignIn.react');
 var Navbar = require('./Navbar.react');
 
@@ -71,8 +72,7 @@ var QBer = React.createClass({
 
     var body;
     if (this.state.dataset === undefined){
-
-      body = <Browser/>;
+      body = <Welcome visible={true}/>;
     } else {
     	body =
         <div className="container-fluid" id="qber_body">

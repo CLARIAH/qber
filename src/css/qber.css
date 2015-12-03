@@ -1,5 +1,6 @@
 /*@import url(http://fonts.googleapis.com/css?family=Signika:400,300,600,700);
 @import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700,400italic,500italic,700italic,300italic,300);*/
+@import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
 html, body {
     margin: 0;
@@ -9,8 +10,8 @@ html, body {
 body {
   padding-top: 50px;
   position: relative;
-	/*font-family: Ubuntu;
-  font-weight: 300;
+	font-family: 'Varela Round';
+  /*font-weight: 300;
 	color: #273142; */
 }
 @media (max-width: 979px) {
@@ -19,6 +20,27 @@ body {
     position: relative;
     overflow: scroll;
   }
+}
+
+div#welcome_body {
+  height: 1200px;
+  background: url('../img/farmhouses-in-loosduinen-near-the-hague-at-twilight-1883.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.welcome {
+  margin-top: 150px;
+  text-align: center;
+}
+.welcome-well {
+  height: 250px;
+}
+
+.welcome-well img {
+  float: right;
 }
 
 nav {
@@ -135,5 +157,5 @@ span.pill-icon {
 
 
 h1, h2, h3, h4, h5, h6, nav {
-  /*font-family: Signika;*/
+  font-family: 'Varela Round';
 }
