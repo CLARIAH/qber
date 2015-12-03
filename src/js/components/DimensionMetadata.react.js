@@ -4,6 +4,54 @@ var QBerModal = require('./QBerModal.react');
 var Caret = require('./Caret.react');
 var _ = require('lodash');
 
+
+
+var xml_schema_datatypes = [
+  { value: 'http://www.w3.org/2001/XMLSchema#decimal', label: 'xsd:decimal' },
+  { value: 'http://www.w3.org/2001/XMLSchema#float', label: 'xsd:float' },
+  { value: 'http://www.w3.org/2001/XMLSchema#double', label: 'xsd:double' },
+  { value: 'http://www.w3.org/2001/XMLSchema#integer', label: 'xsd:integer' },
+  { value: 'http://www.w3.org/2001/XMLSchema#positiveInteger', label: 'xsd:positiveInteger' },
+  { value: 'http://www.w3.org/2001/XMLSchema#negativeInteger', label: 'xsd:negativeInteger' },
+  { value: 'http://www.w3.org/2001/XMLSchema#nonPositiveInteger', label: 'xsd:nonPositiveInteger' },
+  { value: 'http://www.w3.org/2001/XMLSchema#nonNegativeInteger', label: 'xsd:nonNegativeInteger' },
+  { value: 'http://www.w3.org/2001/XMLSchema#long', label: 'xsd:long' },
+  { value: 'http://www.w3.org/2001/XMLSchema#int', label: 'xsd:int' },
+  { value: 'http://www.w3.org/2001/XMLSchema#short', label: 'xsd:short' },
+  { value: 'http://www.w3.org/2001/XMLSchema#byte', label: 'xsd:byte' },
+  { value: 'http://www.w3.org/2001/XMLSchema#unsignedLong', label: 'xsd:unsignedLong' },
+  { value: 'http://www.w3.org/2001/XMLSchema#unsignedInt', label: 'xsd:unsignedInt' },
+  { value: 'http://www.w3.org/2001/XMLSchema#unsignedShort', label: 'xsd:unsignedShort' },
+  { value: 'http://www.w3.org/2001/XMLSchema#unsignedByte', label: 'xsd:unsignedByte' },
+  { value: 'http://www.w3.org/2001/XMLSchema#dateTime', label: 'xsd:dateTime' },
+  { value: 'http://www.w3.org/2001/XMLSchema#date', label: 'xsd:date' },
+  { value: 'http://www.w3.org/2001/XMLSchema#gYearMonth', label: 'xsd:gYearMonth' },
+  { value: 'http://www.w3.org/2001/XMLSchema#gYear', label: 'xsd:gYear' },
+  { value: 'http://www.w3.org/2001/XMLSchema#duration', label: 'xsd:duration' },
+  { value: 'http://www.w3.org/2001/XMLSchema#gMonthDay', label: 'xsd:gMonthDay' },
+  { value: 'http://www.w3.org/2001/XMLSchema#gDay', label: 'xsd:gDay' },
+  { value: 'http://www.w3.org/2001/XMLSchema#gMonth', label: 'xsd:gMonth' },
+  { value: 'http://www.w3.org/2001/XMLSchema#string', label: 'xsd:string' },
+  { value: 'http://www.w3.org/2001/XMLSchema#normalizedString', label: 'xsd:normalizedString' },
+  { value: 'http://www.w3.org/2001/XMLSchema#token', label: 'xsd:token' },
+  { value: 'http://www.w3.org/2001/XMLSchema#language', label: 'xsd:language' },
+  { value: 'http://www.w3.org/2001/XMLSchema#NMTOKEN', label: 'xsd:NMTOKEN' },
+  { value: 'http://www.w3.org/2001/XMLSchema#NMTOKENS', label: 'xsd:NMTOKENS' },
+  { value: 'http://www.w3.org/2001/XMLSchema#Name', label: 'xsd:Name' },
+  { value: 'http://www.w3.org/2001/XMLSchema#NCName', label: 'xsd:NCName' },
+  { value: 'http://www.w3.org/2001/XMLSchema#ID', label: 'xsd:ID' },
+  { value: 'http://www.w3.org/2001/XMLSchema#IDREFS', label: 'xsd:IDREFS' },
+  { value: 'http://www.w3.org/2001/XMLSchema#ENTITY', label: 'xsd:ENTITY' },
+  { value: 'http://www.w3.org/2001/XMLSchema#ENTITIES', label: 'xsd:ENTITIES' },
+  { value: 'http://www.w3.org/2001/XMLSchema#QName', label: 'xsd:QName' },
+  { value: 'http://www.w3.org/2001/XMLSchema#boolean', label: 'xsd:boolean' },
+  { value: 'http://www.w3.org/2001/XMLSchema#hexBinary', label: 'xsd:hexBinary' },
+  { value: 'http://www.w3.org/2001/XMLSchema#base64Binary', label: 'xsd:base64Binary' },
+  { value: 'http://www.w3.org/2001/XMLSchema#anyURI', label: 'xsd:anyURI' },
+  { value: 'http://www.w3.org/2001/XMLSchema#notation', label: 'xsd:notation' }
+];
+
+
 var DimensionMetadata = React.createClass({
 
   // This React class only works if a list of 'dimensions' is passed through its properties.
