@@ -50,8 +50,8 @@ var Browser = React.createClass({
    * @return {object}
    */
   render: function() {
-    
-    
+
+
     // If we don't have a list of files, and the modal is not visible
     if (this.state.files === undefined && !this.state.modal_visible){
       BrowserActions.retrieveFileList('.');
@@ -87,20 +87,20 @@ var Browser = React.createClass({
    * Event handler when a file or path is selected
    */
   _handleSelected: function(selection){
-    
+
 
     // var selection = event.currentTarget.getAttribute('value');
 
-    
+
 
     var selected_file = _.find(this.state.files, 'uri', selection);
-    
+
     if(selected_file.type == 'file'){
-      
-      DatasetActions.retrieveDataset(selected_file.uri);
+
+      DatasetActions.retrieveDataset(selected_file);
       BrowserActions.closeBrowser();
     } else {
-      
+
       BrowserActions.retrieveFileList(selected_file.uri);
     }
   },

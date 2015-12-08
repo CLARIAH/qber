@@ -111,16 +111,20 @@ var DatasetActions = {
   /**
    * @param {string} filename
    */
-  retrieveDataset: function(filename){
+  retrieveDataset: function(file_details){
+    console.log(file_details);
+    var file_id = file_details['uri'];
+    var file_type = file_details['type'];
+    var file_name = file_details['label'];
+
 
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
-      message: 'Retrieving dataset from '+filename
+      message: 'Retrieving dataset from '+file_name
     });
 
-    console.log(filename);
     // Retrieve the dataset from local storage
-    dataset = JSON.parse(localStorage.getItem(filename));
+    dataset = JSON.parse(localStorage.getItem(file_name));
     console.log(dataset);
 
     if(dataset !== null){
@@ -142,7 +146,9 @@ var DatasetActions = {
     } else {
       // Nothing in cache, call the QBerAPI with the filename, and implement the success callback
       QBerAPI.retrieveDatasetDefinition({
-        filename: filename,
+        file_id: file_id,
+        file_name: file_name,
+        file_type: file_type,
         success: function(dataset){
           QBerDispatcher.dispatch({
             actionType: MessageConstants.SUCCESS,
