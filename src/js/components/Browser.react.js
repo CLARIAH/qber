@@ -32,7 +32,7 @@ function getBrowserState() {
   };
 }
 
-var QBer = React.createClass({
+var Browser = React.createClass({
 
   getInitialState: function() {
     return getBrowserState();
@@ -108,4 +108,4 @@ var QBer = React.createClass({
 
 });
 
-module.exports = QBer;
+module.exports = Browser;
