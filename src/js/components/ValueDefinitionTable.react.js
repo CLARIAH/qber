@@ -79,13 +79,13 @@ var ValueDefinitionTable = React.createClass({
         }
 
 
-        values_rows.push(<tr key={values[key].label}>
+        values_rows.push(<tr key={values[key].original.label}>
                           <td>
-                            { values[key].label }
+                            { values[key].original.label }
                           </td>
                           <td>
                             <span className='btn btn-default btn-xs'
-                                  label={values[key].label}
+                                  label={values[key].original.label}
                                   onClick={this._handleSelectValue}
                                   disabled={button_disabled}>
                                   <span className="glyphicon glyphicon-random"/>
