@@ -163,7 +163,7 @@ function applyTransformFunction(func_body){
   var f = new Function('v', func_body);
 
   for (var key in _variables[_variable_name].values){
-    _variables[_variable_name].values[key].label = f(_variables[_variable_name].values[key].label);
+    _variables[_variable_name].values[key].label = f(_variables[_variable_name].values[key].original.label);
   }
 }
 
