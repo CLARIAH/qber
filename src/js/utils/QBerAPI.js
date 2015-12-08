@@ -4,7 +4,7 @@ var CSDH_API = "http://localhost:5000"
 
 module.exports = {
   retrieveDatasetDefinition: function(settings) {
-    $.get(CSDH_API + '/dataset/definition',{'file': settings.filename}, function(response){
+    $.get(CSDH_API + '/dataset/definition',{'name': settings.file_name, 'id': settings.file_id, 'type': settings.file_type}, function(response){
       console.log("Retrieved dataset definition");
       console.log(response);
       settings.success(response);
@@ -74,6 +74,14 @@ module.exports = {
     $.get(CSDH_API + '/browse', {'path': settings.path}, function(response){
 
 
+      settings.success(response);
+    }).fail(function(response){
+      settings.error(response);
+    });
+  },
+
+  retrieveStudy: function(settings) {
+    $.get(CSDH_API + '/dataverse/dataset', {'handle': settings.handle}, function(response){
       settings.success(response);
     }).fail(function(response){
       settings.error(response);

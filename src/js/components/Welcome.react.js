@@ -1,5 +1,6 @@
 var React = require('react');
 var Browser = require('./Browser.react');
+var DataverseBrowser = require('./DataverseBrowser.react');
 
 var ReactPropTypes = React.PropTypes;
 
@@ -36,7 +37,7 @@ var Welcome = React.createClass({
         break;
       case 'dataverse':
         console.log('dataverse');
-        dataverse_browser = <Browser/>;
+        dataverse_browser = <DataverseBrowser/>;
         break;
     }
 
