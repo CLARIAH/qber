@@ -6,8 +6,8 @@ var gulp = require('gulp'),
     browserify = require('gulp-browserify'),
     size = require('gulp-size'),
     rename = require('gulp-rename'),
-    clean = require('gulp-clean');
-
+    clean = require('gulp-clean'),
+    webserver = require('gulp-webserver');
 
 // tasks
 
@@ -15,9 +15,20 @@ gulp.task('transform', function () {
   // add task
 });
 
+
+gulp.task('webserver', function() {
+  gulp.src('.')
+    .pipe(webserver({
+      livereload: true,
+      directoryListing: false,
+      open: true
+    }));
+});
+
 gulp.task('default', ['clean'], function () {
   console.log("Hello QBer!");
   gulp.start('transform');
+  gulp.start('webserver');
   gulp.watch(['./js/qber.js','./js/**/*.js'], ['transform']);
 });
 
