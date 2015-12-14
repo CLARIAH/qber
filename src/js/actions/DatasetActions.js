@@ -2,7 +2,6 @@ var QBerDispatcher = require('../dispatcher/QBerDispatcher');
 var QBerAPI = require('../utils/QBerAPI');
 var DatasetConstants = require('../constants/DatasetConstants');
 var DimensionConstants = require('../constants/DimensionConstants');
-
 var MessageConstants = require('../constants/MessageConstants');
 
 /**
@@ -113,8 +112,7 @@ var DatasetActions = {
    */
   retrieveDataset: function(file_details){
     console.log(file_details);
-    var file_id = file_details['uri'];
-    var file_type = file_details['type'];
+    var file_path = file_details['uri'];
     var file_name = file_details['label'];
 
 
@@ -146,9 +144,7 @@ var DatasetActions = {
     } else {
       // Nothing in cache, call the QBerAPI with the filename, and implement the success callback
       QBerAPI.retrieveDatasetDefinition({
-        file_id: file_id,
-        file_name: file_name,
-        file_type: file_type,
+        path: file_path,
         success: function(dataset){
           QBerDispatcher.dispatch({
             actionType: MessageConstants.SUCCESS,

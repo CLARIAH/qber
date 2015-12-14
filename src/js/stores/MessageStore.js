@@ -54,9 +54,10 @@ var MessageStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 QBerDispatcher.register(function(action) {
-  
+
   switch(action.actionType) {
     case MessageConstants.ERROR:
+      console.log("Retrieved error: " + action.message);
       setMessage(action.message, 'error');
       MessageStore.emitChange();
       break;
@@ -73,7 +74,7 @@ QBerDispatcher.register(function(action) {
       MessageStore.emitChange();
       break;
     default:
-      
+
       // no op
   }
 });

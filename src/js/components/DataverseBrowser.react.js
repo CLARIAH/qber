@@ -139,7 +139,7 @@ var DataverseBrowser = React.createClass({
     var selected_file = _.find(this.state.files, 'uri', selection);
     console.log(selected_file);
     if(selected_file.type == 'file' || selected_file.type == 'dataverse'){
-      DatasetActions.retrieveDataset(selected_file);
+      DataverseActions.retrieveDataset(selected_file);
       DataverseActions.closeDataverseBrowser();
     }
   },

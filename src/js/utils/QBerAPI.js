@@ -4,39 +4,46 @@ var CSDH_API = "http://localhost:5000"
 
 module.exports = {
   retrieveDatasetDefinition: function(settings) {
-    $.get(CSDH_API + '/dataset/definition',{'name': settings.file_name, 'id': settings.file_id, 'type': settings.file_type}, function(response){
-      console.log("Retrieved dataset definition");
+    $.get(CSDH_API + '/dataset/definition',{'path': settings.path}, function(response){
+      console.log("Retrieved dataset definition from file");
       console.log(response);
       settings.success(response);
-    }).fail(function(){
-      settings.error(response);
+    }).fail(function(response){
+      settings.error(response.responseJSON);
+    });
+  },
+
+  retrieveDataverseDefinition: function(settings) {
+    $.get(CSDH_API + '/dataverse/definition',{'name': settings.name, 'id': settings.id}, function(response){
+      console.log("Retrieved dataset definition from dataverse");
+      console.log(response);
+      settings.success(response);
+    }).fail(function(response){
+      settings.error(response.responseJSON);
     });
   },
 
   retrieveCommunityDimensions: function(settings) {
     $.get(CSDH_API + '/community/dimensions', function(response){
-
       settings.success(response);
-    }).fail(function(){
-      settings.error(response);
+    }).fail(function(response){
+      settings.error(response.responseJSON);
     });
   },
 
   retrieveCommunitySchemes: function(settings) {
     $.get(CSDH_API + '/community/schemes', function(response){
-
       settings.success(response);
-    }).fail(function(){
-      settings.error(response);
+    }).fail(function(response){
+      settings.error(response.responseJSON);
     });
   },
 
   saveDataset: function(settings) {
     $.post(CSDH_API + '/dataset/save',data=JSON.stringify({'dataset': settings.dataset}), function(response){
-
       settings.success(response);
     }).fail(function(response){
-      settings.error(response);
+      settings.error(response.responseJSON);
     });
   },
 
@@ -47,36 +54,31 @@ module.exports = {
     $.post(CSDH_API + '/dataset/submit',data=JSON.stringify({'dataset': settings.dataset, 'user': settings.user}), function(response){
       settings.success(response);
     }).fail(function(response){
-      settings.error(response);
+      settings.error(response.responseJSON);
     });
   },
 
   retrieveDimension: function(settings) {
     $.get(CSDH_API + '/community/definition', {'uri': settings.dimension}, function(response){
-
-
       settings.success(response);
     }).fail(function(response){
-      settings.error(response);
+      settings.error(response.responseJSON);
     });
   },
 
   retrieveConcepts: function(settings) {
     $.get(CSDH_API + '/community/concepts', {'uri': settings.scheme_uri}, function(response){
-
       settings.success(response);
     }).fail(function(response){
-      settings.error(response);
+      settings.error(response.responseJSON);
     });
   },
 
   retrieveFileList: function(settings) {
     $.get(CSDH_API + '/browse', {'path': settings.path}, function(response){
-
-
       settings.success(response);
     }).fail(function(response){
-      settings.error(response);
+      settings.error(response.responseJSON);
     });
   },
 
@@ -84,17 +86,16 @@ module.exports = {
     $.get(CSDH_API + '/dataverse/dataset', {'handle': settings.handle}, function(response){
       settings.success(response);
     }).fail(function(response){
-      settings.error(response);
+      console.log(response);
+      settings.error(response.responseJSON);
     });
   },
 
   retrieveIRI: function(settings) {
     $.get(CSDH_API + '/iri', {'iri': settings.iri}, function(response){
-
-
       settings.success(response);
     }).fail(function(response){
-      settings.error(response);
+      settings.error(response.responseJSON);
     });
   }
 };
