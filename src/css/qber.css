@@ -154,6 +154,21 @@ span.pill-icon {
     z-index: 9001; /* 1px higher than the overlay layer */
 }
 
+.slim-modal {
+    position: fixed;
+    top: 150px;
+    bottom: 100px;
+    left: 200px;
+    right: 200px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: white;
+    border-radius: 5px;
+    overflow: auto;
+    padding: 2em;
+    z-index: 9001; /* 1px higher than the overlay layer */
+}
+
 
 
 h1, h2, h3, h4, h5, h6, nav {

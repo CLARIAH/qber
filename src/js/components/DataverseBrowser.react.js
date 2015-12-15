@@ -83,7 +83,8 @@ var DataverseBrowser = React.createClass({
                 visible={this.state.modal_visible}
                 component={DataverseDOIInput}
                 doUpdateHandle={this._updateHandle}
-                doSubmit={this._handleHandle}>
+                doSubmit={this._handleHandle}
+                doClose={this._handleHideDataverse}>
         </Modal>
       );
 

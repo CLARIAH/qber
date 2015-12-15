@@ -30,7 +30,7 @@ var Modal = React.createClass({
     return (
       <section id="qber_modal_component" onKeyUp={this._handleKeyUp}>
         <div className="overlay" onClick={this.props.doClose}/>
-        <div className="qber-modal">
+        <div className="slim-modal">
           <div className="panel panel-default">
             <div className="panel-heading">
               <button type="button" className="close" onClick={this.props.doClose} aria-label="Close"><span aria-hidden="true">&times;</span></button>

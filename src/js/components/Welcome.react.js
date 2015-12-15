@@ -1,6 +1,8 @@
 var React = require('react');
 var Browser = require('./Browser.react');
 var DataverseBrowser = require('./DataverseBrowser.react');
+var DataverseActions = require('../actions/DataverseActions');
+var BrowserActions = require('../actions/BrowserActions');
 
 var ReactPropTypes = React.PropTypes;
 
@@ -67,12 +69,14 @@ var Welcome = React.createClass({
     var newstate = this.state;
     newstate.mode = 'csdh';
     console.log('Setting state to csdh');
+    BrowserActions.showBrowser();
     this.setState(newstate);
   },
 
   _openDataverseBrowser: function(e){
     var newstate = this.state;
     newstate.mode = 'dataverse';
+    DataverseActions.showDataverseBrowser();
     this.setState(newstate);
   },
 });

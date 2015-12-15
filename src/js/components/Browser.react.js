@@ -52,11 +52,11 @@ var Browser = React.createClass({
   render: function() {
 
 
-    // If we don't have a list of files, and the modal is not visible
-    if (this.state.files === undefined && !this.state.modal_visible){
+    // If we don't have a list of files, retrieve it!
+    if (this.state.files === undefined){
       BrowserActions.retrieveFileList('.');
-      BrowserActions.showBrowser();
-      return (<div>Loading...</div>);
+      // BrowserActions.showBrowser();
+      return null;
     } else {
 
       return ( <QBerModal  visible={this.state.modal_visible}
@@ -64,13 +64,14 @@ var Browser = React.createClass({
                   value={'.'}
                   options={this.state.files}
                   doSelect={this._handleSelected}
-                  doClose={this._handleHideBrowser} />
+                  doClose={this._handleHideBrowser}
+                  style={"slim-modal"} />
               );
     }
   },
 
   /**
-   * Event handler for 'change' events coming from the DatasetStore
+   * Event handler for 'change' events coming from the BrowserStore
    */
   _onChange: function() {
     this.setState(getBrowserState());
