@@ -12,6 +12,7 @@ var Navbar = React.createClass({
     doSignIn: ReactPropTypes.func.isRequired,
     doSave: ReactPropTypes.func.isRequired,
     user: ReactPropTypes.object.isRequired,
+    datasetLoaded: ReactPropTypes.bool.isRequired,
     variable: ReactPropTypes.object.isRequired
   },
 
@@ -28,8 +29,13 @@ var Navbar = React.createClass({
       var username = this.props.user.getName();
       var depiction = this.props.user.getImageUrl();
       userinfo = <li><a href="#"><img className="user-depiction" src={depiction}/>{username}</a></li>;
-      savebutton = <li><a href="#" onClick={this.props.doSave}>Save</a></li>;
-      submitbutton = <li><a href="#" onClick={this.props.doSubmit}>Submit</a></li>;
+
+      // Only show the save & submit buttons when a dataset is actually loaded
+      if (this.props.datasetLoaded){
+        savebutton = <li><a href="#" onClick={this.props.doSave}>Save</a></li>;
+        submitbutton = <li><a href="#" onClick={this.props.doSubmit}>Submit</a></li>;
+      }
+
     } else {
       userinfo = <li><a href="#">Not logged in...</a></li>;
     }
