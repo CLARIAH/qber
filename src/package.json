@@ -1,0 +1,45 @@
+{
+  "name": "qber",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap": "^3.3.5",
+    "classnames": "^2.2.0",
+    "flux": "^2.1.1",
+    "gulp-browserify": "^0.5.1",
+    "gulp-clean": "^0.3.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-size": "^1.3.0",
+    "gulp-util": "^3.0.7",
+    "gulp-webserver": "^0.9.1",
+    "jquery": "^2.1.4",
+    "keymirror": "^0.1.1",
+    "lodash": "^3.10.0",
+    "object-assign": "^3.0.0",
+    "react": "^0.13.3",
+    "react-input-autosize": "^0.4.5",
+    "react-select": "^0.4.9",
+    "react-tools": "^0.13.3",
+    "reactify": "^1.1.1",
+    "selectize": "^0.12.1"
+  },
+  "devDependencies": {
+    "bower": "^1.4.1",
+    "gulp": "^3.9.0",
+    "gulp-webserver": "^0.9.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CLARIAH-SDH/qber.git"
+  },
+  "author": "Rinke Hoekstra <rinke.hoekstra@vu.nl>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CLARIAH-SDH/qber/issues"
+  },
+  "homepage": "https://github.com/CLARIAH-SDH/qber"
+}

@@ -1,1 +1,0 @@
-export DYLD_LIBRARY_PATH="/Users/hoekstra/projects/clariah/lib/python2.7/site-packages/savReaderWriter/spssio/macos/"
