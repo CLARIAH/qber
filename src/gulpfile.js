@@ -37,7 +37,7 @@ gulp.task('default', ['clean'], function () {
 
 gulp.task('transform', function () {
   return gulp.src('./js/qber.js')
-    .pipe(browserify({transform: ['reactify']}))
+    .pipe(browserify({transform: ["reactify"]}))
     .pipe(rename('bundle.js'))
     .pipe(gulp.dest('./dist/js'))
     .pipe(size());
