@@ -194,7 +194,8 @@ var ValueDefinitionTable = React.createClass({
     var new_state = this.state;
 
     new_state.selected_value_label = e.currentTarget.getAttribute('label');
-    new_state.selected_value_uri = _.find(this.props.variable.values, 'label', new_state.selected_value_label).uri;
+    var key = (isNaN(new_state.selected_value_label)) ? new_state.selected_value_label : Number(new_state.selected_value_label);
+    new_state.selected_value_uri = _.find(this.props.variable.values, 'label', key).uri;
 
     this.setState(new_state);
     this._handleToggleModal()
