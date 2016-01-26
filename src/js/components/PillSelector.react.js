@@ -36,6 +36,8 @@ var PillSelector = React.createClass({
     } else if (this.props.value !== undefined){
       input.value = this.props.value;
     }
+    input.focus();
+    input.select();
   },
 
   componentWillReceiveProps: function(nextProps){
