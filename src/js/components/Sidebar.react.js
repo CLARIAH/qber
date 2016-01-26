@@ -16,10 +16,14 @@ var Sidebar = React.createClass({
    * @return {object}
    */
   render: function() {
+    console.log('Sidebar state dump')
+    console.log(this.state)
+    console.log('Sidebar props dump')
+    console.log(this.props)
     return (
       <div className="col-md-2 col-sm-3 sidebar">
         <section id="variable_select_panel">
-          <h4>Variables</h4>
+          <h4>Variables in dataset {this.props.datasetName}</h4>
           <PillSelector options={this.props.options} doSelect={this._onSelected}/>
         </section>
       </div>

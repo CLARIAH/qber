@@ -20,7 +20,7 @@ var Navbar = React.createClass({
    * @return {object}
    */
   render: function() {
-    var signin, userinfo, savebutton, submitbutton;
+    var signin, userinfo, savebutton, submitbutton, datasetHeader;
 
 
     signin = <SignIn onSignIn={this.props.doSignIn}/>;
@@ -32,6 +32,7 @@ var Navbar = React.createClass({
 
       // Only show the save & submit buttons when a dataset is actually loaded
       if (this.props.datasetLoaded){
+        datasetHeader = <li><a href="#"><strong>{this.props.datasetName}</strong></a></li>;
         savebutton = <li><a href="#" onClick={this.props.doSave}>Save</a></li>;
         submitbutton = <li><a href="#" onClick={this.props.doSubmit}>Submit</a></li>;
       }
@@ -57,6 +58,7 @@ var Navbar = React.createClass({
           <div className="collapse navbar-collapse" id="navbar">
             <ul className="nav navbar-nav nav-pills">
               {userinfo}
+              {datasetHeader}
               {savebutton}
               {submitbutton}
             </ul>
