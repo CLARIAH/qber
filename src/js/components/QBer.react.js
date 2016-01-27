@@ -63,12 +63,10 @@ var QBer = React.createClass({
   render: function() {
     var body;
     var dataset_loaded;
-    var dataset_name;
 
     if (this.state.dataset === undefined){
       body = <Welcome visible={true}/>;
       dataset_loaded = false;
-      dataset_name = undefined;
     } else {
     	body =
         <div className="container-fluid" id="qber_body">
@@ -86,7 +84,6 @@ var QBer = React.createClass({
           </div>
         </div>;
       dataset_loaded = true;
-      dataset_name = this.state.dataset['name'];
     }
 
     // Let the navbar know whether a dataset is loaded or not
@@ -96,7 +93,7 @@ var QBer = React.createClass({
                          user={this.state.user}
                          datasetLoaded={dataset_loaded}
                          variable={this.state.variable}
-                         datasetName={dataset_name} />;
+                         datasetName={this.state.dataset === undefined ? undefined : this.state.dataset['name']} />;
 
     return (
       <section id='qber_content'>
