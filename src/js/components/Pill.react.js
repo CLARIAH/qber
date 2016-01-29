@@ -52,6 +52,12 @@ var Pill = React.createClass({
       if (this.props.option.refs){
         badge = <span className="badge pull-right">{this.props.option.refs}</span>;
       }
+    } else if (this.props.option.mapped >= 0) {
+      // Sidebar variable pills
+      text = <span>{this.props.option.label}</span>;
+      icon = <span className='glyphicon glyphicon-edit pill-icon'></span>;
+      badge = <span className="badge pull-right">{this.props.option.mapped*100}%</span>;
+      value = this.props.option.label;
     } else {
       // Regular URI item pils
       text = <span>{this.props.option.label}</span>;
@@ -77,6 +83,7 @@ var Pill = React.createClass({
                              title={value}
                              key={value}
                              onClick={this.props.onClicked}>{icon}{text}{link}{badge}</a>;
+
 
 
     return (

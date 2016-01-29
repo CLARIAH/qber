@@ -68,11 +68,34 @@ var QBer = React.createClass({
       body = <Welcome visible={true}/>;
       dataset_loaded = false;
     } else {
+      // if (this.state.dataset.variables != undefined) {
+      //   variables = this.state.variable_names
+      //   for (var key in variables) {
+      //     map_count = 0;
+      //     values = this.state.dataset.variables[variables[key]].values;
+      //     for (var map in values) {
+      //       console.log(map.uri);
+      //       if (map.uri !== map.original.uri) {
+      //         map_count++;
+      //       }
+      //     }
+      //     map_ratio = map_count / values.length;
+      //     console.log('Map ratio');
+      //     console.log(map_ratio);
+      //   }
+      // }
+
+      // var variable_names = new Array();
+      // for (var option in this.state.variable_names) {
+      //     variable_names.push({'label': this.state.variable_names[option], 'rate': 0});
+      //     //variable_names.push(this.state.variable_names[option]);
+      // }
+
+
     	body =
         <div className="container-fluid" id="qber_body">
           <div className="row">
             <Sidebar
-              datasetName={this.state.dataset['name']}
               options={this.state.variable_names}
             />
             <VariablePanel

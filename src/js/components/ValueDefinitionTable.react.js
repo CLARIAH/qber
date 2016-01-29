@@ -50,12 +50,16 @@ var ValueDefinitionTable = React.createClass({
       // The button is enabled if there's a variable, and the variable is of category community or coded
       var button_disabled = (this.props.variable && (this.props.variable.category == 'community' || this.props.variable.category == 'coded' )) ? false: true;
 
+      var encoded_rate = 0;
       for (var key in values) {
 
         var mapping;
         if(this.props.variable.category !== 'other'){
           // If we're dealing with a coded or identity variable, we need to show the URI
           var mapped_uri = values[key].uri;
+          if (mapped_uri != values[key].original.uri) {
+            encoded_rate++;
+          }
           var mapped_uri_icon;
           if (mapped_uri){
             mapped_uri_icon = <span className="glyphicon glyphicon-link"/>;
@@ -99,6 +103,8 @@ var ValueDefinitionTable = React.createClass({
                           </td>
                         </tr>);
       }
+      // console.log('rate');
+      // console.log(encoded_rate/this.props.variable.values.length);
 
       var modal;
       // We only prepare the modal if we have a community or coded variable

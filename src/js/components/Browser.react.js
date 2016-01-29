@@ -91,9 +91,7 @@ var Browser = React.createClass({
 
 
     // var selection = event.currentTarget.getAttribute('value');
-
-
-
+    
     var selected_file = _.find(this.state.files, 'uri', selection);
 
     if(selected_file.type == 'file'){

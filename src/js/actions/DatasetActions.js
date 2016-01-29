@@ -111,6 +111,7 @@ var DatasetActions = {
    * @param {string} filename
    */
   retrieveDataset: function(file_details){
+    console.log('File details:');
     console.log(file_details);
     var file_path = file_details['uri'];
     var file_name = file_details['label'];
@@ -123,6 +124,17 @@ var DatasetActions = {
 
     // Retrieve the dataset from local storage
     dataset = JSON.parse(localStorage.getItem(file_name));
+    // Initialize the % mapping completion
+    for (var variable in dataset.variables) {
+      var mapped = 0;
+      for (var val in variable.values) {
+        if (val.uri != val.original.uri) {
+          mapped += 1;
+        }
+      }
+      dataset.variables[variable].mapped = mapped / dataset.variables[variable].values.length;
+      //console.log('var ' + variable + ' is mapped ' + mapped);
+    }
     console.log(dataset);
 
     if(dataset !== null){

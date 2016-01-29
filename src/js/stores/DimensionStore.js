@@ -180,6 +180,9 @@ function assignMapping(value_uri, code_uri) {
 
    // Assign the selected concept uri to the value.
    _variables[_variable_name].values[index].uri = code_uri;
+   // If the mapping is new, increase the mapping counter
+   _variables[_variable_name].mapped += 1 / _variables[_variable_name].values.length;
+   console.log(_variables[_variable_name].mapped);   
 }
 
 
@@ -243,6 +246,7 @@ QBerDispatcher.register(function(action) {
     // This is the INIT action for the variables
     case DimensionConstants.SDMX_DIMENSION_INIT:
       var variables = action.variables;
+      //console.log(variables);
       if (variables !== {}) {
         initialize(variables);
         DimensionStore.emitChange();
@@ -302,6 +306,8 @@ QBerDispatcher.register(function(action) {
     case DimensionConstants.SDMX_DIMENSION_MAP:
       var value = action.value;
       var uri = action.uri;
+      console.log(value);
+      console.log(uri);
       assignMapping(value, uri);
       DimensionStore.emitChange();
       break;

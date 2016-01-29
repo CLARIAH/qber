@@ -120,7 +120,12 @@ var DatasetStore = assign({}, EventEmitter.prototype, {
     if (_dataset === undefined || _dataset.variables === undefined){
       return [];
     } else {
-      return Object.keys(_dataset.variables);
+      var variables_mappings = new Array();
+      for (var varmap in _dataset.variables) {
+        variables_mappings.push(({'label': varmap, 'mapped': _dataset.variables[varmap].mapped}));
+      }
+      //return Object.keys(_dataset.variables);
+      return variables_mappings;
     }
   },
 

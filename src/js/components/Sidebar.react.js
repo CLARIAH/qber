@@ -16,18 +16,18 @@ var Sidebar = React.createClass({
    * @return {object}
    */
   render: function() {
-    console.log('Sidebar state dump')
-    console.log(this.state)
-    console.log('Sidebar props dump')
-    console.log(this.props)
     return (
       <div className="col-md-2 col-sm-3 sidebar">
         <section id="variable_select_panel">
-          <h4>Variables in dataset {this.props.datasetName}</h4>
-          <PillSelector options={this.props.options} doSelect={this._onSelected}/>
+          <h4>Variables</h4>
+          <PillSelector options={this.props.options} dataset={this.props.dataset} doSelect={this._onSelected} filterFunction={this._filter}/>
         </section>
       </div>
     );
+  },
+
+  _filter: function(regexp, option){
+    return (option.label.search(regexp) > -1) ? '': 'none';
   },
 
   /**
@@ -35,7 +35,7 @@ var Sidebar = React.createClass({
    */
   _onSelected: function(value) {
     DatasetActions.chooseVariable(value);
-  }
+  },
 
 });
 
