@@ -172,9 +172,6 @@ function applyTransformFunction(func_body){
 * @param  {object} codes The retrieved codes
 */
 function assignMapping(value_uri, code_uri) {
-
-
-
    var values = _variables[_variable_name].values;
    var index = _.indexOf(values, _.find(values,{uri: value_uri}));
 
@@ -182,11 +179,8 @@ function assignMapping(value_uri, code_uri) {
    _variables[_variable_name].values[index].uri = code_uri;
    // If the mapping is new, increase the mapping counter
    _variables[_variable_name].mapped += 1 / _variables[_variable_name].values.length;
-   console.log(_variables[_variable_name].mapped);   
+   console.log(_variables[_variable_name].mapped);
 }
-
-
-
 
 var DimensionStore = assign({}, EventEmitter.prototype, {
 
@@ -198,6 +192,18 @@ var DimensionStore = assign({}, EventEmitter.prototype, {
     return _variables;
   },
 
+  /**
+   * Get the list of variables and their mapping status.
+   * @return [array] of {'label' : label, 'mapped': mapped} objects
+   */
+  getVariableNames: function() {
+    var variables_mappings = new Array();
+    for (var varmap in _variables) {
+      variables_mappings.push(({'label': varmap, 'mapped': _variables[varmap].mapped}));
+    }
+    //return Object.keys(_dataset.variables);
+    return variables_mappings;
+  },
 
   /**
    * Get the definition of the currently selected variable

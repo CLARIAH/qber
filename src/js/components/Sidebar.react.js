@@ -1,15 +1,27 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
+var DimensionStore = require('../stores/DimensionStore');
+// var DatasetStore = require('../stores/DatasetStore');
 var DatasetActions = require('../actions/DatasetActions');
 var PillSelector = require('./PillSelector.react');
-
-
 
 var Sidebar = React.createClass({
 
   // This React class only works if a list of 'options' is passed through its properties.
   propTypes: {
     options: ReactPropTypes.array.isRequired
+  },
+
+  getInitialState: function() {
+    return { 'variables' : DimensionStore.getVariableNames() };
+  },
+
+  componentDidMount: function() {
+    DimensionStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function() {
+    DimensionStore.removeChangeListener(this._onChange);
   },
 
   /**
@@ -20,7 +32,7 @@ var Sidebar = React.createClass({
       <div className="col-md-2 col-sm-3 sidebar">
         <section id="variable_select_panel">
           <h4>Variables</h4>
-          <PillSelector options={this.props.options} dataset={this.props.dataset} doSelect={this._onSelected} filterFunction={this._filter}/>
+          <PillSelector options={this.state.variables} dataset={this.props.dataset} doSelect={this._onSelected} filterFunction={this._filter}/>
         </section>
       </div>
     );
@@ -36,6 +48,13 @@ var Sidebar = React.createClass({
   _onSelected: function(value) {
     DatasetActions.chooseVariable(value);
   },
+
+  /**
+   * Event handler for changes coming from the DatasetStore
+   */
+  _onChange: function() {
+    this.setState({ 'variables' : DimensionStore.getVariableNames() });
+  }
 
 });
 
