@@ -125,16 +125,16 @@ var DatasetActions = {
     // Retrieve the dataset from local storage
     dataset = JSON.parse(localStorage.getItem(file_name));
     // Initialize the % mapping completion
-    for (var variable in dataset.variables) {
-      var mapped = 0;
-      for (var val in variable.values) {
-        if (val.uri != val.original.uri) {
-          mapped += 1;
-        }
-      }
-      dataset.variables[variable].mapped = mapped / dataset.variables[variable].values.length;
+    // for (var variable in dataset.variables) {
+    //   var mapped = 0;
+    //   for (var val in variable.values) {
+    //     if (val.uri != val.original.uri) {
+    //       mapped += 1;
+    //     }
+    //   }
+    //   dataset.variables[variable].mapped = mapped / dataset.variables[variable].values.length;
       //console.log('var ' + variable + ' is mapped ' + mapped);
-    }
+    // }
     console.log(dataset);
 
     if(dataset !== null){

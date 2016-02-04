@@ -1,7 +1,6 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var DimensionStore = require('../stores/DimensionStore');
-// var DatasetStore = require('../stores/DatasetStore');
 var DatasetActions = require('../actions/DatasetActions');
 var PillSelector = require('./PillSelector.react');
 
