@@ -3,7 +3,7 @@ var ReactPropTypes = React.PropTypes;
 var DimensionActions = require('../actions/DimensionActions');
 var DimensionStore = require('../stores/DimensionStore');
 var QBerModal = require('./QBerModal.react');
-var DimensionType = require('./Dimensiontype.react');
+var DimensionType = require('./DimensionType.react');
 var DimensionMetadata = require('./DimensionMetadata.react');
 var ValueDefinitionTable = require('./ValueDefinitionTable.react');
 
