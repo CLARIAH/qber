@@ -34,6 +34,12 @@ Change into the `src` subdirectory of the folder you just created, and run:
 npm install
 ```
 
+In case gulp is not available in your environment, you'll need to install it globally:
+
+```
+sudo npm install -g gulp
+```
+
 This should install all required packages.
 
 ###### Silly step
