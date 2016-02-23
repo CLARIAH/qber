@@ -7,7 +7,7 @@ module.exports = {
     $.get(CSDH_API + '/dataset/definition',{'path': settings.path}, function(response){
       console.log("Retrieved dataset definition from file");
       console.log(response);
-      settings.success(response);
+      settings.success(response.dataset);
     }).fail(function(response){
       settings.error(response.responseJSON);
     });
@@ -17,7 +17,7 @@ module.exports = {
     $.get(CSDH_API + '/dataverse/definition',{'name': settings.name, 'id': settings.id}, function(response){
       console.log("Retrieved dataset definition from dataverse");
       console.log(response);
-      settings.success(response);
+      settings.success(response.dataset);
     }).fail(function(response){
       settings.error(response.responseJSON);
     });
