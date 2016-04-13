@@ -3,7 +3,7 @@ var Browser = require('./Browser.react');
 var DataverseBrowser = require('./DataverseBrowser.react');
 var DataverseActions = require('../actions/DataverseActions');
 var CSVActions = require('../actions/CSVActions');
-var Dropzone = require('./CSVDropzone.react')
+var CSVDropzone = require('./CSVDropzone.react')
 var BrowserActions = require('../actions/BrowserActions');
 
 var ReactPropTypes = React.PropTypes;
@@ -46,7 +46,7 @@ var Welcome = React.createClass({
         break;
       case 'csv':
         console.log('csv');
-        csv_dropzone = <Dropzone/>;
+        csv_dropzone = <CSVDropzone/>;
         break;
     }
 
@@ -67,6 +67,9 @@ var Welcome = React.createClass({
                 <div className="btn btn-default btn-space" onClick={this._openDataverseBrowser}>Browse Dataverse</div>
               </div>
             </div>
+              <div className="div-csv">
+                <center>{csv_dropzone}</center>
+              </div>
           </div>
         </div>
       </div>

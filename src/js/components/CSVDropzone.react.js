@@ -47,7 +47,6 @@ var CSVDropzone = React.createClass({
       //             doClose={this._handleHideBrowser}
       //             style={"slim-modal"} />
       //         );
-
       if (!this.state.modal_visible) {
         console.log("CSV modal is not visible");
         return null;
@@ -55,7 +54,7 @@ var CSVDropzone = React.createClass({
         return (
             <div>
               <Dropzone onDrop={this.onDrop}>
-                <div>Try dropping some files here, or click to select files to upload.</div>
+                <div>Drop some CSV files here.</div>
               </Dropzone>
             </div>
         );
