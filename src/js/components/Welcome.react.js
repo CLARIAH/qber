@@ -53,10 +53,11 @@ var Welcome = React.createClass({
           <div className="col-md-8 col-md-offset-2">
             <div className="welcome">
               <h1>QBer</h1>
-              <h4>Connect your data to the cloud!</h4>
+              <h4>Connect your data to the cloud</h4>
               <div className="text-center center-block">
-                <div className="btn btn-primary" onClick={this._openCSDHBrowser}>Browse CSDH</div>
-                <div className="btn btn-default" onClick={this._openDataverseBrowser}>Browse Dataverse</div>
+                <div className="btn btn-primary btn-space" onClick={this._openCSVBrowser}>Upload CSV</div>
+                <div className="btn btn-primary btn-space" onClick={this._openCSDHBrowser}>Browse CSDH</div>
+                <div className="btn btn-default btn-space" onClick={this._openDataverseBrowser}>Browse Dataverse</div>
               </div>
             </div>
           </div>
