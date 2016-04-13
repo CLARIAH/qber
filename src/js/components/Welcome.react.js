@@ -2,6 +2,8 @@ var React = require('react');
 var Browser = require('./Browser.react');
 var DataverseBrowser = require('./DataverseBrowser.react');
 var DataverseActions = require('../actions/DataverseActions');
+var CSVActions = require('../actions/CSVActions');
+var Dropzone = require('./CSVDropzone.react')
 var BrowserActions = require('../actions/BrowserActions');
 
 var ReactPropTypes = React.PropTypes;
@@ -32,6 +34,7 @@ var Welcome = React.createClass({
 
     var csdh_browser;
     var dataverse_browser;
+    var csv_dropzone;
     switch(this.state.mode){
       case 'csdh':
         console.log('csdh');
@@ -40,6 +43,10 @@ var Welcome = React.createClass({
       case 'dataverse':
         console.log('dataverse');
         dataverse_browser = <DataverseBrowser/>;
+        break;
+      case 'csv':
+        console.log('csv');
+        csv_dropzone = <Dropzone/>;
         break;
     }
 
@@ -55,7 +62,7 @@ var Welcome = React.createClass({
               <h1>QBer</h1>
               <h4>Connect your data to the cloud</h4>
               <div className="text-center center-block">
-                <div className="btn btn-primary btn-space" onClick={this._openCSVBrowser}>Upload CSV</div>
+                <div className="btn btn-primary btn-space" onClick={this._openCSVDropzone}>Upload CSV</div>
                 <div className="btn btn-primary btn-space" onClick={this._openCSDHBrowser}>Browse CSDH</div>
                 <div className="btn btn-default btn-space" onClick={this._openDataverseBrowser}>Browse Dataverse</div>
               </div>
@@ -64,6 +71,14 @@ var Welcome = React.createClass({
         </div>
       </div>
     );
+  },
+
+  _openCSVDropzone: function(e) {
+    var newstate = this.state;
+    newstate.mode = 'csv';
+    console.log('Setting state to csv');
+    CSVActions.showCSVDropzone();
+    this.setState(newstate);
   },
 
   _openCSDHBrowser: function(e){
