@@ -20,7 +20,7 @@ var Navbar = React.createClass({
    * @return {object}
    */
   render: function() {
-    var signin, userinfo, savebutton, submitbutton, datasetHeader;
+    var signin, userinfo, savebutton, submitbutton, downloadbutton, datasetHeader;
 
 
     signin = <SignIn onSignIn={this.props.doSignIn}/>;
@@ -35,6 +35,7 @@ var Navbar = React.createClass({
         datasetHeader = <li><a href="#"><strong>{this.props.datasetName}</strong></a></li>;
         savebutton = <li><a href="#" onClick={this.props.doSave}>Save</a></li>;
         submitbutton = <li><a href="#" onClick={this.props.doSubmit}>Submit</a></li>;
+        downloadbutton = <li><a href="#" onClick={this.props.doDownload}>Download QB</a></li>;
       }
 
     } else {
@@ -61,6 +62,7 @@ var Navbar = React.createClass({
               {datasetHeader}
               {savebutton}
               {submitbutton}
+              {downloadbutton}
             </ul>
             <ul className="nav navbar-nav navbar-right">
               <li><a style={{padding:'0px', paddingTop:'2px'}}>{signin}</a></li>
