@@ -1,5 +1,6 @@
 var React = require('react');
 var SignIn = require('./SignIn.react');
+var NavbarStore = require('../stores/NavbarStore')
 
 var ReactPropTypes = React.PropTypes;
 
@@ -14,6 +15,18 @@ var Navbar = React.createClass({
     user: ReactPropTypes.object.isRequired,
     datasetLoaded: ReactPropTypes.bool.isRequired,
     variable: ReactPropTypes.object.isRequired
+  },
+
+  getInitialState: function() {
+    return NavbarStore.getNavbar();
+  },
+
+  componentDidMount: function() {
+    NavbarStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function() {
+    NavbarStore.removeChangeListener(this._onChange);
   },
 
   /**
@@ -35,7 +48,12 @@ var Navbar = React.createClass({
         datasetHeader = <li><a href="#"><strong>{this.props.datasetName}</strong></a></li>;
         savebutton = <li><a href="#" onClick={this.props.doSave}>Save</a></li>;
         submitbutton = <li><a href="#" onClick={this.props.doSubmit}>Submit</a></li>;
-        downloadbutton = <li><a href="#" onClick={this.props.doDownload}>Download QB</a></li>;
+        if (this.state.url) {
+          downloadbutton = <li><a href={this.state.url} onClick={this.props.doDownload} download>Download QB</a></li>;
+        } else {
+          downloadbutton = <li><a className="inactiveLink" href="#">Download QB</a></li>;
+        }
+
       }
 
     } else {
@@ -71,7 +89,17 @@ var Navbar = React.createClass({
         </div>
       </nav>
     );
-  }
+  },
+
+  /**
+   * Event handler for 'change' events coming from the NavbarStore
+   */
+  _onChange: function() {
+    this.setState(NavbarStore.getNavbar());
+  },
+
+
+
 });
 
 module.exports = Navbar;

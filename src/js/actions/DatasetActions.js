@@ -3,6 +3,7 @@ var QBerAPI = require('../utils/QBerAPI');
 var DatasetConstants = require('../constants/DatasetConstants');
 var DimensionConstants = require('../constants/DimensionConstants');
 var MessageConstants = require('../constants/MessageConstants');
+var NavbarConstants = require('../constants/NavbarConstants');
 
 /**
  *  Note that the QBerAPI also dispatches actions to stores!
@@ -253,6 +254,11 @@ var DatasetActions = {
           actionType: MessageConstants.SUCCESS,
           message: response.message
         });
+        QBerDispatcher.dispatch({
+          actionType: NavbarConstants.UPDATE_URL,
+          message: response.url
+        });
+        //console.log(response.url);
       },
       error: function(response){
         QBerDispatcher.dispatch({

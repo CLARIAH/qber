@@ -183,3 +183,9 @@ h1, h2, h3, h4, h5, h6, nav {
 .div-csv {
   margin-top: 20px;
 }
+
+.inactiveLink {
+   pointer-events: none;
+   cursor: default;
+   color: black;
+}

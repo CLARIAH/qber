@@ -1,5 +1,5 @@
 
-var CSDH_API = "http://localhost:5000"
+var CSDH_API = "http://api.clariah-sdh.eculture.labs.vu.nl"
 
 
 module.exports = {
