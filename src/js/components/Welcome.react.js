@@ -14,7 +14,8 @@ var Welcome = React.createClass({
 
   // This React class only works if a 'visible' value is passed through its properties.
   propTypes: {
-    visible: ReactPropTypes.bool.isRequired
+    visible: ReactPropTypes.bool.isRequired,
+    user: ReactPropTypes.object.isRequired,
   },
 
   getInitialState: function() {
@@ -79,13 +80,15 @@ var Welcome = React.createClass({
 
   _openDropboxChooser: function(e) {
     var newstate = this.state;
+    var user = this.props.user;
     newstate.mode = 'dropbox';
     console.log('Setting state to dropbox');
+
 
     options = {
       // Required. Called when a user selects an item in the Chooser.
       success: function(files) {
-          DropboxActions.retrieveDataset(files[0].link);
+          DropboxActions.retrieveDataset(files[0].link, user);
       },
 
       // Optional. Called when the user closes the dialog without selecting a file

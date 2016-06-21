@@ -65,7 +65,7 @@ var QBer = React.createClass({
     var dataset_loaded;
 
     if (this.state.dataset === undefined){
-      body = <Welcome visible={true}/>;
+      body = <Welcome visible={true} user={this.state.user}/>;
       dataset_loaded = false;
     } else {
       // if (this.state.dataset.variables != undefined) {
