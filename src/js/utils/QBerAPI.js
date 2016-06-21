@@ -1,6 +1,6 @@
 
-var CSDH_API = "http://api.clariah-sdh.eculture.labs.vu.nl"
-
+// var CSDH_API = "http://api.clariah-sdh.eculture.labs.vu.nl";
+var CSDH_API = "http://localhost:5000";
 
 module.exports = {
   retrieveDatasetDefinition: function(settings) {
@@ -16,6 +16,16 @@ module.exports = {
   retrieveDataverseDefinition: function(settings) {
     $.get(CSDH_API + '/dataverse/definition',{'name': settings.name, 'id': settings.id}, function(response){
       console.log("Retrieved dataset definition from dataverse");
+      console.log(response);
+      settings.success(response.dataset);
+    }).fail(function(response){
+      settings.error(response.responseJSON);
+    });
+  },
+
+  retrieveURLBasedDefinition: function(settings) {
+    $.get(CSDH_API + '/web/definition',{'name': settings.name, 'url': settings.url}, function(response){
+      console.log("Retrieved dataset definition from URL");
       console.log(response);
       settings.success(response.dataset);
     }).fail(function(response){
