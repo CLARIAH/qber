@@ -113,7 +113,6 @@ var QBer = React.createClass({
     var navbar = <Navbar doSignIn={this._handleSignedIn}
                          doSave={this._handleSave}
                          doSubmit={this._handleSubmit}
-                         doDownload={this._handleDownload}
                          user={this.state.user}
                          datasetLoaded={dataset_loaded}
                          variable={this.state.variable}
@@ -169,9 +168,6 @@ var QBer = React.createClass({
     DatasetActions.submitDataset(user, dataset);
   },
 
-  _handleDownload: function() {
-    // TODO: API call to get the file URL and start the download
-  },
 
 });
 

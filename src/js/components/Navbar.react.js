@@ -49,9 +49,9 @@ var Navbar = React.createClass({
         savebutton = <li><a href="#" onClick={this.props.doSave}>Save</a></li>;
         submitbutton = <li><a href="#" onClick={this.props.doSubmit}>Submit</a></li>;
         if (this.state.url) {
-          downloadbutton = <li><a href={this.state.url} onClick={this.props.doDownload} download>Download QB</a></li>;
+          downloadbutton = <li><a href={this.state.url} target="_new">Result</a></li>;
         } else {
-          downloadbutton = <li><a className="inactiveLink" href="#">Download QB</a></li>;
+          downloadbutton = <li><a className="inactiveLink" disabled='true' href="#" target="_new">Result</a></li>;
         }
 
       }
