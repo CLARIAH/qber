@@ -69,6 +69,11 @@ var ValueDefinitionTable = React.createClass({
             browse_mapped_uri = "http://data.clariah-sdh.eculture.labs.vu.nl/browse?uri="+encodeURIComponent(mapped_uri);
           }
 
+          // Strip to something more readable as long as it is not mapped.
+          if (mapped_uri == values[key].original.uri) {
+            mapped_uri = "value:" +_.last(_.split(mapped_uri, '/'));
+          }
+
           mapping = <div>
                           {mapped_uri_icon}
                           <a className='small' target="_blank" href={browse_mapped_uri}>
