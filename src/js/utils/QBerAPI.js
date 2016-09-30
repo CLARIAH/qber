@@ -85,7 +85,7 @@ module.exports = {
   },
 
   retrieveFileList: function(settings) {
-    $.get(CSDH_API + '/browse', {'path': settings.path}, function(response){
+    $.get(CSDH_API + '/browse', {'path': settings.path, 'user': settings.user}, function(response){
       settings.success(response);
     }).fail(function(response){
       settings.error(response.responseJSON);

@@ -16,7 +16,6 @@ var React = require('react');
 var PillSelector = require('./PillSelector.react');
 var VariablePanel = require('./VariablePanel.react');
 var Sidebar = require('./Sidebar.react');
-var Browser = require('./Browser.react');
 var Welcome = require('./Welcome.react');
 var SignIn = require('./SignIn.react');
 var Navbar = require('./Navbar.react');
@@ -25,7 +24,7 @@ var MessagePanel = require('./MessagePanel.react');
 var DatasetStore = require('../stores/DatasetStore');
 var DimensionStore = require('../stores/DimensionStore');
 var DatasetActions = require('../actions/DatasetActions');
-var BrowserActions = require('../actions/BrowserActions');
+
 
 /**
  * Retrieve the current dataset from the DatasetStore

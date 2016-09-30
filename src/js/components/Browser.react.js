@@ -21,6 +21,8 @@ var BrowserStore = require('../stores/BrowserStore');
 var BrowserActions = require('../actions/BrowserActions');
 var DatasetActions = require('../actions/DatasetActions');
 
+var ReactPropTypes = React.PropTypes;
+
 /**
  * Retrieve the current dataset from the DatasetStore
  */
@@ -33,6 +35,12 @@ function getBrowserState() {
 }
 
 var Browser = React.createClass({
+
+  // This React class only works if a 'visible' value is passed through its properties.
+  propTypes: {
+    user: ReactPropTypes.object.isRequired
+  },
+
 
   getInitialState: function() {
     return getBrowserState();
@@ -54,7 +62,7 @@ var Browser = React.createClass({
 
     // If we don't have a list of files, retrieve it!
     if (this.state.files === undefined){
-      BrowserActions.retrieveFileList('.');
+      BrowserActions.retrieveFileList('.', this.props.user.getEmail());
       // BrowserActions.showBrowser();
       return null;
     } else {
@@ -99,7 +107,7 @@ var Browser = React.createClass({
       BrowserActions.closeBrowser();
     } else {
 
-      BrowserActions.retrieveFileList(selected_file.uri);
+      BrowserActions.retrieveFileList(selected_file.uri, this.props.user.getEmail());
     }
   },
 

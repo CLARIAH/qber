@@ -11,8 +11,10 @@ var BrowserActions = {
   /**
    * @param {string} path
    */
-  retrieveFileList: function(path){
-
+  retrieveFileList: function(path, user){
+    // if (path=='.' || path=='/') {
+    //   path = user;
+    // }
     // QBerDispatcher.dispatch({
     //   actionType: MessageConstants.INFO,
     //   message: 'Retrieving file list from '+path
@@ -21,13 +23,14 @@ var BrowserActions = {
     // Call the QBerAPI with the filename, and implement the success callback
     QBerAPI.retrieveFileList({
       path: path,
+      user: user,
       success: function(file_list){
 
         QBerDispatcher.dispatch({
           actionType: MessageConstants.SUCCESS,
           message: 'Successfully retrieved file list ' + file_list.path
         });
-        
+
         QBerDispatcher.dispatch({
           actionType: BrowserConstants.UPDATE_FILES,
           file_list: file_list

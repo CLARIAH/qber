@@ -40,20 +40,30 @@ var Welcome = React.createClass({
     switch(this.state.mode){
       case 'csdh':
         console.log('csdh');
-        csdh_browser = <Browser/>;
+        csdh_browser = <Browser user={this.props.user}/>;
         break;
       case 'dataverse':
         console.log('dataverse');
         dataverse_browser = <DataverseBrowser/>;
         break;
-      case 'csv':
-        console.log('csv');
-        csv_dropzone = <div className="div-csv">
-                        <center><CSVDropzone/></center>
-                      </div>;
-        break;
+      // case 'csv':
+      //   console.log('csv');
+      //   csv_dropzone = <div className="div-csv">
+      //                   <center><CSVDropzone/></center>
+      //                 </div>;
+      //   break;
     }
 
+    var load_dataset_actions;
+    if (this.props.user != null){
+      load_dataset_actions = <div className="text-center center-block">
+        <div className="btn btn-primary btn-space" onClick={this._openCSDHBrowser}>Browse <strong>data</strong>legend</div>
+        <div className="btn btn-info btn-space" onClick={this._openDropboxChooser}>Browse Dropbox</div>
+        <div className="btn btn-default btn-space" onClick={this._openDataverseBrowser}>Browse Dataverse</div>
+      </div>;
+    } else {
+      load_dataset_actions = <div className="alert alert-info" role="alert">Please login first...</div>
+    }
 
 
     return (
@@ -65,13 +75,8 @@ var Welcome = React.createClass({
             <div className="welcome">
               <h1>QBer</h1>
               <h4>Connect your data to the cloud</h4>
-              <div className="text-center center-block">
-                <div className="btn btn-primary btn-space" onClick={this._openCSDHBrowser}>Browse <strong>data</strong>legend</div>
-                <div className="btn btn-default btn-space" onClick={this._openDropboxChooser}>Browse Dropbox</div>
-                <div className="btn btn-default btn-space" onClick={this._openDataverseBrowser}>Browse Dataverse</div>
-              </div>
+              {load_dataset_actions}
             </div>
-            {csv_dropzone}
           </div>
         </div>
       </div>
@@ -81,6 +86,12 @@ var Welcome = React.createClass({
   _openDropboxChooser: function(e) {
     var newstate = this.state;
     var user = this.props.user;
+
+    if(user == null) {
+      console.log("Not logged in...");
+      return;
+    }
+
     newstate.mode = 'dropbox';
     console.log('Setting state to dropbox');
 
