@@ -14,7 +14,7 @@ module.exports = {
   },
 
   retrieveDataverseDefinition: function(settings) {
-    $.get(CSDH_API + '/dataverse/definition',{'name': settings.name, 'id': settings.id}, function(response){
+    $.get(CSDH_API + '/dataverse/definition',{'name': settings.name, 'id': settings.id, 'user': settings.user}, function(response){
       console.log("Retrieved dataset definition from dataverse");
       console.log(response);
       settings.success(response.dataset);

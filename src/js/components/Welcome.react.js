@@ -44,7 +44,7 @@ var Welcome = React.createClass({
         break;
       case 'dataverse':
         console.log('dataverse');
-        dataverse_browser = <DataverseBrowser/>;
+        dataverse_browser = <DataverseBrowser user={this.props.user}/>;
         break;
       // case 'csv':
       //   console.log('csv');

@@ -59,7 +59,7 @@ var DataverseActions = {
   /**
    * @param {string} filename
    */
-  retrieveDataset: function(file_details){
+  retrieveDataset: function(file_details, user){
     console.log(file_details);
     var file_id = file_details['uri'];
     var file_name = file_details['label'];
@@ -95,6 +95,7 @@ var DataverseActions = {
       QBerAPI.retrieveDataverseDefinition({
         id: file_id,
         name: file_name,
+        user: user,
         success: function(dataset){
           QBerDispatcher.dispatch({
             actionType: MessageConstants.SUCCESS,

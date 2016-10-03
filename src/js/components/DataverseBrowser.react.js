@@ -21,6 +21,8 @@ var DataverseStore = require('../stores/DataverseStore');
 var DataverseActions = require('../actions/DataverseActions');
 var DatasetActions = require('../actions/DatasetActions');
 
+var ReactPropTypes = React.PropTypes;
+
 /**
  * Retrieve the current dataset from the DatasetStore
  */
@@ -52,6 +54,11 @@ var DataverseDOIInput = React.createClass({
 
 
 var DataverseBrowser = React.createClass({
+
+  // This React class only works if a 'visible' value is passed through its properties.
+  propTypes: {
+    user: ReactPropTypes.object.isRequired
+  },
 
   getInitialState: function() {
     return getDataverseState();
@@ -137,10 +144,12 @@ var DataverseBrowser = React.createClass({
 
     console.log(selection);
     console.log(this.state.files);
-    var selected_file = _.find(this.state.files, 'uri', selection);
+    // var selected_filesc = _.find(this.state.files, 'uri', selection);
+
+    var selected_file = _.find(this.state.files, function(o) { return o.uri == selection; });
     console.log(selected_file);
     if(selected_file.type == 'file' || selected_file.type == 'dataverse'){
-      DataverseActions.retrieveDataset(selected_file);
+      DataverseActions.retrieveDataset(selected_file, this.props.user.getEmail());
       DataverseActions.closeDataverseBrowser();
     }
   },
