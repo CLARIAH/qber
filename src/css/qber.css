@@ -25,7 +25,17 @@ body {
 div#welcome_body {
   height: 1200px;
 /*  background-color: #E0E4CC; */
-  background: url('../img/desert-1050x884.png') no-repeat center center fixed; 
+  background: url('../img/desert-1050x884.png') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+div#qber_body {
+  height: 1200px;
+/*  background-color: #E0E4CC; */
+  background: url('../img/desert-1050x884.png') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
