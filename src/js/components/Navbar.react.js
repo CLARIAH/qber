@@ -47,7 +47,7 @@ var Navbar = React.createClass({
       if (this.props.datasetLoaded){
         datasetHeader = <li><a href="#"><strong>{this.props.datasetName}</strong></a></li>;
         savebutton = <li><a href="#" onClick={this.props.doSave}>Save</a></li>;
-        submitbutton = <li><a href="#" onClick={this.props.doSubmit}>Submit</a></li>;
+        submitbutton = <li><a href="#" onClick={this.props.doSubmit}>Publish</a></li>;
         if (this.state.url) {
           downloadbutton = <li><a href={this.state.url} target="_new">Result</a></li>;
         } else {
