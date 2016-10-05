@@ -24,9 +24,6 @@ var DropboxActions = {
     });
 
     var file_name = _.last(_.split(file_url,'/'));
-    var contextual_file_name = user_id + "/" + file_name
-
-    console.log(contextual_file_name);
 
     // Retrieve the dataset from local storage
     dataset = JSON.parse(localStorage.getItem(file_name));
@@ -52,7 +49,8 @@ var DropboxActions = {
       // Nothing in cache, call the QBerAPI with the file url, and implement the success callback
       QBerAPI.retrieveURLBasedDefinition({
         url: file_url,
-        name: contextual_file_name,
+        name: file_name,
+        user: user_id,
         success: function(dataset){
           QBerDispatcher.dispatch({
             actionType: MessageConstants.SUCCESS,

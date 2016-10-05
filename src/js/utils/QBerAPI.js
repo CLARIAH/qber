@@ -24,7 +24,7 @@ module.exports = {
   },
 
   retrieveURLBasedDefinition: function(settings) {
-    $.get(CSDH_API + '/web/definition',{'name': settings.name, 'url': settings.url}, function(response){
+    $.get(CSDH_API + '/web/definition',{'name': settings.name, 'url': settings.url, 'user': settings.user}, function(response){
       console.log("Retrieved dataset definition from URL");
       console.log(response);
       settings.success(response.dataset);
