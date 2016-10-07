@@ -96,6 +96,7 @@ var QBer = React.createClass({
           <div className="row">
             <Sidebar
               options={this.state.variable_names}
+              dataset={this.state.dataset}
             />
             <VariablePanel
               dataset={this.state.dataset}

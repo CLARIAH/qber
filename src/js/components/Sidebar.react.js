@@ -45,6 +45,13 @@ var Sidebar = React.createClass({
    * Event handler for selections in the PillSelector
    */
   _onSelected: function(value) {
+
+    if (this.props.dataset.variables[value].codelist.codes == undefined){
+      scheme_uri = this.props.dataset.variables[value].codelist.uri
+
+      // Retrieve the list of concepts belonging to this scheme
+      DatasetActions.updateConcepts(scheme_uri);
+    }
     DatasetActions.chooseVariable(value);
   },
 
