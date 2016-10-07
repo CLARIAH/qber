@@ -120,7 +120,7 @@ var DimensionMetadata = React.createClass({
                             <input type="button"
                                    className="form-control btn btn-default"
                                    id="inputCommunityCodeList"
-                                   value="Community"
+                                   value="Find"
                                    onClick={this._handleShowSchemes}></input>
                           </div>
                         </div>;

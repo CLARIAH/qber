@@ -47,16 +47,31 @@ var ValueDefinitionTable = React.createClass({
       var values = this.props.variable.values;
       var values_rows = [];
 
+      var uri_column
+      if (this.props.variable.category!== 'other'){
+        uri_column = <th>URI</th>
+      }
+      values_rows.push(
+        <tr>
+        <th>#</th>
+        <th>Original Value</th>
+        <th></th>
+        <th width='100%'>Interpreted Value</th>
+        {uri_column}
+        </tr>
+      )
+
       // The button is enabled if there's a variable, and the variable is of category community or coded
       var button_disabled = (this.props.variable && (this.props.variable.category == 'community' || this.props.variable.category == 'coded' )) ? false: true;
 
       var encoded_rate = 0;
       for (var key in values) {
+        var mapping, mapped_uri_col;
 
-        var mapping;
         if(this.props.variable.category !== 'other'){
           // If we're dealing with a coded or identity variable, we need to show the URI
           var mapped_uri = values[key].uri;
+          var mapped_label = values[key].label;
           if (mapped_uri != values[key].original.uri) {
             encoded_rate++;
           }

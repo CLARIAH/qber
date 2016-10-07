@@ -33,7 +33,7 @@ var DimensionType = React.createClass({
       var community = <a role="button"
                           className={community_active}
                           href="#"
-                          onClick={this.props.doSelectDimension}>Community</a>;
+                          onClick={this.props.doSelectDimension}>Find</a>;
 
       var coded_active = (this.props.category == 'coded') ? 'active': '';
       coded_active += " btn btn-primary form-control";
@@ -45,13 +45,13 @@ var DimensionType = React.createClass({
       identifier_active += " btn btn-primary form-control";
       var identifier = <a role="button"
                            className={identifier_active}
-                           href="#" onClick={this.props.doBuildIdentifier}>Identifier</a>;
+                           href="#" onClick={this.props.doBuildIdentifier}>Identity</a>;
 
       var other_active = (this.props.category == 'other') ? 'active': '';
       other_active += " btn btn-primary form-control";
       var other = <a role="button"
                       className={other_active}
-                      href="#" onClick={this.props.doBuildOther}>Other</a>;
+                      href="#" onClick={this.props.doBuildOther}>Value</a>;
 
       options =  <form className="form-horizontal">
                   <div className="form-group">
