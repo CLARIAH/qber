@@ -89,21 +89,31 @@ var ValueDefinitionTable = React.createClass({
             mapped_uri = "value:" +_.last(_.split(mapped_uri, '/'));
           }
 
-          mapping = <div>
-                          {mapped_uri_icon}
-                          <a className='small' target="_blank" href={browse_mapped_uri}>
-                            {mapped_uri}
+          mapping = <span>
+
+                          <a target="_blank" href={browse_mapped_uri}>
+                            {mapped_label}
                           </a>
-                        </div>;
+                        </span>;
+          mapped_uri_col = <td>
+                              <span className='small pull-right'>
+                                <a target="_blank" href={browse_mapped_uri}>
+                                  {mapped_uri_icon} {mapped_uri}
+                                </a>
+                              </span>
+                            </td>;
         } else {
           // Otherwise, we show the 'literal' value for the variable
-          mapping = <div>
+          mapping = <span>
                       <code>{values[key].label}</code>
-                    </div>;
+                    </span>;
         }
 
 
         values_rows.push(<tr key={values[key].original.label}>
+                          <td>
+                            <span className='badge pull-right'> { values[key].count }</span>
+                          </td>
                           <td>
                             { values[key].original.label }
                           </td>
@@ -115,12 +125,10 @@ var ValueDefinitionTable = React.createClass({
                                   <span className="glyphicon glyphicon-random"/>
                             </span>
                           </td>
-                          <td width="100%">
+                          <td width='100%'>
                             { mapping }
                           </td>
-                          <td>
-                            <span className='badge pull-right'> { values[key].count }</span>
-                          </td>
+                          {mapped_uri_col}
                         </tr>);
       }
       // console.log('rate');
@@ -129,14 +137,13 @@ var ValueDefinitionTable = React.createClass({
       var modal;
       // We only prepare the modal if we have a community or coded variable
       if (this.props.variable && (this.props.variable.category == 'community' || this.props.variable.category == 'coded' )){
-        var title = <span>Select corresponding code for <strong>{this.state.selected_value_label}</strong></span>;
+        var title = <span>Select corresponding code for: <strong>{this.state.selected_value_label}</strong></span>;
 
         var scheme = _.find(this.props.schemes, {'uri': this.props.variable.codelist.uri});
 
         var sorted_values;
         // If we have a stored scheme, sort the concepts by label
         if(scheme !== undefined) {
-
           sorted_values = _.sortBy(scheme.concepts,'label');
         } else {
           // Otherwise, we simply sort the values of the variable (i.e. the defaults)

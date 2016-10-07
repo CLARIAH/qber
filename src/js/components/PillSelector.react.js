@@ -73,10 +73,10 @@ var PillSelector = React.createClass({
 
 
     // If search turns out to be undefined, we will use the value provided through the props..
-    if (this.props.selection && search === undefined ) {
-      search = this.props.selection;
-    } if (this.props.value && search === undefined ) {
+    if (this.props.value && search === undefined ) {
       search = this.props.value;
+    } else if (this.props.selection && search === undefined ) {
+      search = this.props.selection;
     }
 
     // A custom filter function (e.g. one that filters on multiple attributes of the pills)
@@ -188,7 +188,6 @@ var PillSelector = React.createClass({
   },
 
   _handleKeyUp: function(e){
-
     // If the return/enter key is pressed, and the list of visible items is of length 1, select that option.
     if (e.which == 13 && this.visibleItems.length == 1){
       var value = this.visibleItems[0];
