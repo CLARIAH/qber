@@ -162,7 +162,7 @@ span.pill-icon {
     right: 100px;
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-    background-color: white;
+    /*background-color: white;*/
     border-radius: 5px;
     overflow: auto;
     padding: 2em;
