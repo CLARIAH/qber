@@ -156,6 +156,8 @@ var ValueDefinitionTable = React.createClass({
                    value={this.state.selected_value_label}
                    selection={this.state.selected_value_uri}
                    options={sorted_values}
+                   doPrevious = {this._previous}
+                   doNext = {this._next}
                    doSelect={this._handleSelected}
                    doClose={this._handleToggleModal} />;
 
@@ -178,7 +180,7 @@ var ValueDefinitionTable = React.createClass({
         <div className="panel panel-default">
           <div className="panel-heading">
             <h5 className="panel-title" onClick={this._onToggle} aria-expanded={this.state.visible}>
-              Frequency Table
+              Values &amp; Interpretations
               <Caret visible={this.state.visible}/>
             </h5>
           </div>
@@ -198,10 +200,19 @@ var ValueDefinitionTable = React.createClass({
     // The code uri is the selected uri in the QBerModal PillSelector.
 
 
-    // values is the list of code values for this variable
-    var values = this.props.variable.values;
+
     // The selected code value, is the currently visible code value
     var selected_value_uri = this.state.selected_value_uri;
+
+    this._next();
+
+    // Call the externally defined function that handles the mappings between (external) values and the source values.
+    this.props.doMapping(selected_value_uri, code_uri);
+  },
+
+  _next: function(){
+    // values is the list of code values for this variable
+    var values = this.props.variable.values;
 
     // Get the index of the selected code value, and increment it by 1 (the next code value)
     var next_index = _.findIndex(values, {'uri': this.state.selected_value_uri}) + 1;
@@ -218,10 +229,30 @@ var ValueDefinitionTable = React.createClass({
     new_state.selected_value_label = values[next_index].label;
     // Update the state
     this.setState(new_state);
-
-    // Call the externally defined function that handles the mappings between (external) values and the source values.
-    this.props.doMapping(selected_value_uri, code_uri);
   },
+
+
+  _previous: function(){
+    // values is the list of code values for this variable
+    var values = this.props.variable.values;
+
+    // Get the index of the selected code value, and decrease it with 1 (the previous code value)
+    var previous_index = _.findIndex(values, {'uri': this.state.selected_value_uri}) - 1;
+
+    // Set index to the last element if the resulting index is outside the values array (looping)
+    if (previous_index < 0){
+      next_index = values.length - 1;
+    }
+
+    // Copy the current state
+    var new_state = this.state;
+    // Set the selected code value to the next id in the values array (i.e. the code at the next index)
+    new_state.selected_value_uri = values[next_index].uri;
+    new_state.selected_value_label = values[next_index].label;
+    // Update the state
+    this.setState(new_state);
+  },
+
 
   _handleSelectValue: function(e){
     var new_state = this.state;

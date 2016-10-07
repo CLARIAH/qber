@@ -33,6 +33,13 @@ var QBerModal = React.createClass({
 
     var selection_small = this.props.selection ? <small>({this.props.selection})</small> : undefined;
 
+    var previous_button, next_button;
+
+    if (this.props.doNext && this.props.doPrevious){
+      previous_button = <button className="close" onClick={this.props.doPrevious} aria-label="Previous"><span className="glyphicon glyphicon-chevron-left"></span></button>;
+      next_button = <button className="close" onClick={this.props.doNext} aria-label="Next"><span className="glyphicon glyphicon-chevron-right"></span></button>;
+    }
+
     return (
       <section id="qber_modal_component" onKeyUp={this._handleKeyUp}>
         <div className="overlay" onClick={this.props.doClose}/>
@@ -43,7 +50,15 @@ var QBerModal = React.createClass({
               <h4>{this.props.title} {selection_small}</h4>
             </div>
             <div className="panel-body">
-              <PillSelector options={this.props.options} selection={this.props.selection} value={this.props.value} doSelect={this.props.doSelect} filterFunction={this._filter} />
+              <PillSelector options={this.props.options}
+                            selection={this.props.selection}
+                            value={this.props.value}
+                            doSelect={this.props.doSelect}
+                            filterFunction={this._filter} />
+            </div>
+            <div className="panel-footer">
+              {next_button}
+              {previous_button}
             </div>
           </div>
         </div>
