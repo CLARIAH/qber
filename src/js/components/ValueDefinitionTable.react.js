@@ -197,7 +197,7 @@ var ValueDefinitionTable = React.createClass({
     var selected_value_uri = this.state.selected_value_uri;
 
     // Get the index of the selected code value, and increment it by 1 (the next code value)
-    var next_index = _.findIndex(values, 'uri', this.state.selected_value_uri) + 1;
+    var next_index = _.findIndex(values, {'uri': this.state.selected_value_uri}) + 1;
 
     // Set index to 0 if the resulting index is outside the values array (looping)
     if (next_index == values.length){
@@ -221,7 +221,7 @@ var ValueDefinitionTable = React.createClass({
 
     new_state.selected_value_label = e.currentTarget.getAttribute('label');
     var key = (isNaN(new_state.selected_value_label)) ? new_state.selected_value_label : Number(new_state.selected_value_label);
-    new_state.selected_value_uri = _.find(this.props.variable.values, 'label', key).uri;
+    new_state.selected_value_uri = _.find(this.props.variable.values, {'label': key}).uri;
 
     this.setState(new_state);
     this._handleToggleModal()

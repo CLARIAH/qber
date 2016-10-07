@@ -271,11 +271,9 @@ var DimensionMetadata = React.createClass({
 
   _handleSelectScheme: function(scheme_uri){
     this._handleHideSchemes();
-
-
-
-    var scheme = _.find(this.props.schemes, 'uri', scheme_uri);
-
+    console.log("Scheme URI: "+scheme_uri);
+    var scheme = _.find(this.props.schemes, {'uri': scheme_uri});
+    console.log(scheme)
     this.props.doSchemeUpdate(scheme);
   }
 
