@@ -46,9 +46,9 @@ var Sidebar = React.createClass({
    */
   _onSelected: function(value) {
 
+    // If we haven't yet retrieved the codelist...
     if (this.props.dataset.variables[value].codelist.codes == undefined){
       scheme_uri = this.props.dataset.variables[value].codelist.uri
-
       // Retrieve the list of concepts belonging to this scheme
       DatasetActions.updateConcepts(scheme_uri);
     }
