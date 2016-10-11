@@ -36,8 +36,8 @@ var QBerModal = React.createClass({
     var previous_button, next_button;
 
     if (this.props.doNext && this.props.doPrevious){
-      previous_button = <button className="close" onClick={this.props.doPrevious} aria-label="Previous"><span className="glyphicon glyphicon-chevron-left"></span></button>;
-      next_button = <button className="close" onClick={this.props.doNext} aria-label="Next"><span className="glyphicon glyphicon-chevron-right"></span></button>;
+      previous_button = <button className="pull-right" onClick={this.props.doPrevious} aria-label="Previous"><span className="glyphicon glyphicon-chevron-left"></span></button>;
+      next_button = <button className="pull-right" onClick={this.props.doNext} aria-label="Next"><span className="glyphicon glyphicon-chevron-right"></span></button>;
     }
 
     return (
@@ -57,6 +57,7 @@ var QBerModal = React.createClass({
                             filterFunction={this._filter} />
             </div>
             <div className="panel-footer">
+              &nbsp;
               {next_button}
               {previous_button}
             </div>
