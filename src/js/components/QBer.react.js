@@ -15,6 +15,7 @@
 var React = require('react');
 var PillSelector = require('./PillSelector.react');
 var VariablePanel = require('./VariablePanel.react');
+var DatasetPanel = require('./DatasetPanel.react');
 var Sidebar = require('./Sidebar.react');
 var Welcome = require('./Welcome.react');
 var SignIn = require('./SignIn.react');
@@ -67,38 +68,26 @@ var QBer = React.createClass({
       body = <Welcome visible={true} user={this.state.user}/>;
       dataset_loaded = false;
     } else {
-      // if (this.state.dataset.variables != undefined) {
-      //   variables = this.state.variable_names
-      //   for (var key in variables) {
-      //     map_count = 0;
-      //     values = this.state.dataset.variables[variables[key]].values;
-      //     for (var map in values) {
-      //       console.log(map.uri);
-      //       if (map.uri !== map.original.uri) {
-      //         map_count++;
-      //       }
-      //     }
-      //     map_ratio = map_count / values.length;
-      //     console.log('Map ratio');
-      //     console.log(map_ratio);
-      //   }
-      // }
+    	// body =
+      //   <div className="container-fluid" id="qber_body">
+      //     <div className="row">
+      //       <Sidebar
+      //         options={this.state.variable_names}
+      //         dataset={this.state.dataset}
+      //       />
+      //       <VariablePanel
+      //         dataset={this.state.dataset}
+      //         variable={this.state.variable}
+      //         schemes={this.state.schemes}
+      //         dimensions={this.state.dimensions}
+      //       />
+      //     </div>
+      //   </div>;
 
-      // var variable_names = new Array();
-      // for (var option in this.state.variable_names) {
-      //     variable_names.push({'label': this.state.variable_names[option], 'rate': 0});
-      //     //variable_names.push(this.state.variable_names[option]);
-      // }
-
-
-    	body =
+      body =
         <div className="container-fluid" id="qber_body">
           <div className="row">
-            <Sidebar
-              options={this.state.variable_names}
-              dataset={this.state.dataset}
-            />
-            <VariablePanel
+            <DatasetPanel
               dataset={this.state.dataset}
               variable={this.state.variable}
               schemes={this.state.schemes}
