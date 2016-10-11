@@ -5,10 +5,11 @@ var CSDH_API = "http://localhost:5000";
 module.exports = {
   retrieveDatasetDefinition: function(settings) {
     $.get(CSDH_API + '/dataset/definition',{'path': settings.path}, function(response){
-      console.log("Retrieved dataset definition from file");
+      console.log("Retrieved dataset definition from Gitlab");
       console.log(response);
       settings.success(response.dataset);
     }).fail(function(response){
+      console.log("Failed to retrieve dataset definition from Gitlab");
       settings.error(response.responseJSON);
     });
   },
