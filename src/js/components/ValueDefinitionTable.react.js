@@ -47,20 +47,6 @@ var ValueDefinitionTable = React.createClass({
       var values = this.props.variable.values;
       var values_rows = [];
 
-      var uri_column
-      if (this.props.variable.category!== 'other'){
-        uri_column = <th>URI</th>
-      }
-      values_rows.push(
-        <tr>
-        <th>#</th>
-        <th>Original Value</th>
-        <th></th>
-        <th width='100%'>Interpreted Value</th>
-        {uri_column}
-        </tr>
-      )
-
       // The button is enabled if there's a variable, and the variable is of category community or coded
       var button_disabled = (this.props.variable && (this.props.variable.category == 'community' || this.props.variable.category == 'coded' )) ? false: true;
 
@@ -72,36 +58,70 @@ var ValueDefinitionTable = React.createClass({
           // If we're dealing with a coded or identity variable, we need to show the URI
           var mapped_uri = values[key].uri;
           var mapped_label = values[key].label;
-          if (mapped_uri != values[key].original.uri) {
+          var original_uri = values[key].original.uri;
+          var original_label = values[key].original.label;
+
+          var browse_uri = "http://data.clariah-sdh.eculture.labs.vu.nl/browse?uri="+encodeURIComponent(mapped_uri);
+
+          var mapping;
+          // Update the 'encoded rate' by one for each mapped uri
+          if (mapped_uri != original_uri) {
             encoded_rate++;
-          }
-          var mapped_uri_icon;
-          if (mapped_uri){
-            mapped_uri_icon = <span className="glyphicon glyphicon-link"/>;
-          }
-          var browse_mapped_uri;
-          if (mapped_uri){
-            browse_mapped_uri = "http://data.clariah-sdh.eculture.labs.vu.nl/browse?uri="+encodeURIComponent(mapped_uri);
-          }
 
-          // Strip to something more readable as long as it is not mapped.
-          if (mapped_uri == values[key].original.uri) {
-            mapped_uri = "value:" +_.last(_.split(mapped_uri, '/'));
-          }
-
-          mapping = <span>
-
-                          <a target="_blank" href={browse_mapped_uri}>
-                            {mapped_label}
-                          </a>
-                        </span>;
-          mapped_uri_col = <td>
-                              <span className='small pull-right'>
-                                <a target="_blank" href={browse_mapped_uri}>
-                                  {mapped_uri_icon} {mapped_uri}
+            mapping = <div className="btn-group" role="group">
+                      <button type="button"
+                              className="btn btn-info"
+                              label={original_label}
+                              onClick={this._handleSelectValue}>
+                                {mapped_label}
+                                &nbsp;
+                                <a href={browse_uri}
+                                   target="_blank">
+                                  <span className="glyphicon glyphicon-link"></span>
                                 </a>
-                              </span>
-                            </td>;
+                      </button>
+                    </div>;
+          } else {
+            mapping = <div className="btn-group" role="group">
+                      <button type="button"
+                              className="btn btn-warning"
+                              label={original_label}
+                              onClick={this._handleSelectValue}>
+                                {original_label}
+                      </button>
+                    </div>;
+          }
+
+
+          // var mapped_uri_icon;
+          // if (mapped_uri){
+          //   mapped_uri_icon = <span className="glyphicon glyphicon-link"/>;
+          // }
+          //
+          // var browse_mapped_uri;
+          // if (mapped_uri){
+          //   browse_mapped_uri = "http://data.clariah-sdh.eculture.labs.vu.nl/browse?uri="+encodeURIComponent(mapped_uri);
+          // }
+          //
+          // // Strip to something more readable as long as it is not mapped.
+          // if (mapped_uri == values[key].original.uri) {
+          //   mapped_uri = "value:" +_.last(_.split(mapped_uri, '/'));
+          // }
+          //
+          // mapping = <span className="btn btn-default">
+          //
+          //                 <a target="_blank" href={browse_mapped_uri}>
+          //                   {mapped_uri_icon} {mapped_label}
+          //                 </a>
+          //               </span>;
+          //
+          // mapped_uri_col = <td>
+          //                     <span className='small pull-right'>
+          //                       <a target="_blank" href={browse_mapped_uri}>
+          //                         {mapped_uri_icon} {mapped_uri}
+          //                       </a>
+          //                     </span>
+          //                   </td>;
         } else {
           // Otherwise, we show the 'literal' value for the variable
           mapping = <span>
@@ -110,26 +130,27 @@ var ValueDefinitionTable = React.createClass({
         }
 
 
-        values_rows.push(<tr key={values[key].original.label}>
-                          <td>
-                            <span className='badge pull-right'> { values[key].count }</span>
-                          </td>
-                          <td>
-                            { values[key].original.label }
-                          </td>
-                          <td>
-                            <span className='btn btn-default btn-xs'
-                                  label={values[key].original.label}
-                                  onClick={this._handleSelectValue}
-                                  disabled={button_disabled}>
-                                  <span className="glyphicon glyphicon-random"/>
-                            </span>
-                          </td>
-                          <td width='100%'>
-                            { mapping }
-                          </td>
-                          {mapped_uri_col}
-                        </tr>);
+        values_rows.push(mapping);
+        // values_rows.push(<tr key={values[key].original.label}>
+        //                   <td>
+        //                     <span className='badge pull-right'> { values[key].count }</span>
+        //                   </td>
+        //                   <td>
+        //                     { values[key].original.label }
+        //                   </td>
+        //                   <td>
+        //                     <span className='btn btn-default btn-xs'
+        //                           label={values[key].original.label}
+        //                           onClick={this._handleSelectValue}
+        //                           disabled={button_disabled}>
+        //                           <span className="glyphicon glyphicon-random"/>
+        //                     </span>
+        //                   </td>
+        //                   <td width='100%'>
+        //                     { mapping }
+        //                   </td>
+        //                   {mapped_uri_col}
+        //                 </tr>);
       }
       // console.log('rate');
       // console.log(encoded_rate/this.props.variable.values.length);
@@ -163,13 +184,8 @@ var ValueDefinitionTable = React.createClass({
 
       }
 
-      table = <div style={{overflow: 'scroll', maxHeight: '300px'}}>
-                <table className="table table-striped">
-                  <tbody>
-                    {values_rows}
-                  </tbody>
-                </table>
-                {modal}
+      table = <div style={{overflow: 'scroll', maxHeight: '500px', minHeight: '200px'}}>
+                {values_rows}
               </div>;
     }
 
@@ -186,6 +202,7 @@ var ValueDefinitionTable = React.createClass({
           </div>
           <div className={this.state.visible ? 'panel-body' : 'panel-body hidden'} >
               {table}
+              {modal}
           </div>
         </div>
       </section>
