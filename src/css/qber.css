@@ -46,6 +46,11 @@ div#qber_body {
   background-size: cover;
 }
 
+section#dataset_panel{
+  background-color: white;
+  overflow-x: scroll;
+}
+
 .welcome {
   margin-top: 150px;
   text-align: center;
