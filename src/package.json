@@ -17,7 +17,7 @@
     "keymirror": "^0.1.1",
     "lodash": "^4.13.1",
     "object-assign": "^3.0.0",
-    "react": "^0.13.3",
+    "react": "^0.14.8",
     "react-dropzone": "^3.5.1",
     "reactify": "^1.1.1"
   },
