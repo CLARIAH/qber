@@ -28,45 +28,35 @@ var DatasetPanel = React.createClass({
     var variable = this.props.variable;
     var data = this.props.dataset.data;
 
-    var header = [];
+    var columns = [];
+    var heads = []
     var numrows = 0;
 
     for (var col in data){
-      var head = <th key={col}>{col}</th>;
-      header.push(head);
-      // Take the length of the column to determine the number of rows
-      // TODO: Fix this, because it now happens for every column, which is nonsense
-      numrows = data[col].length;
-    }
+      var column = [];
+      var head = <div className="data-head" key={col}>{col}</div>;
 
-    console.log("Number of rows: " + numrows)
+      column.push(head);
 
-
-    var rows = [];
-    for (var i=0; i < numrows; i++){
-      var row = [];
-      for (var col in data){
-        var value = data[col][i];
+      for (var c in data[col]){
+        var value = data[col][c];
         var variable = this.props.dataset.variables[col];
 
-        var cell = <td key={col + "_" + i}>
-                    <Value value={value}
-                           variable={variable} />
-                   </td>;
+        var cell = <Value value={value}
+                           variable={variable} />;
 
-        row.push(cell);
+        column.push(cell);
       }
-      rows.push(<tr key={row + "_" + i}>{row}</tr>);
+      columns.push(<div className="data-col" key={col}>{column}</div>);
     }
 
-    var table = <table id="values_table" className='table table-striped table-responsive'>
-      <thead>
-        {header}
-      </thead>
-      <tbody>
-        {rows}
-      </tbody>
-    </table>;
+
+
+
+
+    var table = <div id="values_table">
+        {columns}
+    </div>;
 
     return (
       <div className="col-md-12 main">

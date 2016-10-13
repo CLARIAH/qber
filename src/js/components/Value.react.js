@@ -32,7 +32,7 @@ var Value = React.createClass({
     var value_button;
 
     if (value_definition === undefined){
-      value_button = null;
+      value_button = <div className="data-cell">&nbsp;</div>;
     } else if (this.props.variable.type != 'other'){
       var mapped_uri = value_definition.uri;
       var mapped_label = value_definition.label;
@@ -59,15 +59,23 @@ var Value = React.createClass({
                         </li>
                       </ul>;
       } else {
-        value_button = <div className="btn-group"
+        var star;
+
+        if (mapped_uri != original_uri && this.props.variable.type == 'coded'){
+            star = <span className="glyphicon glyphicon-star"></span>;
+        } else if (this.props.variable.type == 'coded') {
+            star = <span className="glyphicon glyphicon-star-empty"></span>;
+        }
+        value_button = <div className="data-cell"
                             label={original_label}
                             onClick={this._handleSelectValue}>
-                        <button type="button" className="btn btn-default btn-xs">
-                          <span className="glyphicon glyphicon-link"></span>
-                        </button>
-                        <button type="button" className="btn btn-default btn-xs">
-                          {original_label}
-                        </button>
+                            <div className="data-label">
+                              {original_label}
+                            </div>
+                            <div className="data-link">
+                              {star}
+                              <span className="glyphicon glyphicon-link"></span>
+                            </div>
                        </div>;
       }
 

@@ -51,6 +51,66 @@ section#dataset_panel{
   overflow-x: scroll;
 }
 
+div#values_table {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 0;
+  overflow: scroll;
+}
+
+.data-col {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.data-head {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 20px;
+  width: @text-width;
+  padding: 10px 15px;
+  font-weight: bold;
+  background-color: #dddddd
+}
+
+.data-cell {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 20px;
+  width: @text-width;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  margin-left: 2px;
+  padding: 10px 15px
+}
+
+.data-cell:hover {
+  border: 1px solid #dddddd;
+  text-decoration: none;
+  background-color: #dddddd
+}
+
+
+.data-link {
+  flex-grow: 1;
+  text-align: right;
+}
+
+.data-label {
+  padding-right: 5px;
+  text-align: left;
+  flex-grow: 8;
+}
+
 .welcome {
   margin-top: 150px;
   text-align: center;
