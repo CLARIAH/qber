@@ -2,16 +2,41 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var DatasetActions = require('../actions/DatasetActions');
 var DimensionDefinitionPanel = require('./DimensionDefinitionPanel.react');
+var DimensionStore = require('../stores/DimensionStore');
 var Value = require('./Value.react');
+var Variable = require('./Variable.react');
+
+
+/**
+ * Retrieve the current visibility from the DimensionStore
+ */
+function getDatasetPanelState() {
+  return {
+    'variables': DimensionStore.getVariables()
+  };
+}
 
 var DatasetPanel = React.createClass({
 
   // This React class only works if a 'dataset' is passed through its properties.
   propTypes: {
-    variable: ReactPropTypes.string.isRequired,
     dataset: ReactPropTypes.object.isRequired,
     dimensions: ReactPropTypes.array.isRequired,
-    schemes: ReactPropTypes.array.isRequired
+    schemes: ReactPropTypes.array.isRequired,
+    doSelectVariable: ReactPropTypes.object.isRequired
+  },
+
+  getInitialState: function() {
+    // Get the state from the store
+    return getDatasetPanelState();
+  },
+
+  componentDidMount: function() {
+    DimensionStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function() {
+    DimensionStore.removeChangeListener(this._onChange);
   },
 
   /**
@@ -25,8 +50,8 @@ var DatasetPanel = React.createClass({
       return null;
     }
 
-    var variable = this.props.variable;
     var data = this.props.dataset.data;
+
 
     var columns = [];
     var heads = []
@@ -34,16 +59,16 @@ var DatasetPanel = React.createClass({
 
     for (var col in data){
       var column = [];
-      var head = <div className="data-head" key={col}>{col}</div>;
+      var variable = this.state.variables[col];
+      var head = <Variable doSelectVariable={this.props.doSelectVariable} variable={variable}/>;
 
       column.push(head);
 
       for (var c in data[col]){
         var value = data[col][c];
-        var variable = this.props.dataset.variables[col];
 
         var cell = <Value value={value}
-                           variable={variable} />;
+                          variable={variable} />;
 
         column.push(cell);
       }
@@ -65,6 +90,13 @@ var DatasetPanel = React.createClass({
         </section>
       </div>
     );
+  },
+
+  /**
+   * Event handler for 'change' events coming from the DatasetStore
+   */
+  _onChange: function() {
+    this.setState(getDatasetPanelState());
   }
 });
 

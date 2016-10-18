@@ -84,14 +84,23 @@ var QBer = React.createClass({
       //     </div>
       //   </div>;
 
+      var vp = <VariablePanel
+                 dataset={this.state.dataset}
+                 variable={this.state.variable}
+                 schemes={this.state.schemes}
+                 dimensions={this.state.dimensions}
+               />;
+
       body =
         <div className="container-fluid" id="qber_body">
+          {vp}
           <div className="row">
             <DatasetPanel
               dataset={this.state.dataset}
               variable={this.state.variable}
               schemes={this.state.schemes}
               dimensions={this.state.dimensions}
+              doSelectVariable={this._handleSelectVariable}
             />
           </div>
         </div>;
@@ -120,6 +129,18 @@ var QBer = React.createClass({
    */
   _onChange: function() {
     this.setState(getDatasetState());
+  },
+
+  _handleSelectVariable(variable) {
+
+    // If we haven't yet retrieved the codelist...
+    if (variable.codelist.codes == undefined && variable.category == 'coded'){
+      console.
+      scheme_uri = variable.codelist.uri
+      // Retrieve the list of concepts belonging to this scheme
+      DatasetActions.updateConcepts(scheme_uri);
+    }
+    DatasetActions.chooseVariable(variable.label);
   },
 
   _handleSignedIn: function(user) {

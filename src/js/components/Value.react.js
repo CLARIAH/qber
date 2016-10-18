@@ -33,7 +33,7 @@ var Value = React.createClass({
 
     if (value_definition === undefined){
       value_button = <div className="data-cell">&nbsp;</div>;
-    } else if (this.props.variable.type != 'other'){
+    } else if (this.props.variable.category != 'other'){
       var mapped_uri = value_definition.uri;
       var mapped_label = value_definition.label;
       var original_uri = value_definition.original.uri;
@@ -41,46 +41,27 @@ var Value = React.createClass({
 
       var browse_uri = "http://data.clariah-sdh.eculture.labs.vu.nl/browse?uri="+encodeURIComponent(mapped_uri);
 
-      // Update the 'encoded rate' by one for each mapped uri
-      if (mapped_uri != original_uri) {
-        value_button = <ul className="nav nav-pills nav-pills-stacked"
-                           label={original_label}
-                           onClick={this._handleSelectValue}>
-                        <li role="presentation">
-                          <a>
-                            <span className="badge label-default">
-                              <a href={browse_uri}
-                                 target="_blank">
-                                 <span className="glyphicon glyphicon-link"></span>
-                              </a>
-                            </span>
-                            {mapped_label}
-                          </a>
-                        </li>
-                      </ul>;
-      } else {
-        var star;
 
-        if (mapped_uri != original_uri && this.props.variable.type == 'coded'){
-            star = <span className="glyphicon glyphicon-star"></span>;
-        } else if (this.props.variable.type == 'coded') {
-            star = <span className="glyphicon glyphicon-star-empty"></span>;
-        }
-        value_button = <div className="data-cell"
-                            label={original_label}
-                            onClick={this._handleSelectValue}>
-                            <div className="data-label">
-                              {original_label}
-                            </div>
-                            <div className="data-link">
-                              {star}
-                              <span className="glyphicon glyphicon-link"></span>
-                            </div>
-                       </div>;
+      var star;
+
+      if (mapped_uri != original_uri && this.props.variable.category == 'coded'){
+        star = <span className="glyphicon glyphicon-star text-success"></span>;
+      } else if (this.props.variable.category == 'coded') {
+        star = <span className="glyphicon glyphicon-star-empty text-warning"></span>;
       }
-
+      value_button = <div className="data-cell"
+                          label={original_label}
+                          onClick={this._handleSelectValue}>
+                          <div className="data-label">
+                            {original_label}
+                          </div>
+                          <div className="data-link">
+                            {star}
+                            <span className="glyphicon glyphicon-link text-info"></span>
+                          </div>
+                     </div>;
     } else {
-      value_button = this.props.value;
+      value_button = <div className="data-cell"><div className='data-label'>{this.props.value}</div></div>;
     }
 
 
