@@ -13,7 +13,7 @@ var DimensionActions = {
    * @param {string} dimension
    */
   chooseDimension: function(dimension) {
-    
+
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
       message: 'Retrieving details for '+dimension
@@ -63,23 +63,7 @@ var DimensionActions = {
   },
 
 
-  /**
-   * Show the dimension panel (the modal in which codes are mapped to dimensions)
-   */
-  showDimensions: function() {
-    QBerDispatcher.dispatch({
-      actionType: DimensionConstants.SDMX_DIMENSION_SHOW,
-    });
-  },
 
-  /**
-   * Close the dimension panel (the modal in which codes are mapped to dimensions)
-   */
-  hideDimensions: function() {
-    QBerDispatcher.dispatch({
-      actionType: DimensionConstants.SDMX_DIMENSION_HIDE,
-    });
-  },
 
   /**
    * The user has specified to prefer to use a generated dimension definition
@@ -148,7 +132,7 @@ var DimensionActions = {
    * @param {string} unsafe_iri
    */
   retrieveIRI: function(unsafe_iri){
-    
+
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
       message: 'Retrieving safe IRI based on '+unsafe_iri
