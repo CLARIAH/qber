@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-var DimensionStore = require('../stores/DimensionStore');
+var DatasetStore = require('../stores/DatasetStore');
 var DatasetActions = require('../actions/DatasetActions');
 var PillSelector = require('./PillSelector.react');
 
@@ -12,15 +12,15 @@ var Sidebar = React.createClass({
   },
 
   getInitialState: function() {
-    return { 'variables' : DimensionStore.getVariableNames() };
+    return { 'variables' : DatasetStore.getVariableNames() };
   },
 
   componentDidMount: function() {
-    DimensionStore.addChangeListener(this._onChange);
+    DatasetStore.addChangeListener(this._onChange);
   },
 
   componentWillUnmount: function() {
-    DimensionStore.removeChangeListener(this._onChange);
+    DatasetStore.removeChangeListener(this._onChange);
   },
 
   /**
@@ -59,7 +59,7 @@ var Sidebar = React.createClass({
    * Event handler for changes coming from the DatasetStore
    */
   _onChange: function() {
-    this.setState({ 'variables' : DimensionStore.getVariableNames() });
+    this.setState({ 'variables' : DatasetStore.getVariableNames() });
   }
 
 });
