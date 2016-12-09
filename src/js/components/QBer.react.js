@@ -23,7 +23,6 @@ var Navbar = require('./Navbar.react');
 
 var MessagePanel = require('./MessagePanel.react');
 var DatasetStore = require('../stores/DatasetStore');
-var DimensionStore = require('../stores/DimensionStore');
 var DatasetActions = require('../actions/DatasetActions');
 
 
@@ -35,6 +34,7 @@ function getDatasetState() {
     dataset: DatasetStore.get(),
     variable_names: DatasetStore.getVariableNames(),
     variable: DatasetStore.getSelectedVariable(),
+    value: DatasetStore.getSelectedValue(),
     dimensions: DatasetStore.getDimensions(),
     schemes: DatasetStore.getSchemes(),
     user: DatasetStore.getUser()
@@ -84,23 +84,27 @@ var QBer = React.createClass({
       //     </div>
       //   </div>;
 
-      var vp = <VariablePanel
-                 dataset={this.state.dataset}
-                 variable={this.state.variable}
-                 schemes={this.state.schemes}
-                 dimensions={this.state.dimensions}
-               />;
 
       body =
         <div className="container-fluid" id="qber_body">
-          {vp}
+          <div className="row">
+            <VariablePanel
+                       dataset={this.state.dataset}
+                       selectedVariable={this.state.variable}
+                       selectedValue={this.state.value}
+                       schemes={this.state.schemes}
+                       dimensions={this.state.dimensions}
+                     />
+          </div>
           <div className="row">
             <DatasetPanel
               dataset={this.state.dataset}
-              variable={this.state.variable}
+              selectedVariable={this.state.variable}
+              selectedValue={this.state.value}
               schemes={this.state.schemes}
               dimensions={this.state.dimensions}
               doSelectVariable={this._handleSelectVariable}
+              doSelectValue={this._handleSelectValue}
             />
           </div>
         </div>;
@@ -128,19 +132,26 @@ var QBer = React.createClass({
    * Event handler for 'change' events coming from the DatasetStore
    */
   _onChange: function() {
-    this.setState(getDatasetState());
+    var newstate = getDatasetState();
+    console.log("New state in QBer");
+    console.log(newstate);
+    this.setState(newstate);
   },
 
   _handleSelectVariable(variable) {
 
     // If we haven't yet retrieved the codelist...
     if (variable.codelist.codes == undefined && variable.category == 'coded'){
-      console.
       scheme_uri = variable.codelist.uri
       // Retrieve the list of concepts belonging to this scheme
       DatasetActions.updateConcepts(scheme_uri);
     }
-    DatasetActions.chooseVariable(variable.label);
+    DatasetActions.chooseVariable(variable);
+  },
+
+  _handleSelectValue(variable, value) {
+    this._handleSelectVariable(variable);
+    DatasetActions.chooseValue(value);
   },
 
   _handleSignedIn: function(user) {
@@ -150,7 +161,7 @@ var QBer = React.createClass({
   },
 
   _handleSave: function() {
-    var variables = DimensionStore.getVariables();
+    var variables = DatasetStore.getVariables();
     var dataset = DatasetStore.get();
     var user = DatasetStore.getUser();
 
@@ -161,7 +172,7 @@ var QBer = React.createClass({
   },
 
   _handleSubmit: function() {
-    var variables = DimensionStore.getVariables();
+    var variables = DatasetStore.getVariables();
     var dataset = DatasetStore.get();
     var profile = DatasetStore.getUser();
 

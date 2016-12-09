@@ -86,10 +86,10 @@ var DataverseActions = {
         dataset: dataset
       });
 
-      QBerDispatcher.dispatch({
-        actionType: DimensionConstants.SDMX_DIMENSION_INIT,
-        variables: dataset.variables
-      });
+      // QBerDispatcher.dispatch({
+      //   actionType: DimensionConstants.SDMX_DIMENSION_INIT,
+      //   variables: dataset.variables
+      // });
     } else {
       // Nothing in cache, call the QBerAPI with the filename, and implement the success callback
       QBerAPI.retrieveDataverseDefinition({
@@ -107,10 +107,10 @@ var DataverseActions = {
             dataset: dataset
           });
 
-          QBerDispatcher.dispatch({
-            actionType: DimensionConstants.SDMX_DIMENSION_INIT,
-            variables: dataset.variables
-          });
+          // QBerDispatcher.dispatch({
+          //   actionType: DimensionConstants.SDMX_DIMENSION_INIT,
+          //   variables: dataset.variables
+          // });
         },
         error: function(response){
           QBerDispatcher.dispatch({

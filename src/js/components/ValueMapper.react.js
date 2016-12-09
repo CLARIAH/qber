@@ -12,12 +12,13 @@ function findByURI(source, uri) {
 }
 
 
-var ValueDefinitionTable = React.createClass({
+var ValueMapper = React.createClass({
 
   // This React class only works if a list of 'values' is passed through its properties.
   propTypes: {
     variable: ReactPropTypes.object.isRequired,
-    schemes: ReactPropTypes.array.isRequired
+    schemes: ReactPropTypes.array.isRequired,
+    value: ReactPropTypes.object.isRequired
   },
 
   getInitialState: function() {
@@ -33,28 +34,25 @@ var ValueDefinitionTable = React.createClass({
    * @return {object}
    */
   render: function() {
-
-
-
     // This section should be hidden by default
     // and shown when we do have variables in our dataset
-    if (this.props.variable.values === undefined || this.props.variable.values.length < 1) {
+    if (this.props.selectedVariable.values === undefined || this.props.selectedVariable.values.length < 1) {
       return null;
     }
 
     var table;
     if (this.state.visible) {
-      var values = this.props.variable.values;
+      var values = this.props.selectedVariable.values;
       var values_rows = [];
 
       // The button is enabled if there's a variable, and the variable is of category community or coded
-      var button_disabled = (this.props.variable && (this.props.variable.category == 'community' || this.props.variable.category == 'coded' )) ? false: true;
+      var button_disabled = (this.props.selectedVariable && (this.props.selectedVariable.category == 'community' || this.props.selectedVariable.category == 'coded' )) ? false: true;
 
       var encoded_rate = 0;
       for (var key in values) {
         var mapping, mapped_uri_col;
 
-        if(this.props.variable.category !== 'other'){
+        if(this.props.selectedVariable.category !== 'other'){
           // If we're dealing with a coded or identity variable, we need to show the URI
           var mapped_uri = values[key].uri;
           var mapped_label = values[key].label;
@@ -153,14 +151,14 @@ var ValueDefinitionTable = React.createClass({
         //                 </tr>);
       }
       // console.log('rate');
-      // console.log(encoded_rate/this.props.variable.values.length);
+      // console.log(encoded_rate/this.props.selectedVariable.values.length);
 
       var modal;
       // We only prepare the modal if we have a community or coded variable
-      if (this.props.variable && (this.props.variable.category == 'community' || this.props.variable.category == 'coded' )){
+      if (this.props.selectedVariable && (this.props.selectedVariable.category == 'community' || this.props.selectedVariable.category == 'coded' )){
         var title = <span>Select corresponding code for: <strong>{this.state.selected_value_label}</strong></span>;
 
-        var scheme = _.find(this.props.schemes, {'uri': this.props.variable.codelist.uri});
+        var scheme = _.find(this.props.schemes, {'uri': this.props.selectedVariable.codelist.uri});
 
         var sorted_values;
         // If we have a stored scheme, sort the concepts by label
@@ -168,7 +166,7 @@ var ValueDefinitionTable = React.createClass({
           sorted_values = _.sortBy(scheme.concepts,'label');
         } else {
           // Otherwise, we simply sort the values of the variable (i.e. the defaults)
-          sorted_values = _.sortBy(this.props.variable.values,'label');
+          sorted_values = _.sortBy(this.props.selectedVariable.values,'label');
         }
 
         // Codelist present
@@ -229,7 +227,7 @@ var ValueDefinitionTable = React.createClass({
 
   _next: function(){
     // values is the list of code values for this variable
-    var values = this.props.variable.values;
+    var values = this.props.selectedVariable.values;
 
     // Get the index of the selected code value, and increment it by 1 (the next code value)
     var next_index = _.findIndex(values, {'uri': this.state.selected_value_uri}) + 1;
@@ -251,7 +249,7 @@ var ValueDefinitionTable = React.createClass({
 
   _previous: function(){
     // values is the list of code values for this variable
-    var values = this.props.variable.values;
+    var values = this.props.selectedVariable.values;
 
     // Get the index of the selected code value, and decrease it with 1 (the previous code value)
     var previous_index = _.findIndex(values, {'uri': this.state.selected_value_uri}) - 1;
@@ -276,7 +274,7 @@ var ValueDefinitionTable = React.createClass({
 
     new_state.selected_value_label = e.currentTarget.getAttribute('label');
     var key = (isNaN(new_state.selected_value_label)) ? new_state.selected_value_label : Number(new_state.selected_value_label);
-    new_state.selected_value_uri = _.find(this.props.variable.values, {'label': key}).uri;
+    new_state.selected_value_uri = _.find(this.props.selectedVariable.values, {'label': key}).uri;
 
     this.setState(new_state);
     this._handleToggleModal()
@@ -300,4 +298,4 @@ var ValueDefinitionTable = React.createClass({
   },
 });
 
-module.exports = ValueDefinitionTable;
+module.exports = ValueMapper;

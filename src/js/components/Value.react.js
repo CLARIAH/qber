@@ -13,7 +13,10 @@ var Value = React.createClass({
 
   // This React class only works if a list of 'variables' is passed through its properties.
   propTypes: {
-    value: ReactPropTypes.object.isRequired,
+    doSelectValue: ReactPropTypes.object.isRequired,
+    selectedValue: ReactPropTypes.string.isRequired,
+    selectedVariable: ReactPropTypes.object.isRequired,
+    value: ReactPropTypes.string.isRequired,
     variable: ReactPropTypes.object.isRequired
   },
 
@@ -45,11 +48,23 @@ var Value = React.createClass({
       var star;
 
       if (mapped_uri != original_uri && this.props.variable.category == 'coded'){
+        console.log("Coded property with mapped URI")
         star = <span className="glyphicon glyphicon-star text-success"></span>;
       } else if (this.props.variable.category == 'coded') {
+        console.log("Coded property with unmapped URI")
         star = <span className="glyphicon glyphicon-star-empty text-warning"></span>;
       }
-      value_button = <div className="data-cell"
+
+
+
+      /* Make sure that selected values are visually recognisable in the UI */
+      var active = (this.props.variable == this.props.selectedVariable) && (this.props.value == this.props.selectedValue) && this.props.selectedValue != undefined
+      var classes = cx({
+        'data-cell': true,
+        'data-cell-active': active
+      });
+
+      value_button = <div className={classes}
                           label={original_label}
                           onClick={this._handleSelectValue}>
                           <div className="data-label">
@@ -69,6 +84,12 @@ var Value = React.createClass({
         value_button
     );
   },
+
+  _handleSelectValue: function(){
+    console.log("You just selected variable "+this.props.variable.label+" with value "+this.props.value);
+    console.log(this.props.variable);
+    this.props.doSelectValue(this.props.variable, this.props.value);
+  }
 
 });
 

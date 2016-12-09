@@ -1,23 +1,11 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var DimensionActions = require('../actions/DimensionActions');
-var DimensionStore = require('../stores/DimensionStore');
+var DatasetStore = require('../stores/DatasetStore');
 var QBerModal = require('./QBerModal.react');
 var DimensionType = require('./DimensionType.react');
 var DimensionMetadata = require('./DimensionMetadata.react');
-var ValueDefinitionTable = require('./ValueDefinitionTable.react');
 
-
-
-/**
- * Retrieve the current visibility from the DimensionStore
- */
-function getDimensionDefinitionPanelState() {
-  return {
-    'variable': DimensionStore.getVariable(),
-    'modal_visible': DimensionStore.getModalVisible(),
-  };
-}
 
 
 var DimensionDefinitionPanel = React.createClass({
@@ -26,21 +14,16 @@ var DimensionDefinitionPanel = React.createClass({
   propTypes: {
     datasetName: ReactPropTypes.string.isRequired,
     schemes: ReactPropTypes.object.isRequired,
-    dimensions: ReactPropTypes.object.isRequired
+    dimensions: ReactPropTypes.object.isRequired,
+    selectedVariable: ReactPropTypes.object.isRequired,
+    selectedValue: ReactPropTypes.object.isRequired
   },
 
   getInitialState: function() {
     // Get the state from the store
-    return getDimensionDefinitionPanelState();
+    return {'modal_visible': false};
   },
 
-  componentDidMount: function() {
-    DimensionStore.addChangeListener(this._onChange);
-  },
-
-  componentWillUnmount: function() {
-    DimensionStore.removeChangeListener(this._onChange);
-  },
 
   /**
    * @return {object}
@@ -48,9 +31,9 @@ var DimensionDefinitionPanel = React.createClass({
   render: function() {
     // This section should be visible by default
     // and shown when there is a dataset and variable.
-    // if (Object.keys(this.props.dimensions).length < 1 || this.props.dimensions === undefined) {
-    //   return null;
-    // }
+    if (this.props.selectedVariable === undefined) {
+      return null;
+    }
 
     // TODO: Want this to work the first time the variable is shown
     // TODO: Make this more elegant as this really should not occur in the render function.
@@ -60,29 +43,25 @@ var DimensionDefinitionPanel = React.createClass({
 
     return (
       <section id="sdmx_dimension_panel">
-        <DimensionType category={this.state.variable.category}
-                       key={"dt"+ this.state.variable.label}
+        <DimensionType category={this.props.selectedVariable.category}
+                       key={"dt"+ this.props.selectedVariable.label}
                        doSelectDimension={this._handleSelectDimension}
                        doBuildCodedVariable={this._handleBuildCodedVariable}
                        doBuildIdentifier={this._handleBuildIdentifier}
                        doBuildOther={this._handleBuildOther}/>
-        <DimensionMetadata variable={this.state.variable}
+       <DimensionMetadata variable={this.props.selectedVariable}
                            schemes={this.props.schemes}
-                           key={"dm"+ this.state.variable.label}
+                           key={"dm"+ this.props.selectedVariable.label}
                            doUpdate={this._handleMetadataUpdate}
                            doSchemeUpdate={this._handleSchemeUpdate}
                            doApplyTransform={this._handleApplyTransformFunction}/>
         <QBerModal  visible={this.state.modal_visible}
                     title="Select a community provided variable name"
-                    value={this.state.variable.label}
-                    selection={this.state.variable.uri}
+                    value={this.props.selectedVariable.label}
+                    selection={this.props.selectedVariable.uri}
                     options={this.props.dimensions}
                     doSelect={this._handleSelected}
                     doClose={this._handleHideDimensions} />
-        <ValueDefinitionTable variable={this.state.variable}
-                              schemes={this.props.schemes}
-                              key={"vdt"+ this.state.variable.label}
-                              doMapping={this._handleMapping} />
       </section>
     );
   },
@@ -91,7 +70,7 @@ var DimensionDefinitionPanel = React.createClass({
    * Event handler for the button that shows the Dimensions modal for community-provided dimension definitions
    */
   _handleSelectDimension: function(){
-    DimensionActions.showDimensions();
+    this._showDimensions();
   },
 
   /**
@@ -120,7 +99,7 @@ var DimensionDefinitionPanel = React.createClass({
    * Event handler for the button that hides the Dimensions modal
    */
   _handleHideDimensions: function(){
-    DimensionActions.hideDimensions();
+    this._hideDimensions();
   },
 
   /**
@@ -146,13 +125,24 @@ var DimensionDefinitionPanel = React.createClass({
     DimensionActions.addMapping(code_value, code_uri);
   },
 
+
   /**
-   * Event handler for 'change' events coming from the DatasetStore
+   * Show the dimension panel (the modal in which codes are mapped to dimensions)
    */
-  _onChange: function() {
-    
-    this.setState(getDimensionDefinitionPanelState());
-  }
+  _showDimensions: function() {
+    var newstate = this.state;
+    newstate.modal_visible = true;
+    this.setState(newstate)
+  },
+
+  /**
+   * Close the dimension panel (the modal in which codes are mapped to dimensions)
+   */
+  _hideDimensions: function() {
+    var newstate = this.state;
+    newstate.modal_visible = false;
+    this.setState(newstate)
+  },
 
 });
 

@@ -2,17 +2,17 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var DatasetActions = require('../actions/DatasetActions');
 var DimensionDefinitionPanel = require('./DimensionDefinitionPanel.react');
-var DimensionStore = require('../stores/DimensionStore');
+var DatasetStore = require('../stores/DatasetStore');
 var Value = require('./Value.react');
 var Variable = require('./Variable.react');
 
 
 /**
- * Retrieve the current visibility from the DimensionStore
+ * Retrieve the current visibility from the DatasetStore
  */
 function getDatasetPanelState() {
   return {
-    'variables': DimensionStore.getVariables()
+    'variables': DatasetStore.getVariables(),
   };
 }
 
@@ -23,7 +23,10 @@ var DatasetPanel = React.createClass({
     dataset: ReactPropTypes.object.isRequired,
     dimensions: ReactPropTypes.array.isRequired,
     schemes: ReactPropTypes.array.isRequired,
-    doSelectVariable: ReactPropTypes.object.isRequired
+    doSelectVariable: ReactPropTypes.object.isRequired,
+    doSelectValue: ReactPropTypes.object.isRequired,
+    selectedVariable: ReactPropTypes.object.isRequired,
+    selectedValue: ReactPropTypes.string.isRequired
   },
 
   getInitialState: function() {
@@ -32,11 +35,11 @@ var DatasetPanel = React.createClass({
   },
 
   componentDidMount: function() {
-    DimensionStore.addChangeListener(this._onChange);
+    DatasetStore.addChangeListener(this._onChange);
   },
 
   componentWillUnmount: function() {
-    DimensionStore.removeChangeListener(this._onChange);
+    DatasetStore.removeChangeListener(this._onChange);
   },
 
   /**
@@ -60,22 +63,28 @@ var DatasetPanel = React.createClass({
     for (var col in data){
       var column = [];
       var variable = this.state.variables[col];
-      var head = <Variable doSelectVariable={this.props.doSelectVariable} variable={variable}/>;
+      var head = <Variable selectedVariable={this.props.selectedVariable}
+                           selectedValue={this.props.selectedValue}
+                           doSelectVariable={this.props.doSelectVariable}
+                           variable={variable}
+                           key={'variable-' + col}/>;
 
       column.push(head);
 
       for (var c in data[col]){
         var value = data[col][c];
 
-        var cell = <Value value={value}
-                          variable={variable} />;
+        var cell = <Value selectedVariable={this.props.selectedVariable}
+                          selectedValue={this.props.selectedValue}
+                          value={value}
+                          variable={variable}
+                          doSelectValue={this.props.doSelectValue}
+                          key={'value-' + col + '-' + c} />;
 
         column.push(cell);
       }
-      columns.push(<div className="data-col" key={col}>{column}</div>);
+      columns.push(<div className="data-col" key={'column-' + col}>{column}</div>);
     }
-
-
 
 
 
@@ -84,9 +93,18 @@ var DatasetPanel = React.createClass({
     </div>;
 
     return (
-      <div className="col-md-12 main">
+      <div className="col-md-12">
         <section id="dataset_panel">
-          {table}
+          <div className="panel panel-default">
+            <div className="panel-heading">
+              <h5 className="panel-title">
+                Data
+              </h5>
+            </div>
+            <div className='panel-body'>
+                {table}
+            </div>
+          </div>
         </section>
       </div>
     );
