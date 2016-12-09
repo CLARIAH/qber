@@ -5,6 +5,7 @@ var DimensionConstants = require('../constants/DimensionConstants');
 var MessageConstants = require('../constants/MessageConstants');
 var NavbarConstants = require('../constants/NavbarConstants');
 
+
 /**
  *  Note that the QBerAPI also dispatches actions to stores!
  */
@@ -114,8 +115,8 @@ var DatasetActions = {
   retrieveDataset: function(file_details){
     console.log('File details:');
     console.log(file_details);
-    var file_path = file_details['uri'];
-    var file_name = file_details['label'];
+    var file_path = file_details.uri;
+    var file_name = file_details.label;
 
 
     QBerDispatcher.dispatch({
@@ -150,10 +151,10 @@ var DatasetActions = {
         dataset: dataset
       });
 
-      QBerDispatcher.dispatch({
-        actionType: DimensionConstants.SDMX_DIMENSION_INIT,
-        variables: dataset.variables
-      });
+      // QBerDispatcher.dispatch({
+      //   actionType: DimensionConstants.SDMX_DIMENSION_INIT,
+      //   variables: dataset.variables
+      // });
     } else {
       // Nothing in cache, call the QBerAPI with the filename, and implement the success callback
       QBerAPI.retrieveDatasetDefinition({
@@ -169,10 +170,10 @@ var DatasetActions = {
             dataset: dataset
           });
 
-          QBerDispatcher.dispatch({
-            actionType: DimensionConstants.SDMX_DIMENSION_INIT,
-            variables: dataset.variables
-          });
+          // QBerDispatcher.dispatch({
+          //   actionType: DimensionConstants.SDMX_DIMENSION_INIT,
+          //   variables: dataset.variables
+          // });
         },
         error: function(response){
           QBerDispatcher.dispatch({
@@ -192,7 +193,7 @@ var DatasetActions = {
   chooseVariable: function(variable) {
     QBerDispatcher.dispatch({
       actionType: MessageConstants.INFO,
-      message: 'You selected variable '+variable
+      message: 'You selected variable '+variable.label
     });
 
     QBerDispatcher.dispatch({
@@ -200,11 +201,23 @@ var DatasetActions = {
       variable: variable
     });
 
+  },
+
+  /**
+   * @param {string} value
+   */
+  chooseValue: function(value) {
     QBerDispatcher.dispatch({
-      actionType: DimensionConstants.SDMX_DIMENSION_SET_VARIABLE,
-      variable: variable
+      actionType: MessageConstants.INFO,
+      message: 'You selected value '+value
+    });
+
+    QBerDispatcher.dispatch({
+      actionType: DatasetConstants.DATASET_CHOOSE_VALUE,
+      value: value
     });
   },
+
 
   /**
    * Save the dataset to cache
