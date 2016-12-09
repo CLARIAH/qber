@@ -47,7 +47,7 @@ div#qber_body {
 }
 
 section#dataset_panel{
-  background-color: white;
+  /*background-color: white;*/
   overflow-x: scroll;
 }
 
@@ -73,9 +73,15 @@ div#values_table {
   text-overflow: ellipsis;
   padding-right: 20px;
   width: @text-width;
-  padding: 10px 15px;
+  padding: 10px 17px;
   font-weight: bold;
+  /* margin-left: 2px; */
   background-color: #dddddd
+}
+
+.data-head:hover {
+  text-decoration: none;
+  background-color: #bbbbbb
 }
 
 .data-cell {
@@ -93,10 +99,16 @@ div#values_table {
   padding: 10px 15px
 }
 
+.data-cell-active {
+  border: 1px solid #eeeeee;
+  text-decoration: none;
+  background-color: #eeeeee;
+}
+
 .data-cell:hover {
   border: 1px solid #dddddd;
   text-decoration: none;
-  background-color: #dddddd
+  background-color: #dddddd;
 }
 
 
