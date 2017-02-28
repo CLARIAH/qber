@@ -28,19 +28,12 @@ Clone the `master` branch of this repository to a directory of your choice:
 git clone https://github.com/CLARIAH/qber.git
 ```
 
-Change into the `src` subdirectory of the folder you just created, and run:
+Change into the folder you just created, and run:
 
 ```
 npm install
 ```
 
-In case gulp is not available in your environment, you'll need to install it globally:
-
-```
-sudo npm install -g gulp
-```
-
-This should install all required packages.
 
 ###### Silly step
 
@@ -57,11 +50,10 @@ var CSDH_API = "http://api.clariah-sdh.eculture.labs.vu.nl"
 ```
 
 #### Running QBer
-
-Change into the `src` subdirectory of the QBer folder, and run `gulp`:
+Simply run
 
 ```
-gulp
+npm run serve
 ```
 
 This automatically opens a browser window with QBer:
