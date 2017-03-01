@@ -17,13 +17,14 @@
     "keymirror": "^0.1.1",
     "lodash": "^4.13.1",
     "object-assign": "^3.0.0",
-    "react": "^0.14.8",
+    "react": "0.14.8",
     "react-dropzone": "^3.5.1",
     "reactify": "^1.1.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "gulp",
+    "build": "gulp transform"
   },
   "repository": {
     "type": "git",
