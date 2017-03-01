@@ -23,7 +23,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "serve": "gulp",
+    "dev": "gulp",
+    "serve": "gulp webserver",
     "build": "gulp transform"
   },
   "repository": {

@@ -15,7 +15,7 @@ gulp.task("transform", function() {
   // add task
 });
 
-gulp.task("webserver", function() {
+gulp.task("webserver-dev", function() {
   gulp.src("./src").pipe(
     webserver({
       livereload: true,
@@ -24,11 +24,19 @@ gulp.task("webserver", function() {
     })
   );
 });
+gulp.task("webserver", function() {
+  gulp.src("./src").pipe(
+    webserver({
+      directoryListing: false,
+      host: "0.0.0.0"
+    })
+  );
+});
 
 gulp.task("default", ["clean"], function() {
   console.log("Hello QBer!");
   gulp.start("transform");
-  gulp.start("webserver");
+  gulp.start("webserver-dev");
   gulp.watch(["./src/js/qber.js", "./src/js/**/*.js"], ["transform"]);
 });
 
